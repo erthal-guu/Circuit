@@ -41,6 +41,4 @@ public class Funcionario {
     @Column(name = "data_admissao")
     private LocalDate dataAdmissao;
 
-    @OneToOne(mappedBy = "funcionario")
-    private User usuario;
 }

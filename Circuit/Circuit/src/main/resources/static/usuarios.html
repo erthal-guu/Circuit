@@ -16,7 +16,7 @@
         </div>
 
         <nav class="menu">
-            <a href="home.html" class="menu-item active">
+            <a href="home.html" class="menu-item">
                 <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 10L10 3L17 10V17C17 17.5304 16.7893 18.0391 16.4142 18.4142C16.0391 18.7893 15.5304 19 15 19H5C4.46957 19 3.96086 18.7893 3.58579 18.4142C3.21071 18.0391 3 17.5304 3 17V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -96,7 +96,7 @@
                 <span class="menu-text">Funcionários</span>
             </a>
 
-            <a href="usuarios.html" class="menu-item">
+            <a href="usuarios.html" class="menu-item active">
                 <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M12.5 7C12.5 9.20914 10.7091 11 8.5 11C6.29086 11 4.5 9.20914 4.5 7C4.5 4.79086 6.29086 3 8.5 3C10.7091 3 12.5 4.79086 12.5 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -121,7 +121,6 @@
         </div>
     </aside>
 
-    <!-- Conteúdo Principal -->
     <main class="main-content">
         <header class="top-bar">
             <div class="header-left">
@@ -150,7 +149,6 @@
         </header>
 
         <div class="content">
-            <!-- Cabeçalho da Página -->
             <div class="page-header">
                 <h1 class="page-title">Usuários do Sistema</h1>
                 <button class="btn-primary" onclick="openModal()">
@@ -161,7 +159,6 @@
                 </button>
             </div>
 
-            <!-- Card com Tabela -->
             <div class="table-card">
                 <div class="table-header">
                     <h3>Lista de Usuários</h3>
@@ -177,110 +174,22 @@
                 <table class="data-table" id="userTable">
                     <thead>
                     <tr>
-                        <td>001</td>
-                        <td>André Silva</td>
-                        <td>123.456.789-00</td>
-                        <td>andre.silva@circuit.com</td>
-                        <td>Administrador</td>
-                        <td><span class="badge badge-active">Ativo</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action btn-edit" onclick="editUser(1)" title="Editar">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                                <button class="btn-action btn-delete" onclick="deleteUser(1)" title="Excluir">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Perfil</th>
+                        <th>Status</th>
+                        <th>Ações</th>
                     </tr>
-                    <tr>
-                        <td>002</td>
-                        <td>Maria Santos</td>
-                        <td>987.654.321-00</td>
-                        <td>maria.santos@circuit.com</td>
-                        <td>Técnico</td>
-                        <td><span class="badge badge-active">Ativo</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action btn-edit" onclick="editUser(2)" title="Editar">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                                <button class="btn-action btn-delete" onclick="deleteUser(2)" title="Excluir">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>003</td>
-                        <td>João Oliveira</td>
-                        <td>456.789.123-00</td>
-                        <td>joao.oliveira@circuit.com</td>
-                        <td>Vendedor</td>
-                        <td><span class="badge badge-active">Ativo</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action btn-edit" onclick="editUser(3)" title="Editar">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                                <button class="btn-action btn-delete" onclick="deleteUser(3)" title="Excluir">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>004</td>
-                        <td>Carlos Ferreira</td>
-                        <td>321.654.987-00</td>
-                        <td>carlos.ferreira@circuit.com</td>
-                        <td>Técnico</td>
-                        <td><span class="badge badge-inactive">Inativo</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action btn-edit" onclick="editUser(4)" title="Editar">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                                <button class="btn-action btn-delete" onclick="deleteUser(4)" title="Excluir">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    </thead>
+                    <tbody>
+
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
-</div>
-
-<!-- Modal de Cadastro/Edição -->
-<div class="modal" id="userModal">
+</div> <div class="modal" id="userModal">
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="modalTitle">Novo Usuário</h2>
@@ -290,43 +199,32 @@
                 </svg>
             </button>
         </div>
-        <form id="userForm" onsubmit="saveUser(event)">
+        <div id="mensagem" style="padding: 10px; text-align: center; font-weight: bold;"></div>
+        <form id="userForm">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="userName">Nome Completo *</label>
+                        <label for="userName">Nome Completo </label>
                         <input type="text" id="userName" required placeholder="Digite o nome completo">
                     </div>
                     <div class="form-group">
-                        <label for="userCPF">CPF *</label>
+                        <label for="userCPF">CPF </label>
                         <input type="text" id="userCPF" required placeholder="000.000.000-00" maxlength="14">
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="userEmail">E-mail *</label>
-                        <input type="email" id="userEmail" required placeholder="usuario@circuit.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="userPhone">Telefone</label>
-                        <input type="text" id="userPhone" placeholder="(00) 00000-0000" maxlength="15">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="userProfile">Perfil de Acesso *</label>
+                        <label for="userProfile">Perfil de Acesso</label>
                         <select id="userProfile" required>
                             <option value="">Selecione o perfil</option>
-                            <option value="admin">Administrador</option>
-                            <option value="tecnico">Técnico</option>
-                            <option value="vendedor">Vendedor</option>
-                            <option value="atendente">Atendente</option>
+                            <option value="ADMIN">Administrador</option>
+                            <option value="TECNICO">Técnico</option>
+                            <option value="VENDEDOR">Vendedor</option>
+                            <option value="GERENTE">Gerente</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="userStatus">Status *</label>
+                        <label for="userStatus">Status</label>
                         <select id="userStatus" required>
                             <option value="ativo">Ativo</option>
                             <option value="inativo">Inativo</option>
@@ -336,36 +234,39 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="userPassword">Senha *</label>
-                        <input type="password" id="userPassword" required placeholder="Digite a senha">
+                        <label for="userPassword">Senha</label>
+                        <div class="password-container">
+                            <input type="password" id="userPassword" placeholder="Digite a senha">
+                            <button type="button" class="btn-eye" onclick="togglePassword('userPassword')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="userPasswordConfirm">Confirmar Senha *</label>
-                        <input type="password" id="userPasswordConfirm" required placeholder="Confirme a senha">
+                        <label for="userPasswordConfirm">Confirmar Senha</label>
+                        <div class="password-container">
+                            <input type="password" id="userPasswordConfirm"  placeholder="Confirme a senha">
+                            <button type="button" class="btn-eye" onclick="togglePassword('userPasswordConfirm')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
-                <button type="submit" class="btn-submit">Salvar Usuário</button>
+                <button type="submit" class="btn-submit" onclick="verificarSenha()">Salvar Usuário</button>
+            </div>
             </div>
         </form>
     </div>
 </div>
 
-<script src="js/user.js">
-</script>
+<script src="js/user.js"></script>
 </body>
-</html>h>ID</th>
-<th>Nome</th>
-<th>CPF</th>
-<th>Email</th>
-<th>Perfil</th>
-<th>Status</th>
-<th>Ações</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-    <t
+</html>

@@ -14,6 +14,7 @@ public class UsuarioLoginService {
         User user = Repository.findByCpf(cpf);
         if (user != null && user.getSenha().equals(Senha)){
         return user;
-        }return null;
+        }
+        return null;
     }
 }

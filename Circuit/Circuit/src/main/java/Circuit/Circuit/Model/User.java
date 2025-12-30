@@ -17,6 +17,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String nome;
+
     @Column(nullable = false, length = 14)
     private String cpf;
 
@@ -25,16 +28,11 @@ public class User {
     private Cargo cargo;
 
     @Column(nullable = false)
-    private boolean ativo;
+    private Boolean ativo;
 
     @Column(nullable = false)
     private String senha;
 
     @Column(name = "data_cadastro", updatable = false)
     private Timestamp dataCadastro;
-
-    @OneToOne
-    @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
-
 }
