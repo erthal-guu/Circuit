@@ -15,25 +15,44 @@ public class UsuarioCadastroController {
     private UsuarioCadastroService userService;
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<String> cadastrar(@RequestBody User usuarioCadastro){
-        try{
+    public ResponseEntity<String> cadastrar(@RequestBody User usuarioCadastro) {
+        try {
             userService.cadastrar(usuarioCadastro);
             return ResponseEntity.ok("Usuário cadastrado com sucesso!");
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @GetMapping("/listar")
-    public List<User> listarUsuarios(){
+
+    @GetMapping("listar-ativos")
+    public List<User> listarUsuarios() {
         return userService.ListarUsuarios();
     }
+
+    @GetMapping("/listar-inativos")
+    public List<User> listarUsuariosInativos() {
+        return userService.ListarUsuarioInativos();
+    }
+
     @DeleteMapping("/excluir/{id}")
-    public void excluir (@PathVariable Long id){
+    public void excluir(@PathVariable Long id) {
         userService.excluirUsuarios(id);
     }
+
     @PutMapping("/editar/{id}")
-    public User editarUsuario(@PathVariable Long id,@RequestBody User usuario){
-        return  userService.editarUsuario(id,usuario);
+    public User editarUsuario(@PathVariable Long id, @RequestBody User usuario) {
+        return userService.editarUsuario(id, usuario);
+    }
+    @PutMapping("/reativar/{id}")
+    public void restaurar (@PathVariable Long id) {
+         userService.restaurarUsuario(id);
+    }
+    @GetMapping("/pesquisar-ativos")
+    public List<User> pesquisarAtivos(@RequestParam String nome){
+        return userService.pesquisarAtivos(nome);
+    }
+    @GetMapping("/pesquisar-inativos")
+    public List<User> pesquisarInativos(@RequestParam String nome){
+        return userService.pesquisarInativo(nome);
     }
 }

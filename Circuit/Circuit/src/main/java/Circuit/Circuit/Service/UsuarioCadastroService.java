@@ -23,10 +23,18 @@ public class UsuarioCadastroService {
     public List<User> ListarUsuarios() {
         return userRepository.findByAtivoTrueOrderById();
     }
+    public List<User> ListarUsuarioInativos(){
+        return  userRepository.findByAtivoFalseOrderById();
+    }
 
     public void excluirUsuarios(Long id) {
         User user = userRepository.getReferenceById(id);
         user.setAtivo(false);
+        userRepository.save(user);
+    }
+    public void restaurarUsuario(Long id){
+        User user = userRepository.getReferenceById(id);
+        user.setAtivo((true));
         userRepository.save(user);
     }
 
@@ -42,5 +50,11 @@ public class UsuarioCadastroService {
         }
             return userRepository.save(usuarioEditar);
         }
+        public List<User> pesquisarAtivos(String userAtivo){
+            return userRepository.findByAtivoTrueAndNomeContainingIgnoreCase(userAtivo);
+        }
+        public List<User> pesquisarInativo(String userInativo){
+            return userRepository.findByAtivoFalseAndNomeContainingIgnoreCase(userInativo);
+    }
     }
 

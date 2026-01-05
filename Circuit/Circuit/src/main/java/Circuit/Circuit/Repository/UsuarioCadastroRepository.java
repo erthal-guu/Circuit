@@ -11,5 +11,7 @@ public interface UsuarioCadastroRepository extends JpaRepository<User,Long> {
     User findByCpf(String cpf);
     boolean existsBycpf(String cpf);
     List<User>findByAtivoTrueOrderById();
-
+    List<User>findByAtivoFalseOrderById();
+    List<User> findByAtivoTrueAndNomeContainingIgnoreCase(String nome);
+    List<User> findByAtivoFalseAndNomeContainingIgnoreCase(String nome);
 }

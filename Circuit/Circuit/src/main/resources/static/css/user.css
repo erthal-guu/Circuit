@@ -315,7 +315,6 @@
             transform: translateY(-1px);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -352,4 +351,54 @@
             color: #666;
             display: flex;
             align-items: center;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .tab-container {
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #ea580c;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .btn-restore {
+            background: #e0f2fe;
+            color: #0ea5e9;
+        }
+
+        .btn-restore:hover {
+            background: #0ea5e9;
+            color: white;
         }
