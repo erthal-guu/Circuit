@@ -12,8 +12,8 @@ public class UsuarioLoginService {
 
     public User login (String cpf, String Senha){
         User user = Repository.findByCpf(cpf);
-        if (user != null && user.getSenha().equals(Senha)){
-        return user;
+        if (user != null && user.getAtivo() && user.getSenha().equals(Senha)){
+            return user;
         }
         return null;
     }

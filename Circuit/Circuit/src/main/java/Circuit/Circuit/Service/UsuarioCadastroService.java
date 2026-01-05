@@ -13,7 +13,7 @@ public class UsuarioCadastroService {
     private UsuarioCadastroRepository userRepository;
 
     public User cadastrar(User usuario) {
-        if (userRepository.existsBycpf(usuario.getCpf())) {
+        if (userRepository.existsByCpf(usuario.getCpf())) {
             throw new RuntimeException("Este CPF já está cadastrado no sistema.");
         }
         usuario.setDataCadastro(new Timestamp(System.currentTimeMillis()));
@@ -50,11 +50,14 @@ public class UsuarioCadastroService {
         }
             return userRepository.save(usuarioEditar);
         }
-        public List<User> pesquisarAtivos(String userAtivo){
-            return userRepository.findByAtivoTrueAndNomeContainingIgnoreCase(userAtivo);
-        }
-        public List<User> pesquisarInativo(String userInativo){
-            return userRepository.findByAtivoFalseAndNomeContainingIgnoreCase(userInativo);
+    public List<User> pesquisarAtivos(String nome) {
+        if (nome == null) return userRepository.findByAtivoTrueOrderById();
+        return userRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
     }
+
+    public List<User> pesquisarInativo(String nome) {
+        if (nome == null) return userRepository.findByAtivoFalseOrderById();
+        return userRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
     }
+}
 

@@ -19,9 +19,11 @@ function switchTab(tabName) {
     if (tabName === 'ativos') {
         document.getElementById('tabAtivos').classList.add('active');
         event.currentTarget.classList.add('active');
+        carregarUsuarios();
     } else {
         document.getElementById('tabInativos').classList.add('active');
         event.currentTarget.classList.add('active');
+        carregarInativos();
     }
 }
 
@@ -66,24 +68,28 @@ if (cpfInput) {
 
 async function carregarUsuarios() {
     try {
-        const resAtivos = await fetch('http://localhost:8080/usuarios/listar-ativos');
-        const ativos = await resAtivos.json();
-        renderizarTabela(ativos, userTableBody, true);
-
-        const resInativos = await fetch('http://localhost:8080/usuarios/listar-inativos');
-        const inativos = await resInativos.json();
-        renderizarTabela(inativos, userTableInativosBody, false);
-
-        const resContagem = await fetch('http://localhost:8080/usuarios/contar-inativos');
-        const totalInativos = await resContagem.json();
-        const btnTabInativos = document.getElementById('btnTabInativos');
+        const res = await fetch('http://localhost:8080/usuarios/listar-ativos');
+        const lista = await res.json();
+        renderizarTabela(lista, userTableBody, true);
     } catch (error) {
-        console.error("Erro ao carregar tabelas:", error);
+        console.error(error);
+    }
+}
+
+async function carregarInativos() {
+    try {
+        const res = await fetch('http://localhost:8080/usuarios/listar-inativos');
+        const lista = await res.json();
+        renderizarTabela(lista, userTableInativosBody, false);
+    } catch (error) {
+        console.error(error);
     }
 }
 
 function renderizarTabela(usuarios, tbody, isAtivo) {
+    if (!tbody) return;
     tbody.innerHTML = '';
+
     usuarios.forEach(user => {
         const row = document.createElement('tr');
         const cargoExibicao = nomesCargos[user.cargo] || user.cargo;
@@ -111,7 +117,11 @@ async function filterTable(tableId) {
     const termo = document.getElementById(inputId).value;
 
     if (termo.length === 0) {
-        carregarUsuarios();
+        if (isAtivo) {
+            carregarUsuarios();
+        } else {
+            carregarInativos();
+        }
         return;
     }
 
@@ -133,17 +143,19 @@ async function editUser(id) {
         const usuarios = await response.json();
         const user = usuarios.find(u => u.id === id);
 
-        usuarioIdEdicao = id;
-        document.getElementById('userName').value = user.nome;
-        document.getElementById('userCPF').value = user.cpf;
-        document.getElementById('userProfile').value = user.cargo;
-        document.getElementById('userStatus').value = user.ativo ? 'ativo' : 'inativo';
-        document.getElementById('userPassword').value = "";
-        document.getElementById('userPasswordConfirm').value = "";
+        if(user) {
+            usuarioIdEdicao = id;
+            document.getElementById('userName').value = user.nome;
+            document.getElementById('userCPF').value = user.cpf;
+            document.getElementById('userProfile').value = user.cargo;
+            document.getElementById('userStatus').value = user.ativo ? 'ativo' : 'inativo';
+            document.getElementById('userPassword').value = "";
+            document.getElementById('userPasswordConfirm').value = "";
 
-        aplicarMascaras();
-        document.getElementById('modalTitle').textContent = 'Editar Usuário';
-        openModal();
+            aplicarMascaras();
+            document.getElementById('modalTitle').textContent = 'Editar Usuário';
+            openModal();
+        }
     } catch (error) { console.error(error); }
 }
 
@@ -153,9 +165,11 @@ async function restaurarUser(id) {
             const response = await fetch(`http://localhost:8080/usuarios/reativar/${id}`, {
                 method: 'PUT'
             });
-            if (response.ok) carregarUsuarios();
+            if (response.ok) {
+                carregarInativos();
+            }
         } catch (error) {
-            console.error("Erro ao restaurar:", error);
+            console.error(error);
         }
     }
 }
@@ -164,7 +178,9 @@ async function deleteUser(id) {
     if (confirm("Deseja desativar este usuário?")) {
         try {
             const response = await fetch(`http://localhost:8080/usuarios/excluir/${id}`, { method: 'DELETE' });
-            if (response.ok) carregarUsuarios();
+            if (response.ok) {
+                carregarUsuarios();
+            }
         } catch (error) {
             console.error(error);
         }
@@ -208,6 +224,16 @@ if (formCadastro) {
             carregarUsuarios();
         }
     });
+}
+
+const searchInputAtivos = document.getElementById('searchInputAtivos');
+if (searchInputAtivos) {
+    searchInputAtivos.addEventListener('input', () => filterTable('userTable'));
+}
+
+const searchInputInativos = document.getElementById('searchInputInativos');
+if (searchInputInativos) {
+    searchInputInativos.addEventListener('input', () => filterTable('userTableInativos'));
 }
 
 carregarUsuarios();
