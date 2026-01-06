@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UsuarioCadastroRepository extends JpaRepository<User,Long> {
-    User findByCpf(String cpf);
+public interface usuarioCadastroRepository extends JpaRepository<User,Long> {
     boolean existsByCpf(String cpf);
     List<User> findByAtivoTrueOrderById();
     List<User> findByAtivoFalseOrderById();

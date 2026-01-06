@@ -1,14 +1,14 @@
 package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.User;
-import Circuit.Circuit.Repository.UsuarioLoginRepository;
+import Circuit.Circuit.Repository.usuarioLoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
 @Service
-public class UsuarioLoginService {
+public class usuarioLoginService {
     @Autowired
-    private UsuarioLoginRepository Repository;
+    private usuarioLoginRepository Repository;
 
     public User login (String cpf, String Senha){
         User user = Repository.findByCpf(cpf);

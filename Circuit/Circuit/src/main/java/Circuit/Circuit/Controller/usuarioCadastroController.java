@@ -1,7 +1,7 @@
     package Circuit.Circuit.Controller;
 
     import Circuit.Circuit.Model.User;
-    import Circuit.Circuit.Service.UsuarioCadastroService;
+    import Circuit.Circuit.Service.usuarioCadastroService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,9 @@
 
     @RestController
     @RequestMapping("/usuarios")
-    @CrossOrigin("*")
-    public class UsuarioCadastroController {
+    public class usuarioCadastroController {
         @Autowired
-        private UsuarioCadastroService userService;
+        private usuarioCadastroService userService;
 
         @PostMapping("/cadastrar")
         public ResponseEntity<String> cadastrar(@RequestBody User usuarioCadastro) {

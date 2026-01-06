@@ -38,7 +38,7 @@ form.addEventListener('submit', async (event) => {
             localStorage.setItem('user', JSON.stringify(user));
 
             setTimeout(() => {
-                window.location.href = 'home.html';
+                window.location.href = '/home';
             }, 1000);
 
         } else {

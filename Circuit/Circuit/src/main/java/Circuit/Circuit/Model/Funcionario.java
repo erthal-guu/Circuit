@@ -29,6 +29,9 @@ public class Funcionario {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String cargo;
+
     @Column(length = 9)
     private String cep;
 
@@ -37,6 +40,9 @@ public class Funcionario {
     private String bairro;
     private String cidade;
     private String estado;
+
+    @Column(nullable = false)
+    private Boolean ativo;
 
     @Column(name = "data_admissao")
     private LocalDate dataAdmissao;
