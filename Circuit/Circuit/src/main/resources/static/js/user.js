@@ -162,7 +162,7 @@
     async function restaurarUser(id) {
         if (confirm("Deseja restaurar este usuário?")) {
             try {
-                const response = await fetch(`http://localhost:8080/usuarios/reativar/${id}`, {
+                const response = await fetch(`http://localhost:8080/usuarios/restaurar/${id}`, {
                     method: 'PUT'
                 });
                 if (response.ok) {

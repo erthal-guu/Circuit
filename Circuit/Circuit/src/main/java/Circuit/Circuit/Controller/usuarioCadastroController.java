@@ -43,7 +43,7 @@
         public User editarUsuario(@PathVariable Long id, @RequestBody User usuario) {
             return userService.editarUsuario(id, usuario);
         }
-        @PutMapping("/reativar/{id}")
+        @PutMapping("/restaurar/{id}")
         public void restaurar (@PathVariable Long id) {
              userService.restaurarUsuario(id);
         }

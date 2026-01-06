@@ -2,6 +2,7 @@ package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.User;
 import Circuit.Circuit.Repository.usuarioCadastroRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
@@ -37,7 +38,6 @@ public class usuarioCadastroService {
         user.setAtivo((true));
         userRepository.save(user);
     }
-
     public User editarUsuario(Long id, User dadosAtualizados) {
         User usuarioEditar = userRepository.getReferenceById(id);
         usuarioEditar.setNome(dadosAtualizados.getNome());

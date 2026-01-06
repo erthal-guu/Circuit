@@ -113,9 +113,11 @@ async function carregarInativos() {
 function renderizarTabela(lista, tbody, isAtivo) {
     if (!tbody) return;
     tbody.innerHTML = '';
-
     lista.forEach(func => {
         const row = document.createElement('tr');
+        const statusClass = func.ativo ? 'badge-active' : 'badge-inactive';
+        const statusText = func.ativo ? 'Ativo' : 'Inativo';
+
         const botoes = isAtivo ?
             `<button class="btn-action btn-edit" onclick="editFuncionario(${func.id})">✏️</button>
              <button class="btn-action btn-delete" onclick="excluirFuncionario(${func.id})">🗑️</button>` :
@@ -127,6 +129,7 @@ function renderizarTabela(lista, tbody, isAtivo) {
             <td>${func.cargo}</td>
             <td>${func.telefone || '-'}</td>
             <td>${func.email}</td>
+            <td><span class="badge ${statusClass}">${statusText}</span></td>
             <td><div class="action-buttons">${botoes}</div></td>
         `;
         tbody.appendChild(row);
@@ -153,7 +156,6 @@ async function editFuncionario(id) {
         document.getElementById('funcBairro').value = f.bairro || '';
         document.getElementById('funcCidade').value = f.cidade || '';
         document.getElementById('funcEstado').value = f.estado || '';
-
         document.getElementById('modalTitle').textContent = 'Editar Funcionário';
         openModal();
     }
@@ -168,10 +170,12 @@ async function excluirFuncionario(id) {
 }
 
 async function reativarFuncionario(id) {
-    if (confirm("Reativar este funcionário?")) {
-        await fetch(`${API_URL}/reativar/${id}`, { method: 'PUT' });
-        carregarAtivos();
-        carregarInativos();
+    if (confirm("Deseja restaurar este funcionário?")) {
+        const res = await fetch(`${API_URL}/restaurar/${id}`, { method: 'PUT' });
+        if(res.ok) {
+            carregarAtivos();
+            carregarInativos();
+        }
     }
 }
 
@@ -201,8 +205,53 @@ function switchTab(tabName) {
     }
 }
 
+
+async function pesquisarAtivos(termo) {
+    if (!termo) {
+        carregarAtivos();
+        return;
+    }
+    try {
+        const res = await fetch(`${API_URL}/pesquisar-ativos?nome=${encodeURIComponent(termo)}`);
+
+        if (res.ok) {
+            const lista = await res.json();
+            renderizarTabela(lista, tableBodyAtivos, true);
+        }
+    } catch (error) {
+        console.error("Erro na pesquisa de ativos:", error);
+    }
+}
+
+async function pesquisarInativos(termo) {
+    if (!termo) {
+        carregarInativos();
+        return;
+    }
+    try {
+        const res = await fetch(`${API_URL}/pesquisar-inativos?nome=${encodeURIComponent(termo)}`);
+
+        if (res.ok) {
+            const lista = await res.json();
+            renderizarTabela(lista, tableBodyInativos, false);
+        }
+    } catch (error) {
+        console.error("Erro na pesquisa de inativos:", error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     configurarMascaras();
     carregarAtivos();
     carregarInativos();
+
+    const inputBuscaAtivos = document.querySelector('input[placeholder*="Buscar ativos"]');
+    if (inputBuscaAtivos) {
+        inputBuscaAtivos.addEventListener('input', (e) => pesquisarAtivos(e.target.value));
+    }
+
+    const inputBuscaInativos = document.querySelector('input[placeholder*="Buscar inativos"]');
+    if (inputBuscaInativos) {
+        inputBuscaInativos.addEventListener('input', (e) => pesquisarInativos(e.target.value));
+    }
 });

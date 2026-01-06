@@ -94,7 +94,7 @@
 
         .data-table th {
             padding: 16px 25px;
-            text-align: left;
+            text-align: center;
             font-size: 12px;
             font-weight: 700;
             color: #64748b;
@@ -401,4 +401,40 @@
         .btn-restore:hover {
             background: #0ea5e9;
             color: white;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-active {
+        .badge-active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge-inactive {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .data-table th,
+        .data-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }

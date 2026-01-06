@@ -1,5 +1,6 @@
 package Circuit.Circuit.Service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import Circuit.Circuit.Model.Funcionario;
@@ -23,6 +24,41 @@ public class funcionarioCadastroService {
     }
     public List<Funcionario>ListarFuncionariosInativos(){
         return funcionarioRepository.findByAtivoFalse();
+    }
+    public Funcionario ExcluirFuncionario(Long id){
+        Funcionario funcionario = funcionarioRepository.getReferenceById(id);
+        funcionario.setAtivo(false);
+        return funcionarioRepository.save(funcionario);
+    }
+    public Funcionario EditarFuncionario(Long id, Funcionario dadosAtualizados) {
+        Funcionario funcionario = funcionarioRepository.getReferenceById(id);
+        funcionario.setNome(dadosAtualizados.getNome());
+        funcionario.setCpf(dadosAtualizados.getCpf());
+        funcionario.setCargo(dadosAtualizados.getCargo());
+        funcionario.setTelefone(dadosAtualizados.getTelefone());
+        funcionario.setEmail(dadosAtualizados.getEmail());
+        funcionario.setDataAdmissao(dadosAtualizados.getDataAdmissao());
+        funcionario.setAtivo(dadosAtualizados.getAtivo());
+        funcionario.setCep(dadosAtualizados.getCep());
+        funcionario.setLogradouro(dadosAtualizados.getLogradouro());
+        funcionario.setNumero(dadosAtualizados.getNumero());
+        funcionario.setBairro(dadosAtualizados.getBairro());
+        funcionario.setCidade(dadosAtualizados.getCidade());
+        funcionario.setEstado(dadosAtualizados.getEstado());
+        return funcionarioRepository.save(funcionario);
+    }
+    public Funcionario RestaurarFuncionario(Long id){
+        Funcionario funcionario = funcionarioRepository.getReferenceById(id);
+        funcionario.setAtivo(true);
+        return funcionarioRepository.save(funcionario);
+    }
+    public List<Funcionario>pesquisarFuncionarioAtivo(String nome){
+        if (nome == null) return funcionarioRepository.findByAtivoTrue();
+        return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
+    }
+    public List<Funcionario>pesquisarFuncionarioInativo(String nome){
+        if (nome == null) return funcionarioRepository.findByAtivoFalse();
+        return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
     }
 
 }

@@ -44,4 +44,24 @@ public class funcionarioCadastroController {
     public List<Funcionario>ListarFuncionariosInativos(){
         return funcionarioService.ListarFuncionariosInativos();
     }
+    @DeleteMapping("/excluir/{id}")
+    public void ExcluirFuncionário(@PathVariable Long id){
+        funcionarioService.ExcluirFuncionario(id);
+    }
+    @PutMapping("/editar/{id}")
+    public Funcionario EditarFuncionario(@PathVariable Long id , @RequestBody Funcionario funcionario){
+        return funcionarioService.EditarFuncionario(id,funcionario);
+    }
+    @PutMapping("/restaurar/{id}")
+    public void RestaurarFuncionario(@PathVariable Long id){
+        funcionarioService.RestaurarFuncionario(id);
+    }
+    @GetMapping("/pesquisar-ativos")
+    public List<Funcionario> pesquisarAtivos(@RequestParam("nome") String nome){
+        return funcionarioService.pesquisarFuncionarioAtivo(nome);
+    }
+    @GetMapping("/pesquisar-inativos")
+    public List<Funcionario> pesquisarInativos(@RequestParam("nome") String nome){
+        return funcionarioService.pesquisarFuncionarioInativo(nome);
+    }
 }
