@@ -5,14 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "funcionarios")
+@Table(name = "Clientes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Funcionario {
+public class Cliente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,14 +22,11 @@ public class Funcionario {
     @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
-    @Column(length = 15)
-    private String telefone;
-
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = false)
-    private String cargo;
+    @Column(length = 20)
+    private String telefone;
 
     @Column(length = 9)
     private String cep;
@@ -39,11 +35,7 @@ public class Funcionario {
     private String numero;
     private String bairro;
     private String cidade;
+    @Column(length = 2)
     private String estado;
-
-    @Column(nullable = false)
-    private Boolean ativo;
-    @Column(name = "data_admissao")
-    private LocalDate dataAdmissao;
-
+    private Boolean ativo = true;
 }

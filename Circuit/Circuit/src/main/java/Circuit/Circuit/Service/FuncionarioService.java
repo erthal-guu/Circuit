@@ -1,17 +1,16 @@
 package Circuit.Circuit.Service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import Circuit.Circuit.Model.Funcionario;
-import Circuit.Circuit.Repository.funcionarioCadastroRepository;
+import Circuit.Circuit.Repository.FuncionarioRepository;
 
 import java.util.List;
 
 @Service
-public class funcionarioCadastroService {
+public class FuncionarioService {
     @Autowired
-    private funcionarioCadastroRepository funcionarioRepository;
+    private FuncionarioRepository funcionarioRepository;
 
     public Funcionario cadastrar (Funcionario funcionario) {
         if (funcionarioRepository.existsByCpf(funcionario.getCpf())) {

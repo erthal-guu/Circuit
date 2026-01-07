@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class viewController {
+public class ViewController {
 
     @GetMapping("/home")
     public String home() {
@@ -19,5 +19,9 @@ public class viewController {
     @GetMapping("/funcionarios")
     public String funcionarios() {
         return "funcionarios";
+    }
+    @GetMapping("/clientes")
+    public String clientes(){
+        return "clientes";
     }
 }

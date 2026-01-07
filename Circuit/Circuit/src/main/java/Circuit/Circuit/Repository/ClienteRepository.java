@@ -1,0 +1,19 @@
+package Circuit.Circuit.Repository;
+
+import Circuit.Circuit.Model.Cliente;
+import Circuit.Circuit.Model.Funcionario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface ClienteRepository extends JpaRepository<Cliente,Long> {
+    boolean existsByCpf(String cpf);
+    List<Cliente> findByAtivoTrue();
+    List<Cliente> findByAtivoFalse();
+    @Query("SELECT c FROM Cliente c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND c.ativo = true")
+    List<Funcionario> findByNomeContainingIgnoreCaseAndAtivoTrue(@Param("nome") String nome);
+    @Query("SELECT c FROM Cliente c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND c.ativo = false")
+    List<Funcionario> findByNomeContainingIgnoreCaseAndAtivoFalse(@Param("nome") String nome);
+}

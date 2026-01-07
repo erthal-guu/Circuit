@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class apiCepService {
+public class CepService {
     public viaCep consultarCep(String cep){
         String url = "https://viacep.com.br/ws/" + cep.replaceAll("\\D", "") + "/json/";
         RestTemplate restTemplate = new RestTemplate();

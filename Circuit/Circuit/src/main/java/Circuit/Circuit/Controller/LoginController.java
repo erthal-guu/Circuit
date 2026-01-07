@@ -1,6 +1,6 @@
 package Circuit.Circuit.Controller;
 
-import Circuit.Circuit.Service.usuarioLoginService;
+import Circuit.Circuit.Service.LoginService;
 import Circuit.Circuit.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class usuarioLoginController {
+public class LoginController {
     @Autowired
-    private usuarioLoginService Service;
+    private LoginService Service;
     @PostMapping("/login")
     public ResponseEntity<Object> Logar(@RequestBody User LoginDados){
         User user = Service.login(LoginDados.getCpf(),LoginDados.getSenha());

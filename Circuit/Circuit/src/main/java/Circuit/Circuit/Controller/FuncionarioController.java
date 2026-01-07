@@ -2,8 +2,8 @@ package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.ApiDto.viaCep;
 import Circuit.Circuit.Model.Funcionario;
-import Circuit.Circuit.Service.apiCepService;
-import Circuit.Circuit.Service.funcionarioCadastroService;
+import Circuit.Circuit.Service.CepService;
+import Circuit.Circuit.Service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/funcionarios")
-public class funcionarioCadastroController {
+public class FuncionarioController {
     @Autowired
-    private funcionarioCadastroService funcionarioService;
+    private FuncionarioService funcionarioService;
     @Autowired
-    private apiCepService viaCepService;
+    private CepService viaCepService;
     @PostMapping("/cadastrar")
     public ResponseEntity<String> cadastrar(@RequestBody Funcionario funcionarioCadastro){
         try{

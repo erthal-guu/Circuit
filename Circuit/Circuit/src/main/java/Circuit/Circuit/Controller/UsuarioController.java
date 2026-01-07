@@ -1,7 +1,7 @@
     package Circuit.Circuit.Controller;
 
     import Circuit.Circuit.Model.User;
-    import Circuit.Circuit.Service.usuarioCadastroService;
+    import Circuit.Circuit.Service.UsuarioService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
@@ -10,9 +10,9 @@
 
     @RestController
     @RequestMapping("/usuarios")
-    public class usuarioCadastroController {
+    public class UsuarioController {
         @Autowired
-        private usuarioCadastroService userService;
+        private UsuarioService userService;
 
         @PostMapping("/cadastrar")
         public ResponseEntity<String> cadastrar(@RequestBody User usuarioCadastro) {
