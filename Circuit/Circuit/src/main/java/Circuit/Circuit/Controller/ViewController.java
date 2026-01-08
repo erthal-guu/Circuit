@@ -20,8 +20,9 @@ public class ViewController {
     public String funcionarios() {
         return "funcionarios";
     }
+
     @GetMapping("/clientes")
-    public String clientes(){
+    public String clientes() {
         return "clientes";
     }
 }

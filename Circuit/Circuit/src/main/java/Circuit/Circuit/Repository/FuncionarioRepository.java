@@ -9,12 +9,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FuncionarioRepository extends JpaRepository<Funcionario,Long> {
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
     boolean existsByCpf(String cpf);
-    List<Funcionario> findByAtivoTrue();
-    List<Funcionario> findByAtivoFalse();
+
+    List<Funcionario> findByAtivoTrueOrderById();
+
+    List<Funcionario> findByAtivoFalseOrderById();
+
     @Query("SELECT f FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND f.ativo = true")
     List<Funcionario> findByNomeContainingIgnoreCaseAndAtivoTrue(@Param("nome") String nome);
+
     @Query("SELECT f FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND f.ativo = false")
     List<Funcionario> findByNomeContainingIgnoreCaseAndAtivoFalse(@Param("nome") String nome);
 

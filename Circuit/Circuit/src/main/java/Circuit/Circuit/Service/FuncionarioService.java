@@ -20,11 +20,11 @@ public class FuncionarioService {
     }
 
     public List<Funcionario> listarFuncionarioAtivos() {
-        return funcionarioRepository.findByAtivoTrue();
+        return funcionarioRepository.findByAtivoTrueOrderById();
     }
 
     public List<Funcionario> ListarFuncionariosInativos() {
-        return funcionarioRepository.findByAtivoFalse();
+        return funcionarioRepository.findByAtivoFalseOrderById();
     }
 
     public Funcionario ExcluirFuncionario(Long id) {
@@ -58,12 +58,12 @@ public class FuncionarioService {
     }
 
     public List<Funcionario> pesquisarFuncionarioAtivo(String nome) {
-        if (nome == null) return funcionarioRepository.findByAtivoTrue();
+        if (nome == null) return funcionarioRepository.findByAtivoTrueOrderById();
         return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
     }
 
     public List<Funcionario> pesquisarFuncionarioInativo(String nome) {
-        if (nome == null) return funcionarioRepository.findByAtivoFalse();
+        if (nome == null) return funcionarioRepository.findByAtivoFalseOrderById();
         return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
     }
 
