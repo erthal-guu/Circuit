@@ -26,4 +26,44 @@ public class ClienteService {
     public List<Cliente> listarInativos() {
         return clienteRepository.findByAtivoFalse();
     }
+
+    public List<Cliente> pesquisarClienteAtivos(String nome) {
+        if (nome == null) return clienteRepository.findByAtivoTrue();
+        return clienteRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
+    }
+
+    public List<Cliente> pesquisarClienteInativo(String nome) {
+        if (nome == null) return clienteRepository.findByAtivoFalse();
+        return clienteRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
+    }
+
+    public Cliente ExcluirCliente(Long id) {
+        Cliente cliente = clienteRepository.getReferenceById(id);
+        cliente.setAtivo(false);
+        return clienteRepository.save(cliente);
+    }
+
+    public Cliente RestaurarCliente(Long id) {
+        Cliente cliente = clienteRepository.getReferenceById(id);
+        cliente.setAtivo(true);
+        return clienteRepository.save(cliente);
+    }
+
+    public Cliente editarCliente(Long id, Cliente dadosAtualizados) {
+        Cliente cliente = clienteRepository.getReferenceById(id);
+
+        cliente.setNome(dadosAtualizados.getNome());
+        cliente.setCpf(dadosAtualizados.getCpf());
+        cliente.setEmail(dadosAtualizados.getEmail());
+        cliente.setTelefone(dadosAtualizados.getTelefone());
+        cliente.setCep(dadosAtualizados.getCep());
+        cliente.setLogradouro(dadosAtualizados.getLogradouro());
+        cliente.setNumero(dadosAtualizados.getNumero());
+        cliente.setBairro(dadosAtualizados.getBairro());
+        cliente.setCidade(dadosAtualizados.getCidade());
+        cliente.setEstado(dadosAtualizados.getEstado());
+        cliente.setAtivo(dadosAtualizados.getAtivo());
+
+        return clienteRepository.save(cliente);
+    }
 }

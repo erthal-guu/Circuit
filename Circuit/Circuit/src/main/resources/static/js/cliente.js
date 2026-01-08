@@ -2,8 +2,12 @@ const formCadastro = document.getElementById('clienteForm');
 const msgDiv = document.getElementById('mensagem');
 const tableBodyAtivos = document.querySelector('#clienteTable tbody');
 const tableBodyInativos = document.querySelector('#clienteTableInativos tbody');
+const inputBuscaAtivos = document.getElementById('searchInputAtivos');
+const inputBuscaInativos = document.getElementById('searchInputInativos');
 
 let clienteIdEdicao = null;
+let listaClientesAtivos = [];
+let listaClientesInativos = [];
 const API_URL = '/clientes';
 
 function configurarMascaras() {
@@ -20,6 +24,16 @@ function configurarMascaras() {
                 e.target.value = masks[id](e.target.value);
             });
         }
+    });
+}
+
+function filtrarTabela(input, tbody) {
+    const termo = input.value.toLowerCase();
+    const linhas = tbody.querySelectorAll('tr');
+
+    linhas.forEach(linha => {
+        const texto = linha.innerText.toLowerCase();
+        linha.style.display = texto.includes(termo) ? '' : 'none';
     });
 }
 
@@ -87,16 +101,16 @@ formCadastro.addEventListener('submit', async (e) => {
 async function carregarAtivos() {
     const res = await fetch(`${API_URL}/listar-ativos`);
     if (res.ok) {
-        const lista = await res.json();
-        renderizarTabela(lista, tableBodyAtivos, true);
+        listaClientesAtivos = await res.json();
+        renderizarTabela(listaClientesAtivos, tableBodyAtivos, true);
     }
 }
 
 async function carregarInativos() {
     const res = await fetch(`${API_URL}/listar-inativos`);
     if (res.ok) {
-        const lista = await res.json();
-        renderizarTabela(lista, tableBodyInativos, false);
+        listaClientesInativos = await res.json();
+        renderizarTabela(listaClientesInativos, tableBodyInativos, false);
     }
 }
 
@@ -151,10 +165,9 @@ function switchTab(tabName) {
     }
 }
 
-async function editCliente(id) {
-    const res = await fetch(`${API_URL}/buscar/${id}`);
-    if (res.ok) {
-        const c = await res.json();
+function editCliente(id) {
+    const c = listaClientesAtivos.find(item => item.id === id);
+    if (c) {
         clienteIdEdicao = id;
         document.getElementById('cliNome').value = c.nome;
         document.getElementById('cliCpf').value = c.cpf;
@@ -182,14 +195,23 @@ async function excluirCliente(id) {
 }
 
 async function reativarCliente(id) {
-    const res = await fetch(`${API_URL}/reativar/${id}`, { method: 'PUT' });
-    if (res.ok) {
-        carregarAtivos();
-        carregarInativos();
+    if (confirm("Deseja realmente restaurar este cliente para a lista de ativos?")) {
+        const res = await fetch(`${API_URL}/restaurar/${id}`, { method: 'PUT' });
+        if (res.ok) {
+            carregarAtivos();
+            carregarInativos();
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     configurarMascaras();
     carregarAtivos();
+
+    if (inputBuscaAtivos) {
+        inputBuscaAtivos.addEventListener('keyup', () => filtrarTabela(inputBuscaAtivos, tableBodyAtivos));
+    }
+    if (inputBuscaInativos) {
+        inputBuscaInativos.addEventListener('keyup', () => filtrarTabela(inputBuscaInativos, tableBodyInativos));
+    }
 });

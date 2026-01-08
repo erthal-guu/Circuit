@@ -12,23 +12,27 @@ public class FuncionarioService {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
-    public Funcionario cadastrar (Funcionario funcionario) {
+    public Funcionario cadastrar(Funcionario funcionario) {
         if (funcionarioRepository.existsByCpf(funcionario.getCpf())) {
             throw new RuntimeException("Este CPF já está cadastrado no sistema.");
         }
         return funcionarioRepository.save(funcionario);
     }
-    public List<Funcionario> listarFuncionarioAtivos(){
-         return funcionarioRepository.findByAtivoTrue();
+
+    public List<Funcionario> listarFuncionarioAtivos() {
+        return funcionarioRepository.findByAtivoTrue();
     }
-    public List<Funcionario>ListarFuncionariosInativos(){
+
+    public List<Funcionario> ListarFuncionariosInativos() {
         return funcionarioRepository.findByAtivoFalse();
     }
-    public Funcionario ExcluirFuncionario(Long id){
+
+    public Funcionario ExcluirFuncionario(Long id) {
         Funcionario funcionario = funcionarioRepository.getReferenceById(id);
         funcionario.setAtivo(false);
         return funcionarioRepository.save(funcionario);
     }
+
     public Funcionario EditarFuncionario(Long id, Funcionario dadosAtualizados) {
         Funcionario funcionario = funcionarioRepository.getReferenceById(id);
         funcionario.setNome(dadosAtualizados.getNome());
@@ -46,18 +50,22 @@ public class FuncionarioService {
         funcionario.setEstado(dadosAtualizados.getEstado());
         return funcionarioRepository.save(funcionario);
     }
-    public Funcionario RestaurarFuncionario(Long id){
+
+    public Funcionario RestaurarFuncionario(Long id) {
         Funcionario funcionario = funcionarioRepository.getReferenceById(id);
         funcionario.setAtivo(true);
         return funcionarioRepository.save(funcionario);
     }
-    public List<Funcionario>pesquisarFuncionarioAtivo(String nome){
+
+    public List<Funcionario> pesquisarFuncionarioAtivo(String nome) {
         if (nome == null) return funcionarioRepository.findByAtivoTrue();
         return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
     }
-    public List<Funcionario>pesquisarFuncionarioInativo(String nome){
+
+    public List<Funcionario> pesquisarFuncionarioInativo(String nome) {
         if (nome == null) return funcionarioRepository.findByAtivoFalse();
         return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
     }
+
 
 }
