@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class LoginController {
     @Autowired
-    private LoginService Service;
+    private LoginService service;
+
     @PostMapping("/login")
-    public ResponseEntity<Object> Logar(@RequestBody User LoginDados){
-        User user = Service.login(LoginDados.getCpf(),LoginDados.getSenha());
-        if (user != null){
+    public ResponseEntity<?> logar(@RequestBody User loginDados) {
+        try {
+            User user = service.login(loginDados.getCpf(), loginDados.getSenha());
             return ResponseEntity.ok(user);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("CPF ou Senha inválidos");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
-
 }
+

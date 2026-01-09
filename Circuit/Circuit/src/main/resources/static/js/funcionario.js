@@ -31,7 +31,7 @@ async function buscarCep(valor) {
     campos.forEach(id => document.getElementById(id).value = "...");
 
     try {
-        const response = await fetch(`${API_URL}/consulta-cep/${cep}`);
+        const response = await fetch(`${API_URL}/consulta-cep-funcionarios/${cep}`);
         if (!response.ok) throw new Error("CEP não encontrado");
 
         const dados = await response.json();

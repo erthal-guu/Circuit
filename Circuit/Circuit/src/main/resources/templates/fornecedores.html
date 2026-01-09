@@ -1,10 +1,204 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit - Fornecedores</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/fornecedor.css}">
+    <script th:src="@{/js/home.js}"></script>
 </head>
 <body>
+<div class="container">
+    <div th:replace="~{menu :: sidebar('fornecedores')}"></div>
 
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="header-left"><h2>Gestão de Fornecedores</h2></div>
+            <div class="header-right">
+                <button class="icon-btn" id="btnLogout" title="Sair">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="page-header">
+                <h1 class="page-title">Fornecedores Cadastrados</h1>
+                <div class="header-actions">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('ativos')">Fornecedores Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos')">Fornecedores Inativos</button>
+                    </div>
+
+                    <button class="btn-primary" onclick="openModal()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                        </svg>
+                        Novo Fornecedor
+                    </button>
+                </div>
+            </div>
+
+            <div id="tabAtivos" class="tab-content active">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Fornecedores Ativos</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"
+                                      stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar Ativos..." id="searchInputAtivos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="fornecedorTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome Fantasia</th>
+                            <th>CNPJ</th>
+                            <th>Telefone</th>
+                            <th>E-mail</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tabInativos" class="tab-content">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Fornecedores Inativos</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"
+                                      stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar inativos..." id="searchInputInativos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="fornecedorTableInativos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome Fantasia</th>
+                            <th>CNPJ</th>
+                            <th>Telefone</th>
+                            <th>E-mail</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="fornecedorModal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h2 id="modalTitle">Cadastrar Fornecedor</h2>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <div id="mensagem" style="padding: 10px; text-align: center;"></div>
+
+        <form id="fornecedorForm">
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+                    <h3 class="section-title">Dados da Empresa</h3>
+
+                    <div class="form-group col-6">
+                        <label>Nome Fantasia *</label>
+                        <input type="text" id="fornNomeFantasia" class="form-control" required>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Razão Social *</label>
+                        <input type="text" id="fornRazaoSocial" class="form-control" required>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label>CNPJ *</label>
+                        <input type="text" id="fornCnpj" class="form-control" required placeholder="00.000.000/0000-00"
+                               maxlength="18">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Telefone</label>
+                        <input type="text" id="fornTelefone" class="form-control" placeholder="(00) 00000-0000"
+                               maxlength="15">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label>E-mail *</label>
+                        <input type="email" id="fornEmail" class="form-control" required>
+                    </div>
+
+                    <h3 class="section-title">Endereço</h3>
+
+                    <div class="form-group col-3">
+                        <label>CEP</label>
+                        <input type="text" id="fornCep" class="form-control" placeholder="00000-000" maxlength="9"
+                               onblur="buscarCep(this.value)">
+                    </div>
+                    <div class="form-group col-7">
+                        <label>Logradouro</label>
+                        <input type="text" id="fornLogradouro" class="form-control">
+                    </div>
+                    <div class="form-group col-2">
+                        <label>Nº</label>
+                        <input type="text" id="fornNumero" class="form-control">
+                    </div>
+
+                    <div class="form-group col-4">
+                        <label>Bairro</label>
+                        <input type="text" id="fornBairro" class="form-control">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Cidade</label>
+                        <input type="text" id="fornCidade" class="form-control">
+                    </div>
+                    <div class="form-group col-2">
+                        <label>UF</label>
+                        <input type="text" id="fornEstado" class="form-control" maxlength="2" placeholder="UF">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label>Status</label>
+                        <select id="fornAtivo" class="form-control" required>
+                            <option value="true" selected>Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/fornecedor.js}"></script>
 </body>
 </html>

@@ -25,4 +25,9 @@ public class ViewController {
     public String clientes() {
         return "clientes";
     }
+
+    @GetMapping("fornecedores")
+    public String fornecedores() {
+        return "fornecedores";
+    }
 }

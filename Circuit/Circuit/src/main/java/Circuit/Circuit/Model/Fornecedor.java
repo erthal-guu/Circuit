@@ -31,6 +31,9 @@ public class Fornecedor {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
 
     @Column(length = 9)
     private String cep;
@@ -40,4 +43,5 @@ public class Fornecedor {
     private String bairro;
     private String cidade;
     private String estado;
+
 }

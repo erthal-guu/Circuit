@@ -28,7 +28,7 @@ public class FuncionarioController {
         }
     }
 
-    @GetMapping("/consulta-cep/{cep}")
+    @GetMapping("/consulta-cep-funcionarios/{cep}")
     public ResponseEntity<?> consultarCep(@PathVariable String cep) {
         try {
             viaCep dadosEndereco = viaCepService.consultarCep(cep);
