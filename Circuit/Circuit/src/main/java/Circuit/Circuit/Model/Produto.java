@@ -26,7 +26,7 @@ public class Produto {
     @Column(nullable = false)
     private Integer quantidade;
 
-    @Column(nullable = false)
+    @Column(name = "quantidade_minima")
     private Integer quantidadeMinima;
 
     @Column(name = "preco_compra", nullable = false)
@@ -35,13 +35,13 @@ public class Produto {
     @Column(name = "preco_venda", nullable = false)
     private BigDecimal precoVenda;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
+    @Column(name = "categoria_id", nullable = false)
+    private Integer categoriaId;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
 
     @ManyToOne
     @JoinColumn(name = "fornecedor_id")
     private Fornecedor fornecedor;
-
-    private Boolean ativo = true;
 }
