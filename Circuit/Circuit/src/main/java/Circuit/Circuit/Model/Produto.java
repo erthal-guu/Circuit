@@ -38,6 +38,9 @@ public class Produto {
     @Column(name = "categoria_id", nullable = false)
     private Integer categoriaId;
 
+    @Column(name = "imagem_produto")
+    private String imagemProduto;
+
     @Column(nullable = false)
     private Boolean ativo = true;
 

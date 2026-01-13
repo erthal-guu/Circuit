@@ -50,6 +50,7 @@ form.addEventListener('submit', async (event) => {
             const user = await response.json();
             msgDiv.style.color = "green";
             msgDiv.innerText = "Sucesso! Entrando...";
+
             localStorage.setItem('user', JSON.stringify(user));
             
             setTimeout(() => {

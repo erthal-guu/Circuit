@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circuit - Estoque</title>
     <link rel="stylesheet" th:href="@{/css/home.css}">
-    <link rel="stylesheet" th:href="@{/css/fornecedor.css}">
+    <link rel="stylesheet" th:href="@{/css/estoque.css}">
     <script th:src="@{/js/home.js}"></script>
 </head>
 <body>
@@ -29,7 +29,7 @@
 
         <div class="content">
             <div class="page-header">
-                <h1 class="page-title">Produtos em Estoque</h1>
+                <h1 class="page-title">Estoque de Produtos</h1>
                 <div class="header-actions">
                     <div class="tab-container">
                         <button class="tab-btn active" onclick="switchTab('ativos')">Produtos Ativos</button>
@@ -60,6 +60,7 @@
                             <input type="text" placeholder="Buscar produtos..." id="searchInputAtivos">
                         </div>
                     </div>
+
                     <table class="data-table" id="estoqueTable">
                         <thead>
                         <tr>
@@ -72,6 +73,7 @@
                             <th>Ações</th>
                         </tr>
                         </thead>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
@@ -121,22 +123,19 @@
                     <h3 class="section-title">Informações do Produto</h3>
 
                     <div class="form-group col-12">
-                        <label>Nome do Produto *</label>
+                        <label>Nome do Produto </label>
                         <input type="text" id="prodNome" class="form-control" required>
                     </div>
 
                     <div class="form-group col-6">
-                        <label>Categoria *</label>
+                        <label>Categoria </label>
                         <select id="prodCategoria" class="form-control" required>
-                            <option value="VENDA">Venda (Acessórios)</option>
-                            <option value="TECNICO">Técnico (Peças)</option>
                         </select>
                     </div>
 
                     <div class="form-group col-6">
                         <label>Fornecedor</label>
                         <select id="prodFornecedor" class="form-control">
-                            <option value="">Selecione...</option>
                         </select>
                     </div>
 
@@ -163,6 +162,17 @@
                     <div class="form-group col-6">
                         <label>Preço Venda (R$)</label>
                         <input type="number" step="0.01" id="prodPrecoVenda" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group col-12">
+                    <label>Imagem do Produto</label>
+                    <div class="image-upload-wrapper">
+                        <label for="prodImagem" class="image-upload-label">
+                            <span>Clique para selecionar uma foto</span>
+                            <small id="fileNameDisplay" style="margin-left: auto;">Nenhum arquivo selecionado</small>
+                        </label>
+                        <input type="file" id="prodImagem" accept="image/*" onchange="updateFileName(this)">
                     </div>
                 </div>
 
