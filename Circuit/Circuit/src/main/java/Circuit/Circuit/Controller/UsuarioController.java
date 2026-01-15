@@ -4,34 +4,38 @@
     import Circuit.Circuit.Service.UsuarioService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.ResponseEntity;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.ui.Model;
     import org.springframework.web.bind.annotation.*;
+    import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
     import java.util.List;
 
-    @RestController
+    @Controller
     @RequestMapping("/usuarios")
     public class UsuarioController {
         @Autowired
         private UsuarioService userService;
 
         @PostMapping("/cadastrar")
-        public ResponseEntity<String> cadastrar(@RequestBody User usuarioCadastro) {
+        public String cadastrar(@ModelAttribute User usuario, RedirectAttributes redirectAttributes) {
             try {
-                userService.cadastrar(usuarioCadastro);
-                return ResponseEntity.ok("Usuário cadastrado com sucesso!");
+                userService.cadastrar(usuario);
+                redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário salvo com sucesso!");
             } catch (RuntimeException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
+                redirectAttributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
             }
+            return "redirect:/usuarios";
         }
 
-        @GetMapping("/listar-ativos")
-        public List<User> listarUsuarios() {
-            return userService.ListarUsuarios();
-        }
-
-        @GetMapping("/listar-inativos")
-        public List<User> listarUsuariosInativos() {
-            return userService.ListarUsuarioInativos();
+        @GetMapping
+        public String abrirPaginaUsuarios(Model model) {
+            List<User> ativos = userService.ListarUsuarios();
+            List<User> inativos = userService.ListarUsuarioInativos();
+            model.addAttribute("listaAtivos", ativos);
+            model.addAttribute("listaInativos", inativos);
+            model.addAttribute("user", new User());
+            return "usuarios";
         }
 
         @DeleteMapping("/excluir/{id}")

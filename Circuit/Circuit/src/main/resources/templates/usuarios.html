@@ -8,6 +8,17 @@
     <main class="main-content">
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
         <div class="content">
+            <div th:if="${mensagemSucesso}"
+                 style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">✅</span>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+
+            <div th:if="${mensagemErro}"
+                 style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">⚠️</span>
+                <span th:text="${mensagemErro}"></span>
+            </div>
             <div class="page-header">
                 <h1 class="page-title">Usuários do Sistema</h1>
                 <div class="header-actions">
@@ -42,12 +53,31 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>CPF</th>
-                            <th>Perfil</th>
+                            <th>Cargo</th>
                             <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                        <tr th:each="u : ${listaAtivos}">
+                            <td th:text="${u.id}"></td>
+                            <td th:text="${u.nome}"></td>
+                            <td th:text="${u.cpf}"></td>
+                            <td th:text="${u.cargo}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" th:onclick="abrirModalEdicao([[${u}]])">✏️</button>
+                                    <a th:href="@{/usuarios/excluir/{id}(id=${u.id})}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('Tem certeza que deseja desativar este usuário?')">🗑️</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="6" style="text-align:center; padding: 20px;">Nenhum usuário ativo.</td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -70,11 +100,30 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>CPF</th>
+                            <th>Cargo</th>
                             <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                        <tr th:each="u : ${listaInativos}">
+                            <td th:text="${u.id}"></td>
+                            <td th:text="${u.nome}"></td>
+                            <td th:text="${u.cpf}"></td>
+                            <td th:text="${u.cargo}"></td>
+                            <td><span class="badge badge-inactive">Inativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a th:href="@{/usuarios/restaurar/{id}(id=${u.id})}"
+                                       class="btn-action btn-restore"
+                                       onclick="return confirm('Deseja restaurar este usuário?')">🔄</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaInativos)}">
+                            <td colspan="6" style="text-align:center; padding: 20px;">Nenhum usuário inativo.</td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -93,22 +142,23 @@
             </button>
         </div>
         <div id="mensagem" style="padding: 10px; text-align: center; font-weight: bold;"></div>
-        <form id="userForm">
+        <form id="userForm" th:action="@{/usuarios/cadastrar}" method="POST">
+            <input type="hidden" id="userId">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="userName">Nome Completo</label>
-                        <input type="text" id="userName" required placeholder="Digite o nome completo">
+                        <input type="text" id="userName" name="nome" required placeholder="Digite o nome completo">
                     </div>
                     <div class="form-group">
                         <label for="userCPF">CPF</label>
-                        <input type="text" id="userCPF" required placeholder="000.000.000-00" maxlength="14">
+                        <input type="text" id="userCPF" name="cpf" required placeholder="000.000.000-00" maxlength="14">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="userProfile">Perfil de Acesso</label>
-                        <select id="userProfile" required>
+                        <select id="userProfile" required name="cargo">
                             <option value="">Selecione o perfil</option>
                             <option value="ADMIN">Administrador</option>
                             <option value="TECNICO">Técnico</option>
@@ -118,9 +168,9 @@
                     </div>
                     <div class="form-group">
                         <label for="userStatus">Status</label>
-                        <select id="userStatus" required>
-                            <option value="ativo">Ativo</option>
-                            <option value="inativo">Inativo</option>
+                        <select id="userStatus" required name="ativo">
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
                         </select>
                     </div>
                 </div>
@@ -129,7 +179,7 @@
                     <div class="form-group">
                         <label for="userPassword">Senha</label>
                         <div class="password-container">
-                            <input type="password" id="userPassword" placeholder="Digite a senha">
+                            <input type="password" id="userPassword" placeholder="Digite a senha" name="senha">
                             <button type="button" class="btn-eye" onclick="togglePassword('userPassword')">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
