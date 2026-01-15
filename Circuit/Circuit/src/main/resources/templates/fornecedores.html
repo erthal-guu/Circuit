@@ -1,31 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circuit - Fornecedores</title>
-    <link rel="stylesheet" th:href="@{/css/home.css}">
-    <link rel="stylesheet" th:href="@{/css/fornecedor.css}">
-    <script th:src="@{/js/home.js}"></script>
+<head th:replace="~{fragments/head.html :: head(titulo = 'Fornecedores')}">
 </head>
 <body>
 <div class="container">
-    <div th:replace="~{menu :: sidebar('fornecedores')}"></div>
-
+    <div th:replace="~{fragments/menu :: sidebar('fornecedores')}"></div>
     <main class="main-content">
-        <header class="top-bar">
-            <div class="header-left"><h2>Gestão de Fornecedores</h2></div>
-            <div class="header-right">
-                <button class="icon-btn" id="btnLogout" title="Sair">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                </button>
-            </div>
-        </header>
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="content">
             <div class="page-header">

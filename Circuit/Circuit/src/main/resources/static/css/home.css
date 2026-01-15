@@ -15,7 +15,6 @@ body {
   min-height: 100vh;
 }
 
-/* Redesigned sidebar with darker navy blue matching reference */
 .sidebar {
   width: 280px;
   background: linear-gradient(135deg, #000814 0%, #001d3d 50%, #000814 100%);
