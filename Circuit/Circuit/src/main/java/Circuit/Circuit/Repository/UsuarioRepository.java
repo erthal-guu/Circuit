@@ -13,8 +13,4 @@ public interface UsuarioRepository extends JpaRepository<User,Long> {
     boolean existsByCpf(String cpf);
     List<User> findByAtivoTrueOrderById();
     List<User> findByAtivoFalseOrderById();
-    @Query("SELECT u FROM User u WHERE LOWER(u.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND u.ativo = true")
-    List<User> findByNomeContainingIgnoreCaseAndAtivoTrue(@Param("nome") String nome);
-    @Query("SELECT u FROM User u WHERE LOWER(u.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND u.ativo = false")
-    List<User> findByNomeContainingIgnoreCaseAndAtivoFalse(@Param("nome") String nome);
 }

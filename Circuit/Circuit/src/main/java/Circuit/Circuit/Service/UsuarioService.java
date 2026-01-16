@@ -49,14 +49,5 @@ public class UsuarioService {
         }
             return userRepository.save(usuarioEditar);
         }
-    public List<User> pesquisarAtivos(String nome) {
-        if (nome == null) return userRepository.findByAtivoTrueOrderById();
-        return userRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
-    }
-
-    public List<User> pesquisarInativo(String nome) {
-        if (nome == null) return userRepository.findByAtivoFalseOrderById();
-        return userRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
-    }
 }
 

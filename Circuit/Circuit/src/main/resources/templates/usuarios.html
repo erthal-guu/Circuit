@@ -8,6 +8,7 @@
     <main class="main-content">
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
         <div class="content">
+
             <div th:if="${mensagemSucesso}"
                  style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 20px;">✅</span>
@@ -19,14 +20,15 @@
                 <span style="font-size: 20px;">⚠️</span>
                 <span th:text="${mensagemErro}"></span>
             </div>
+
             <div class="page-header">
                 <h1 class="page-title">Usuários do Sistema</h1>
                 <div class="header-actions">
                     <div class="tab-container">
-                        <button class="tab-btn active" onclick="switchTab('ativos')">Usuários Ativos</button>
-                        <button class="tab-btn" onclick="switchTab('inativos')" id="btnTabInativos">Usuários Inativos</button>
+                        <button class="tab-btn active" onclick="switchTab('ativos', event)">Usuários Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos', event)">Usuários Inativos</button>
                     </div>
-                    <button class="btn-primary" onclick="openModal()">
+                    <button class="btn-primary" onclick="abrirModalNovo()">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -44,7 +46,7 @@
                                 <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
                                 <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
-                            <input type="text" placeholder="Buscar ativos..." id="searchInputAtivos">
+                            <input type="text" name="termo" placeholder="Buscar ativos..." id="searchInputAtivos">
                         </div>
                     </div>
                     <table class="data-table" id="userTable">
@@ -67,7 +69,16 @@
                             <td><span class="badge badge-active">Ativo</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn-action btn-edit" th:onclick="abrirModalEdicao([[${u}]])">✏️</button>
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${u.id}"
+                                            th:data-nome="${u.nome}"
+                                            th:data-cpf="${u.cpf}"
+                                            th:data-cargo="${u.cargo}"
+                                            th:data-ativo="${u.ativo}"
+                                            onclick="abrirModalEdicao(this)">
+                                        ✏️
+                                    </button>
+
                                     <a th:href="@{/usuarios/excluir/{id}(id=${u.id})}"
                                        class="btn-action btn-delete"
                                        onclick="return confirm('Tem certeza que deseja desativar este usuário?')">🗑️</a>
@@ -142,8 +153,10 @@
             </button>
         </div>
         <div id="mensagem" style="padding: 10px; text-align: center; font-weight: bold;"></div>
+
         <form id="userForm" th:action="@{/usuarios/cadastrar}" method="POST">
-            <input type="hidden" id="userId">
+            <input type="hidden" id="userId" name="id">
+
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">

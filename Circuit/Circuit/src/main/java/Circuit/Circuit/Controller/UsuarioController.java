@@ -29,7 +29,7 @@
         }
 
         @GetMapping
-        public String abrirPaginaUsuarios(Model model) {
+        public String listarUsuarios(Model model) {
             List<User> ativos = userService.ListarUsuarios();
             List<User> inativos = userService.ListarUsuarioInativos();
             model.addAttribute("listaAtivos", ativos);
@@ -38,25 +38,30 @@
             return "usuarios";
         }
 
-        @DeleteMapping("/excluir/{id}")
-        public void excluir(@PathVariable Long id) {
+        @GetMapping("/excluir/{id}")
+        public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
             userService.excluirUsuarios(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário desativado com sucesso.");
+            return "redirect:/usuarios";
         }
 
-        @PutMapping("/editar/{id}")
-        public User editarUsuario(@PathVariable Long id, @RequestBody User usuario) {
-            return userService.editarUsuario(id, usuario);
+        @PostMapping("/editar")
+        public String editar(@ModelAttribute User usuario, RedirectAttributes redirectAttributes) {
+            try {
+                if (usuario.getId() == null) {
+                    throw new RuntimeException("Erro: Tentativa de edição sem ID.");
+                }
+                userService.editarUsuario(usuario.getId(), usuario);
+                redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário atualizado com sucesso!");
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao editar: " + e.getMessage());
+            }
+            return "redirect:/usuarios";
         }
-        @PutMapping("/restaurar/{id}")
-        public void restaurar (@PathVariable Long id) {
-             userService.restaurarUsuario(id);
-        }
-        @GetMapping("/pesquisar-ativos")
-        public List<User> pesquisarAtivos(@RequestParam("nome") String nome){
-            return userService.pesquisarAtivos(nome);
-        }
-        @GetMapping("/pesquisar-inativos")
-        public List<User> pesquisarInativos(@RequestParam("nome") String nome){
-            return userService.pesquisarInativo(nome);
+        @GetMapping("/restaurar/{id}")
+        public String restaurar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+            userService.restaurarUsuario(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário restaurado com sucesso.");
+            return "redirect:/usuarios";
         }
     }
