@@ -11,10 +11,6 @@ public class ViewController {
         return "home";
     }
 
-    @GetMapping("/funcionarios")
-    public String funcionarios() {
-        return "funcionarios";
-    }
 
     @GetMapping("/clientes")
     public String clientes() {

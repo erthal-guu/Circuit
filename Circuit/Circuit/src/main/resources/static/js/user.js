@@ -115,6 +115,7 @@ if (formCadastro) {
     });
 }
 document.addEventListener("DOMContentLoaded", function (){
+    CargosFormatados();
     pesquisarUsuarios('searchInputAtivos','userTable');
     pesquisarUsuarios('searchInputInativos','userTableInativos');
 });
@@ -134,5 +135,22 @@ function pesquisarUsuarios(inputId,tableId){
                 linha.style.display = 'none';
             }
         });
+    });
+}
+function CargosFormatados() {
+    const mapaCargos = {
+        'ADMIN': 'Administrador',
+        'TECNICO': 'Técnico',
+        'VENDEDOR': 'Vendedor',
+        'GERENTE': 'Gerente'
+    };
+
+    const celulas = document.querySelectorAll('.col-cargo');
+
+    celulas.forEach(td => {
+        const tecnico = td.getAttribute('data-cargo');
+        if (mapaCargos[tecnico]) {
+            td.innerText = mapaCargos[tecnico];
+        }
     });
 }

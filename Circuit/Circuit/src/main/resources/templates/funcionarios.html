@@ -8,15 +8,26 @@
     <main class="main-content">
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
         <div class="content">
+
+            <div th:if="${mensagemSucesso}" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                <span>✅</span>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+
+            <div th:if="${mensagemErro}" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+                <span>⚠️</span>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
             <div class="page-header">
                 <h1 class="page-title">Funcionários Cadastrados</h1>
                 <div class="header-actions">
                     <div class="tab-container">
-                        <button class="tab-btn active" onclick="switchTab('ativos')">Funcionários Ativos</button>
-                        <button class="tab-btn" onclick="switchTab('inativos')">Funcionários Inativos</button>
+                        <button class="tab-btn active" onclick="switchTab('ativos',event)">Funcionários Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos',event)">Funcionários Inativos</button>
                     </div>
 
-                    <button class="btn-primary" onclick="openModal()">
+                    <button class="btn-primary" onclick="abrirModalNovo()">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -43,13 +54,47 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Cargo</th>
-                            <th>Telefone</th>
                             <th>E-mail</th>
-                            <th>status</th>
+                            <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                        <tr th:each="u : ${listaAtivos}">
+                            <td th:text="${u.id}"></td>
+                            <td th:text="${u.nome}"></td>
+                            <td th:text="${u.cargo}"></td>
+                            <td th:text="${u.email}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${u.id}"
+                                            th:data-nome="${u.nome}"
+                                            th:data-cpf="${u.cpf}"
+                                            th:data-cargo="${u.cargo}"
+                                            th:data-email="${u.email}"
+                                            th:data-telefone="${u.telefone}"
+                                            th:data-cep="${u.cep}"
+                                            th:data-logradouro="${u.logradouro}"
+                                            th:data-numero="${u.numero}"
+                                            th:data-bairro="${u.bairro}"
+                                            th:data-localidade="${u.cidade}"
+                                            th:data-uf="${u.estado}"
+                                            th:data-dataadmissao="${u.dataAdmissao}"
+                                            th:data-ativo="${u.ativo}"
+                                            onclick="abrirModalEdicao(this)">✏️</button>
+
+                                    <a th:href="@{/funcionarios/excluir/{id}(id=${u.id})}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('Desativar este funcionário?')">🗑️</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="6" style="text-align:center; padding: 20px;">Nenhum funcionário ativo.</td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -72,13 +117,30 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Cargo</th>
-                            <th>Telefone</th>
                             <th>E-mail</th>
-                            <th>status</th>
+                            <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                        <tr th:each="u : ${listaInativos}">
+                            <td th:text="${u.id}"></td>
+                            <td th:text="${u.nome}"></td>
+                            <td th:text="${u.cargo}"></td>
+                            <td th:text="${u.email}"></td>
+                            <td><span class="badge badge-inactive">Inativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a th:href="@{/funcionarios/restaurar/{id}(id=${u.id})}"
+                                       class="btn-action btn-restore"
+                                       onclick="return confirm('Deseja restaurar este funcionário?')">🔄</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaInativos)}">
+                            <td colspan="6" style="text-align:center; padding: 20px;">Nenhum funcionário inativo.</td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -92,96 +154,92 @@
             <h2 id="modalTitle">Cadastrar Funcionário</h2>
             <button class="btn-close" onclick="closeModal()">&times;</button>
         </div>
+        <div id="mensagem" style="padding: 10px; text-align: center; font-weight: bold;"></div>
 
-        <div id="mensagem" style="padding: 10px; text-align: center;"></div>
-
-        <form id="funcionarioForm">
+        <form id="funcionarioForm" th:action="@{/funcionarios/cadastrar}" method="POST">
+            <input type="hidden" id="funcId" name="id">
             <div class="modal-body">
+                <div class="form-grid" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px;">
 
-                <div class="form-grid">
+                    <h3 class="section-title" style="grid-column: span 12; border-bottom: 1px solid #eee; padding-bottom: 5px;">Dados Pessoais</h3>
 
-                    <h3 class="section-title">Dados Pessoais</h3>
-
-                    <div class="form-group col-8">
-                        <label>Nome Completo </label>
-                        <input type="text" id="funcNome" class="form-control" required>
+                    <div class="form-group" style="grid-column: span 8;">
+                        <label>Nome Completo</label>
+                        <input type="text" id="funcNome" name="nome" class="form-control" required>
                     </div>
-                    <div class="form-group col-4">
-                        <label>CPF </label>
-                        <input type="text" id="funcCpf" class="form-control" required placeholder="000.000.000-00" maxlength="14">
+                    <div class="form-group" style="grid-column: span 4;">
+                        <label>CPF</label>
+                        <input type="text" id="funcCpf" name="cpf" class="form-control" required maxlength="14">
                     </div>
 
-                    <div class="form-group col-6">
-                        <label>Cargo *</label>
-                        <select id="funcCargo" required class="form-control">
+                    <div class="form-group" style="grid-column: span 6;">
+                        <label>Cargo</label>
+                        <select id="funcCargo" name="cargo" required class="form-control">
                             <option value="" disabled selected>Selecione...</option>
                             <optgroup label="Administrativo">
                                 <option value="Gerente Geral">Gerente Geral</option>
                                 <option value="Supervisor de Loja">Supervisor de Loja</option>
-                                <option value="Auxiliar Administrativo">Auxiliar Administrativo</option>
-                                <option value="Recepcionista">Recepcionista</option>
                             </optgroup>
                             <optgroup label="Técnico">
                                 <option value="Técnico Líder">Técnico Líder</option>
                                 <option value="Técnico de Hardware">Técnico de Hardware</option>
-                                <option value="Técnico de Software">Técnico de Software</option>
-                                <option value="Auxiliar Técnico">Auxiliar Técnico</option>
-                            </optgroup>
-                            <optgroup label="Vendas">
-                                <option value="Vendedor">Vendedor</option>
                             </optgroup>
                         </select>
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group" style="grid-column: span 6;">
                         <label>Telefone</label>
-                        <input type="text" id="funcTelefone" class="form-control" placeholder="(00) 00000-0000" maxlength="15">
+                        <input type="text" id="funcTelefone" name="telefone" class="form-control" maxlength="15">
                     </div>
 
-                    <div class="form-group col-12">
-                        <label>E-mail </label>
-                        <input type="email" id="funcEmail" class="form-control" required>
+                    <div class="form-group" style="grid-column: span 12;">
+                        <label>E-mail</label>
+                        <input type="email" id="funcEmail" name="email" class="form-control" required>
                     </div>
 
-                    <h3 class="section-title">Endereço</h3>
+                    <h3 class="section-title" style="grid-column: span 12; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 10px;">Endereço</h3>
 
-                    <div class="form-group col-3">
+                    <div class="form-group" style="grid-column: span 3;">
                         <label>CEP</label>
-                        <input type="text" id="funcCep" class="form-control" placeholder="00000-000" maxlength="9" onblur="buscarCep(this.value)">
+                        <input type="text" id="funcCep" name="cep" class="form-control" maxlength="9">
                     </div>
-                    <div class="form-group col-7"> <label>Logradouro</label>
-                        <input type="text" id="funcLogradouro" class="form-control">
+                    <div class="form-group" style="grid-column: span 7;">
+                        <label>Logradouro</label>
+                        <input type="text" id="funcLogradouro" name="logradouro" class="form-control">
                     </div>
-                    <div class="form-group col-2"> <label>Nº</label>
-                        <input type="text" id="funcNumero" class="form-control">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Nº</label>
+                        <input type="text" id="funcNumero" name="numero" class="form-control">
                     </div>
 
-                    <div class="form-group col-4">
+                    <div class="form-group" style="grid-column: span 4;">
                         <label>Bairro</label>
-                        <input type="text" id="funcBairro" class="form-control">
+                        <input type="text" id="funcBairro" name="bairro" class="form-control">
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group" style="grid-column: span 6;">
                         <label>Cidade</label>
-                        <input type="text" id="funcCidade" class="form-control">
+                        <input type="text" id="funcCidade" name="localidade" class="form-control">
                     </div>
-                    <div class="form-group col-2"> <label>UF</label>
-                        <input type="text" id="funcEstado" class="form-control" maxlength="2" placeholder="UF">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>UF</label>
+                        <input type="text" id="funcEstado" name="uf" class="form-control" maxlength="2">
                     </div>
-                    <div class="form-group col-6">
+
+                    <div class="form-group" style="grid-column: span 6;">
                         <label>Data de Admissão</label>
-                        <input type="date" id="funcDataAdmissao" class="form-control" required>
+                        <input type="date" id="funcDataAdmissao" name="dataAdmissao" class="form-control" required>
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group" style="grid-column: span 6;">
                         <label>Status</label>
-                        <select id="funcAtivo" class="form-control" required>
-                            <option value="true" selected>Ativo</option>
+                        <select id="funcAtivo" name="ativo" class="form-control" required>
+                            <option value="true">Ativo</option>
                             <option value="false">Inativo</option>
                         </select>
                     </div>
-
-                </div> <div class="modal-footer" style="margin-top: 20px;">
-                <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
-                <button type="submit" class="btn-submit">Salvar</button>
-            </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Salvar</button>
+                </div>
             </div>
         </form>
     </div>
