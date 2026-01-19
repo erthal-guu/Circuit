@@ -4,14 +4,16 @@ import Circuit.Circuit.ApiDto.viaCep;
 import Circuit.Circuit.Model.Fornecedor;
 import Circuit.Circuit.Service.CepService;
 import Circuit.Circuit.Service.FornecedorService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/fornecedores")
 public class FornecedorController {
 
@@ -22,16 +24,18 @@ public class FornecedorController {
     private CepService viaCepService;
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<String> cadastrar(@RequestBody Fornecedor fornecedor) {
+    public String cadastrar(@ModelAttribute Fornecedor fornecedor, RedirectAttributes redirectAttributes) {
         try {
             fornecedorService.cadastrar(fornecedor);
-            return ResponseEntity.ok("Fornecedor cadastrado com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Fornecedor salvo com sucesso!");
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
         }
+        return "redirect:/fornecedores";
     }
 
     @GetMapping("/consulta-cep-fornecedor/{cep}")
+    @ResponseBody
     public ResponseEntity<?> consultarCep(@PathVariable String cep) {
         try {
             viaCep dadosEndereco = viaCepService.consultarCep(cep);
@@ -40,54 +44,46 @@ public class FornecedorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @GetMapping("/listar-ativos")
-    public List<Fornecedor> listarFornecedoresAtivos() {
-        return fornecedorService.listarFornecedoresAtivos();
+    @GetMapping
+    public String listarFuncionarios(Model model){
+        List<Fornecedor> ativos = fornecedorService.listarFornecedoresAtivos();
+        List<Fornecedor> Inativos = fornecedorService.listarFornecedoresInativos();
+        model.addAttribute("listaAtivos", ativos);
+        model.addAttribute("listaInativos", Inativos);
+        model.addAttribute("fornecedores", new Fornecedor());
+        return "fornecedores";
     }
 
-    @GetMapping("/listar-inativos")
-    public List<Fornecedor> listarFornecedoresInativos() {
-        return fornecedorService.listarFornecedoresInativos();
-    }
-
-    @GetMapping("/pesquisar-ativos")
-    public List<Fornecedor> pesquisarFornecedoresAtivos(@RequestParam("nome") String nome) {
-        return fornecedorService.pesquisarFornecedorAtivo(nome);
-    }
-
-    @GetMapping("/pesquisar-inativos")
-    public List<Fornecedor> pesquisarFornecedoresInativos(@RequestParam("nome") String nome) {
-        return fornecedorService.pesquisarFornecedorInativo(nome);
-    }
-
-    @DeleteMapping("/excluir/{id}")
-    public ResponseEntity<?> excluirFornecedor(@PathVariable Long id) {
+    @GetMapping("/excluir/{id}")
+    public String excluirFornecedor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             fornecedorService.excluirFornecedor(id);
-            return ResponseEntity.ok("Fornecedor desativado com sucesso!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Funcionário desativado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
         }
+        return "redirect:/fornecedores";
     }
 
-    @PutMapping("/restaurar/{id}")
-    public ResponseEntity<?> restaurarFornecedor(@PathVariable Long id) {
+    @GetMapping("/restaurar/{id}")
+    public String  restaurarFornecedor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             fornecedorService.restaurarFornecedor(id);
-            return ResponseEntity.ok("Fornecedor restaurado com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemSucesso","Fornecedor restaurado com sucesso!");
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao restaurar: " + e.getMessage());
         }
+        return "redirect:/fornecedores";
     }
 
-    @PutMapping("/editar/{id}")
-    public ResponseEntity<?> editarFornecedor(@PathVariable Long id, @RequestBody Fornecedor fornecedor) {
+    @PostMapping("/editar")
+    public String editarFornecedor(@ModelAttribute Fornecedor fornecedor,RedirectAttributes redirectAttributes ) {
         try {
-            Fornecedor atualizado = fornecedorService.editarFornecedor(id, fornecedor);
-            return ResponseEntity.ok(atualizado);
+            fornecedorService.editarFornecedor(fornecedor.getId(),fornecedor);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Fornecedor editado com sucesso!");
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao editar: " + e.getMessage());
         }
+        return "redirect:/fornecedores";
     }
 }

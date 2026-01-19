@@ -12,16 +12,6 @@ public class ViewController {
     }
 
 
-    @GetMapping("/clientes")
-    public String clientes() {
-        return "clientes";
-    }
-
-    @GetMapping("/fornecedores")
-    public String fornecedores() {
-        return "fornecedores";
-    }
-
     @GetMapping("/estoque")
     public String estoque() {
         return "estoque";

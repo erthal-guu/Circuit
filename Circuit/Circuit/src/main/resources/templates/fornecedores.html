@@ -9,18 +9,26 @@
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="content">
+                <div th:if="${mensagemSucesso}" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                    <span>✅</span>
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+
+                <div th:if="${mensagemErro}" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+                    <span>⚠️</span>
+                    <span th:text="${mensagemErro}"></span>
+                </div>
             <div class="page-header">
                 <h1 class="page-title">Fornecedores Cadastrados</h1>
                 <div class="header-actions">
                     <div class="tab-container">
-                        <button class="tab-btn active" onclick="switchTab('ativos')">Fornecedores Ativos</button>
-                        <button class="tab-btn" onclick="switchTab('inativos')">Fornecedores Inativos</button>
+                        <button class="tab-btn active" onclick="switchTab('ativos', event)">Fornecedores Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos', event)">Fornecedores Inativos</button>
                     </div>
 
-                    <button class="btn-primary" onclick="openModal()">
+                    <button class="btn-primary" onclick="abrirModalNovo()">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                  stroke-linejoin="round"/>
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Novo Fornecedor
                     </button>
@@ -32,11 +40,9 @@
                     <div class="table-header">
                         <h3>Fornecedores Ativos</h3>
                         <div class="search-box">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"
-                                      stroke-linecap="round"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                             <input type="text" placeholder="Buscar Ativos..." id="searchInputAtivos">
                         </div>
@@ -53,7 +59,42 @@
                             <th>Ações</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                        <tr th:each="f : ${listaAtivos}">
+                            <td th:text="${f.id}"></td>
+                            <td th:text="${f.nomeFantasia}"></td>
+                            <td th:text="${f.cnpj}"></td>
+                            <td th:text="${f.telefone}"></td>
+                            <td th:text="${f.email}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${f.id}"
+                                            th:data-nomefantasia="${f.nomeFantasia}"
+                                            th:data-razaosocial="${f.razaoSocial}"
+                                            th:data-cnpj="${f.cnpj}"
+                                            th:data-email="${f.email}"
+                                            th:data-telefone="${f.telefone}"
+                                            th:data-cep="${f.cep}"
+                                            th:data-logradouro="${f.logradouro}"
+                                            th:data-numero="${f.numero}"
+                                            th:data-bairro="${f.bairro}"
+                                            th:data-cidade="${f.cidade}"
+                                            th:data-estado="${f.estado}"
+                                            th:data-ativo="${f.ativo}"
+                                            onclick="abrirModalEdicao(this)">✏️</button>
+
+                                    <a th:href="@{/fornecedores/excluir/{id}(id=${f.id})}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('Desativar este fornecedor?')">🗑️</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="7" style="text-align:center; padding: 20px;">Nenhum fornecedor ativo.</td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -63,11 +104,9 @@
                     <div class="table-header">
                         <h3>Fornecedores Inativos</h3>
                         <div class="search-box">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"
-                                      stroke-linecap="round"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                             <input type="text" placeholder="Buscar inativos..." id="searchInputInativos">
                         </div>
@@ -80,11 +119,23 @@
                             <th>CNPJ</th>
                             <th>Telefone</th>
                             <th>E-mail</th>
-                            <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                        <tr th:each="f : ${listaInativos}">
+                            <td th:text="${f.id}"></td>
+                            <td th:text="${f.nomeFantasia}"></td>
+                            <td th:text="${f.cnpj}"></td>
+                            <td th:text="${f.telefone}"></td>
+                            <td th:text="${f.email}"></td>
+                            <td>
+                                <a th:href="@{/fornecedores/restaurar/{id}(id=${f.id})}"
+                                   class="btn-action btn-restore"
+                                   onclick="return confirm('Restaurar este fornecedor?')">🔄</a>
+                            </td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -98,78 +149,72 @@
             <h2 id="modalTitle">Cadastrar Fornecedor</h2>
             <button class="btn-close" onclick="closeModal()">&times;</button>
         </div>
+        <div id="mensagem" style="padding: 10px; text-align: center; font-weight: bold;"></div>
 
-        <div id="mensagem" style="padding: 10px; text-align: center;"></div>
-
-        <form id="fornecedorForm">
+        <form id="fornecedorForm" th:action="@{/fornecedores/cadastrar}" method="POST">
+            <input type="hidden" id="fornId" name="id">
             <div class="modal-body">
-
                 <div class="form-grid">
-
                     <h3 class="section-title">Dados da Empresa</h3>
 
                     <div class="form-group col-6">
-                        <label>Nome Fantasia *</label>
-                        <input type="text" id="fornNomeFantasia" class="form-control" required>
+                        <label>Nome Fantasia</label>
+                        <input type="text" id="fornNomeFantasia" name="nomeFantasia" class="form-control" required>
                     </div>
                     <div class="form-group col-6">
-                        <label>Razão Social *</label>
-                        <input type="text" id="fornRazaoSocial" class="form-control" required>
+                        <label>Razão Social</label>
+                        <input type="text" id="fornRazaoSocial" name="razaoSocial" class="form-control" required>
                     </div>
 
                     <div class="form-group col-6">
                         <label>CNPJ *</label>
-                        <input type="text" id="fornCnpj" class="form-control" required placeholder="00.000.000/0000-00"
-                               maxlength="18">
+                        <input type="text" id="fornCnpj" name="cnpj" class="form-control" required maxlength="18">
                     </div>
                     <div class="form-group col-6">
                         <label>Telefone</label>
-                        <input type="text" id="fornTelefone" class="form-control" placeholder="(00) 00000-0000"
-                               maxlength="15">
+                        <input type="text" id="fornTelefone" name="telefone" class="form-control" maxlength="15">
                     </div>
 
                     <div class="form-group col-12">
-                        <label>E-mail *</label>
-                        <input type="email" id="fornEmail" class="form-control" required>
+                        <label>E-mail</label>
+                        <input type="email" id="fornEmail" name="email" class="form-control" required>
                     </div>
 
                     <h3 class="section-title">Endereço</h3>
 
                     <div class="form-group col-3">
                         <label>CEP</label>
-                        <input type="text" id="fornCep" class="form-control" placeholder="00000-000" maxlength="9"
-                               onblur="buscarCep(this.value)">
+                        <input type="text" id="fornCep" name="cep" class="form-control" maxlength="9" onblur="buscarCep(this.value)" required>
                     </div>
                     <div class="form-group col-7">
                         <label>Logradouro</label>
-                        <input type="text" id="fornLogradouro" class="form-control">
+                        <input type="text" id="fornLogradouro" name="logradouro" class="form-control" required>
                     </div>
                     <div class="form-group col-2">
                         <label>Nº</label>
-                        <input type="text" id="fornNumero" class="form-control">
+                        <input type="text" id="fornNumero" name="numero" class="form-control" required>
                     </div>
 
                     <div class="form-group col-4">
                         <label>Bairro</label>
-                        <input type="text" id="fornBairro" class="form-control">
+                        <input type="text" id="fornBairro" name="bairro" class="form-control" required>
                     </div>
                     <div class="form-group col-6">
                         <label>Cidade</label>
-                        <input type="text" id="fornCidade" class="form-control">
+                        <input type="text" id="fornCidade" name="cidade" class="form-control" required>
                     </div>
                     <div class="form-group col-2">
                         <label>UF</label>
-                        <input type="text" id="fornEstado" class="form-control" maxlength="2" placeholder="UF">
+                        <input type="text" id="fornEstado" name="estado" class="form-control" maxlength="2" required>
                     </div>
 
                     <div class="form-group col-12">
                         <label>Status</label>
-                        <select id="fornAtivo" class="form-control" required>
-                            <option value="true" selected>Ativo</option>
+                        <select id="fornAtivo" name="ativo" class="form-control" required>
+                            <option value="true">Ativo</option>
                             <option value="false">Inativo</option>
                         </select>
                     </div>
-
                 </div>
                 <div class="modal-footer" style="margin-top: 20px;">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
