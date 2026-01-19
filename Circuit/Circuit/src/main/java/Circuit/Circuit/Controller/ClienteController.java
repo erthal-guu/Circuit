@@ -6,84 +6,81 @@ import Circuit.Circuit.Service.CepService;
 import Circuit.Circuit.Service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/clientes")
 public class ClienteController {
+
     @Autowired
     private ClienteService clienteService;
+
     @Autowired
     private CepService viaCepService;
+    @GetMapping
+    public String listarClientes(Model model) {
+        List<Cliente> ativos = clienteService.listarAtivos();
+        List<Cliente> inativos = clienteService.listarInativos();
+        model.addAttribute("listaAtivos", ativos);
+        model.addAttribute("listaInativos", inativos);
+        model.addAttribute("cliente", new Cliente());
 
-    @PostMapping("/cadastrar")
-    public ResponseEntity<String> cadastrar(@RequestBody Cliente cliente) {
-        try {
-            clienteService.cadastrar(cliente);
-            return ResponseEntity.ok("Cliente cadastrado com sucesso!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return "clientes";
     }
 
-    @GetMapping("/consulta-cep/{cep}")
+    @PostMapping("/cadastrar")
+    public String cadastrar(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+        try {
+            clienteService.cadastrar(cliente);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente cadastrado com sucesso!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao cadastrar: " + e.getMessage());
+        }
+        return "redirect:/clientes";
+    }
+
+    @PostMapping("/editar")
+    public String editar(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+        try {
+            clienteService.editarCliente(cliente.getId(), cliente);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente atualizado com sucesso!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao editar: " + e.getMessage());
+        }
+        return "redirect:/clientes";
+    }
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            clienteService.ExcluirCliente(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente desativado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao desativar: " + e.getMessage());
+        }
+        return "redirect:/clientes";
+    }
+    @GetMapping("/restaurar/{id}")
+    public String restaurar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            clienteService.RestaurarCliente(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente restaurado com sucesso!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao restaurar: " + e.getMessage());
+        }
+        return "redirect:/clientes";
+    }
+    @GetMapping("/consulta-cep-clientes/{cep}")
+    @ResponseBody
     public ResponseEntity<?> consultarCep(@PathVariable String cep) {
         try {
             viaCep dadosEndereco = viaCepService.consultarCep(cep);
             return ResponseEntity.ok(dadosEndereco);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/listar-ativos")
-    public List<Cliente> listarClientesAtivos() {
-        return clienteService.listarAtivos();
-    }
-
-    @GetMapping("/listar-inativos")
-    public List<Cliente> listarClientesInativos() {
-        return clienteService.listarInativos();
-    }
-
-    @GetMapping("/pesquisar-ativos")
-    public List<Cliente> pesquisarClientesAtivos(@RequestParam("nome") String nome) {
-        return clienteService.pesquisarClienteAtivos(nome);
-    }
-
-    @GetMapping("/pesquisar-inativos")
-    public List<Cliente> pesquisarClientesInativos(@RequestParam("nome") String nome) {
-        return clienteService.pesquisarClienteInativo(nome);
-    }
-
-    @DeleteMapping("/excluir/{id}")
-    public ResponseEntity<?> excluirCliente(@PathVariable Long id) {
-        try {
-            clienteService.ExcluirCliente(id);
-            return ResponseEntity.ok("Cliente desativado com sucesso!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/restaurar/{id}")
-    public ResponseEntity<?> restaurarClientes(@PathVariable Long id) {
-        try {
-            clienteService.RestaurarCliente(id);
-            return ResponseEntity.ok("Cliente restaurado com sucesso!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/editar/{id}")
-    public ResponseEntity<?> editarClientes(@PathVariable Long id, @RequestBody Cliente cliente) {
-        try {
-            Cliente atualizado = clienteService.editarCliente(id, cliente);
-            return ResponseEntity.ok(atualizado);
-        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
