@@ -10,14 +10,6 @@ import java.util.List;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     boolean existsByCpf(String cpf);
-
     List<Cliente> findByAtivoTrue();
-
     List<Cliente> findByAtivoFalse();
-
-    @Query("SELECT c FROM Cliente c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND c.ativo = true")
-    List<Cliente> findByNomeContainingIgnoreCaseAndAtivoTrue(@Param("nome") String nome);
-
-    @Query("SELECT c FROM Cliente c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND c.ativo = false")
-    List<Cliente> findByNomeContainingIgnoreCaseAndAtivoFalse(@Param("nome") String nome);
 }

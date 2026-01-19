@@ -16,10 +16,4 @@ public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
     List<Fornecedor> findByAtivoTrueOrderById();
 
     List<Fornecedor> findByAtivoFalseOrderById();
-
-    @Query("SELECT f FROM Fornecedor f WHERE LOWER(f.nomeFantasia) LIKE LOWER(CONCAT('%', :nome, '%')) AND f.ativo = true")
-    List<Fornecedor> findByNomeFantasiaContainingIgnoreCaseAndAtivoTrue(@Param("nome") String nome);
-
-    @Query("SELECT f FROM Fornecedor f WHERE LOWER(f.nomeFantasia) LIKE LOWER(CONCAT('%', :nome, '%')) AND f.ativo = false")
-    List<Fornecedor> findByNomeFantasiaContainingIgnoreCaseAndAtivoFalse(@Param("nome") String nome);
 }

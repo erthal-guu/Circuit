@@ -11,9 +11,8 @@ public class ViewController {
         return "home";
     }
 
-
-    @GetMapping("/estoque")
-    public String estoque() {
-        return "estoque";
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }

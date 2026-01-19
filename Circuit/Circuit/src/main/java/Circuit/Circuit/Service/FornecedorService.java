@@ -57,14 +57,4 @@ public class FornecedorService {
         fornecedor.setAtivo(dadosAtualizados.getAtivo());
         return fornecedorRepository.save(fornecedor);
     }
-
-    public List<Fornecedor> pesquisarFornecedorAtivo(String nome) {
-        if (nome == null) return fornecedorRepository.findByAtivoTrueOrderById();
-        return fornecedorRepository.findByNomeFantasiaContainingIgnoreCaseAndAtivoTrue(nome);
-    }
-
-    public List<Fornecedor> pesquisarFornecedorInativo(String nome) {
-        if (nome == null) return fornecedorRepository.findByAtivoFalseOrderById();
-        return fornecedorRepository.findByNomeFantasiaContainingIgnoreCaseAndAtivoFalse(nome);
-    }
 }

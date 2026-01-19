@@ -21,8 +21,6 @@ public class Produto {
     @Column(nullable = false, length = 100)
     private String nome;
 
-    private String descricao;
-
     @Column(nullable = false)
     private Integer quantidade;
 
@@ -38,13 +36,14 @@ public class Produto {
     @Column(name = "categoria_id", nullable = false)
     private Integer categoriaId;
 
-    @Column(name = "imagem_produto")
-    private String imagemProduto;
 
     @Column(nullable = false)
     private Boolean ativo = true;
 
+    @Column(nullable = false)
+    private Long codigoBarras;
+
     @ManyToOne
     @JoinColumn(name = "fornecedor_id")
-    private Fornecedor fornecedor;
+    private Fornecedor fornecedorId;
 }

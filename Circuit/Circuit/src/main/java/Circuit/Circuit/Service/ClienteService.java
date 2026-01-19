@@ -27,16 +27,6 @@ public class ClienteService {
         return clienteRepository.findByAtivoFalse();
     }
 
-    public List<Cliente> pesquisarClienteAtivos(String nome) {
-        if (nome == null) return clienteRepository.findByAtivoTrue();
-        return clienteRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
-    }
-
-    public List<Cliente> pesquisarClienteInativo(String nome) {
-        if (nome == null) return clienteRepository.findByAtivoFalse();
-        return clienteRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
-    }
-
     public Cliente ExcluirCliente(Long id) {
         Cliente cliente = clienteRepository.getReferenceById(id);
         cliente.setAtivo(false);

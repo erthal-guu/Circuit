@@ -57,15 +57,4 @@ public class FuncionarioService {
         return funcionarioRepository.save(funcionario);
     }
 
-    public List<Funcionario> pesquisarFuncionarioAtivo(String nome) {
-        if (nome == null) return funcionarioRepository.findByAtivoTrueOrderById();
-        return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
-    }
-
-    public List<Funcionario> pesquisarFuncionarioInativo(String nome) {
-        if (nome == null) return funcionarioRepository.findByAtivoFalseOrderById();
-        return funcionarioRepository.findByNomeContainingIgnoreCaseAndAtivoFalse(nome);
-    }
-
-
 }

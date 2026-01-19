@@ -16,10 +16,4 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     List<Funcionario> findByAtivoFalseOrderById();
 
-    @Query("SELECT f FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND f.ativo = true")
-    List<Funcionario> findByNomeContainingIgnoreCaseAndAtivoTrue(@Param("nome") String nome);
-
-    @Query("SELECT f FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%')) AND f.ativo = false")
-    List<Funcionario> findByNomeContainingIgnoreCaseAndAtivoFalse(@Param("nome") String nome);
-
 }

@@ -1,69 +1,85 @@
 package Circuit.Circuit.Controller;
 
+import Circuit.Circuit.Model.Categoria;
 import Circuit.Circuit.Model.Produto;
+import Circuit.Circuit.Repository.CategoriaRepository;
+import Circuit.Circuit.Service.FornecedorService;
 import Circuit.Circuit.Service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/estoque")
-@CrossOrigin(origins = "*")
 public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+    @Autowired
+    private FornecedorService fornecedorService;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
-    @PostMapping(value = "/cadastrar", consumes = {"multipart/form-data"})
-    public ResponseEntity<Produto> cadastrar(
-            @RequestPart("produto") Produto produto,
-            @RequestPart(value = "imagem", required = false) MultipartFile imagem) {
+    @GetMapping
+    public String abrirEstoque(Model model) {
+        List<Produto> ativos = produtoService.listarProdutos();
+        List<Produto> inativos = produtoService.listarProdutosInativos();
+        List<Categoria>categorias = categoriaRepository.findAll();
 
-        return ResponseEntity.ok(produtoService.cadastrar(produto));
+        model.addAttribute("listaAtivos", ativos);
+        model.addAttribute("listaInativos", inativos);
+        model.addAttribute("categorias", categorias);
+        model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
+        model.addAttribute("produto", new Produto());
+
+        return "estoque";
     }
 
-    @GetMapping("/listar")
-    public List<Produto> listar() {
-        return produtoService.listarProdutos();
+    @PostMapping("/cadastrar")
+    public String cadastrar(@ModelAttribute Produto produto, RedirectAttributes redirectAttributes) {
+        try {
+            produtoService.cadastrar(produto);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto salvo com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
+        }
+        return "redirect:/estoque";
     }
 
-    @GetMapping("/listar-inativos")
-    public List<Produto> listarInativos() {
-        return produtoService.listarProdutosInativos();
+    @PostMapping("/editar")
+    public String editar(@ModelAttribute Produto produto, RedirectAttributes redirectAttributes) {
+        try {
+            produtoService.editarProduto(produto.getId(), produto);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto atualizado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao editar: " + e.getMessage());
+        }
+        return "redirect:/estoque";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(produtoService.pesquisarAtivos(null).stream()
-                .filter(p -> p.getId().equals(id)).findFirst().orElse(null));
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            produtoService.excluirProduto(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto desativado!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
+        }
+        return "redirect:/estoque";
     }
 
-    @PutMapping(value = "/editar/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Produto> editar(
-            @PathVariable Long id,
-            @RequestPart("produto") Produto produto,
-            @RequestPart(value = "imagem", required = false) MultipartFile imagem) {
-
-        return ResponseEntity.ok(produtoService.editarProduto(id, produto));
-    }
-
-    @DeleteMapping("/excluir/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        produtoService.excluirProduto(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/restaurar/{id}")
-    public ResponseEntity<Void> restaurar(@PathVariable Long id) {
-        produtoService.restaurarProduto(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/pesquisar")
-    public List<Produto> pesquisar(@RequestParam(required = false) String nome) {
-        return produtoService.pesquisarAtivos(nome);
+    @GetMapping("/restaurar/{id}")
+    public String restaurar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            produtoService.restaurarProduto(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto restaurado!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao restaurar: " + e.getMessage());
+        }
+        return "redirect:/estoque";
     }
 }
