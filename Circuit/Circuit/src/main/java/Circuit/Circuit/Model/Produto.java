@@ -33,17 +33,17 @@ public class Produto {
     @Column(name = "preco_venda", nullable = false)
     private BigDecimal precoVenda;
 
-    @Column(name = "categoria_id", nullable = false)
-    private Integer categoriaId;
-
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
     @Column(nullable = false)
     private Boolean ativo = true;
 
-    @Column(nullable = false)
+    @Column(name = "codigo_barras", nullable = false)
     private Long codigoBarras;
 
     @ManyToOne
     @JoinColumn(name = "fornecedor_id")
-    private Fornecedor fornecedorId;
+    private Fornecedor fornecedor;
 }

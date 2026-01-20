@@ -29,11 +29,14 @@ public class ProdutoController {
         List<Produto> ativos = produtoService.listarProdutos();
         List<Produto> inativos = produtoService.listarProdutosInativos();
         List<Categoria>categorias = categoriaRepository.findAll();
+        Long produtosCriticos = produtoService.contarCriticos();
 
         model.addAttribute("listaAtivos", ativos);
         model.addAttribute("listaInativos", inativos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
+        model.addAttribute("totalCriticos", produtoService.contarCriticos());
+
         model.addAttribute("produto", new Produto());
 
         return "estoque";
@@ -80,6 +83,26 @@ public class ProdutoController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao restaurar: " + e.getMessage());
         }
+        return "redirect:/estoque";
+    }
+    @PostMapping("/alimentar")
+    public String alimentar(@ModelAttribute Produto produto, RedirectAttributes redirectAttributes) {
+        try{
+            produtoService.alimentarEstoque(produto.getId(), produto.getQuantidade());
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Estoque alimentado!");
+        }catch(Exception e){
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao Alimentar: " + e.getMessage());
+        }
+        return "redirect:/estoque";
+    }
+    @PostMapping("/retirar")
+    public String retirar(@ModelAttribute Produto produto, RedirectAttributes redirectAttributes) {
+        try{
+            produtoService.retirarEstoque(produto.getId(), produto.getQuantidade());
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto removido com sucesso!");
+        }catch(Exception e){
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao remover do estoque: " + e.getMessage());
+    }
         return "redirect:/estoque";
     }
 }

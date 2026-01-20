@@ -5,14 +5,24 @@ function switchTab(tabName, event) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-    if (tabName === 'ativos') {
-        document.getElementById('tabAtivos').classList.add('active');
-    } else {
-        document.getElementById('tabInativos').classList.add('active');
-    }
-
     if (event && event.currentTarget) {
         event.currentTarget.classList.add('active');
+    }
+    const displayTotal = document.getElementById('displayTotal');
+    const tituloTotal = document.getElementById('stat-title');
+    const colorCard = document.getElementById("stat-total")
+
+    if (tabName === 'ativos') {
+        document.getElementById('tabAtivos').classList.add('active');
+        displayTotal.innerText = displayTotal.getAttribute('data-ativos');
+        tituloTotal.innerText = "Total de produtos Ativos";
+        colorCard.style.borderLeft = "4px solid forestgreen";
+
+    } else {
+        document.getElementById('tabInativos').classList.add('active');
+        displayTotal.innerText = displayTotal.getAttribute('data-inativos');
+        tituloTotal.innerText = "Total de produtos Inativos";
+        colorCard.style.borderLeft = "4px solid red";
     }
 }
 
@@ -55,3 +65,51 @@ window.onclick = function(event) {
         closeModal();
     }
 };
+const modalAlimentar = document.getElementById('modalAlimentar');
+
+function abrirModalAlimentar(btn) {
+    const id = btn.getAttribute('data-id');
+    const nome = btn.getAttribute('data-nome');
+
+    document.getElementById('alimentarId').value = id;
+    document.getElementById('alimentarNome').value = nome;
+
+    if (modalAlimentar) {
+        modalAlimentar.classList.add('active');
+    }
+}
+
+function fecharModalAlimentar() {
+    if (modalAlimentar) {
+        modalAlimentar.classList.remove('active');
+    }
+}
+const modalRetirar = document.getElementById('modalRetirar');
+
+function abrirModalRetirar(btn) {
+    document.getElementById('retirarId').value = btn.getAttribute('data-id');
+    document.getElementById('retirarNome').value = btn.getAttribute('data-nome');
+    modalRetirar.classList.add('active');
+}
+
+function fecharModalRetirar() {
+    modalRetirar.classList.remove('active');
+}
+function configurarPesquisaLocal(inputId, tableId) {
+    const input = document.getElementById(inputId);
+    const table = document.getElementById(tableId);
+    if (!input || !table) return;
+    input.addEventListener('keyup', function () {
+        const termo = input.value.toLowerCase();
+        const linhas = table.querySelectorAll('tbody tr');
+
+        linhas.forEach(linha => {
+            linha.style.display = linha.innerText.toLowerCase().includes(termo) ? '' : 'none';
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    configurarPesquisaLocal('searchInputAtivos', 'estoqueTable');
+    configurarPesquisaLocal('searchInputInativos', 'estoqueTableInativos');
+});

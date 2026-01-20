@@ -53,15 +53,23 @@
                         <span class="stat-title">Itens Críticos</span>
                         <i class="fas fa-exclamation-triangle stat-icon icon-alert"></i>
                     </div>
-                    <div class="stat-value text-alert" th:text="${totalBaixoEstoque}">0</div>
+                    <div class="stat-value text-alert" th:text="${totalCriticos}">
+
+                    </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" id="stat-total">
                     <div class="stat-header">
-                        <span class="stat-title">Total de Produtos</span>
+                        <span id="stat-title">Total de Produtos Ativos</span>
                         <i class="fas fa-boxes stat-icon"></i>
                     </div>
-                    <div class="stat-value" th:text="${listaAtivos != null ? #lists.size(listaAtivos) : 0}">0</div>
+                    <div class="stat-value"
+                         id="displayTotal"
+                         th:data-ativos="${listaAtivos != null ? #lists.size(listaAtivos) : 0}"
+                         th:data-inativos="${listaInativos != null ? #lists.size(listaInativos) : 0}"
+                         th:text="${listaAtivos != null ? #lists.size(listaAtivos) : 0}">
+                        0
+                    </div>
                 </div>
             </div>
 
@@ -70,6 +78,10 @@
                     <div class="table-header">
                         <h3>Produtos Ativos</h3>
                         <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                             <input type="text" placeholder="Buscar Ativos..." id="searchInputAtivos">
                         </div>
                     </div>
@@ -82,6 +94,7 @@
                             <th>Qtd</th>
                             <th>Fornecedor</th>
                             <th>Venda</th>
+                            <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
@@ -89,24 +102,24 @@
                         <tr th:each="p : ${listaAtivos}">
                             <td th:text="${p.codigoBarras}"></td>
                             <td th:text="${p.nome}"></td>
-                            <td th:text="${p.categoriaId}"></td>
+                            <td th:text="${p.categoria?.tipo}"></td>
                             <td th:text="${p.quantidade}" th:style="${p.quantidade <= p.quantidadeMinima ? 'color:red; font-weight:bold;' : ''}"></td>
-                            <td th:text="${p.fornecedorId?.nomeFantasia}"></td>
+                            <td th:text="${p.fornecedor?.nomeFantasia}"></td>
                             <td th:text="${'R$ ' + #numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
                             <td>
                                 <div class="action-buttons">
                                     <button class="btn-action btn-edit" type="button"
                                             th:data-id="${p.id}"
                                             th:data-nome="${p.nome}"
-                                            th:data-categoria="${p.categoriaId}"
-                                            th:data-fornecedor="${p.fornecedorId?.nomeFantasia}"
+                                            th:data-categoria="${p.categoria?.id}"
+                                            th:data-fornecedor="${p.fornecedor?.id}"
                                             th:data-quantidade="${p.quantidade}"
                                             th:data-minima="${p.quantidadeMinima}"
                                             th:data-compra="${p.precoCompra}"
                                             th:data-venda="${p.precoVenda}"
                                             th:data-codigobarras="${p.codigoBarras}"
                                             onclick="abrirModalEdicao(this)">✏️</button>
-
                                     <a th:href="@{/estoque/excluir/{id}(id=${p.id})}" class="btn-action btn-delete" onclick="return confirm('Desativar produto?')">🗑️</a>
                                 </div>
                             </td>
@@ -118,14 +131,22 @@
 
             <div id="tabInativos" class="tab-content">
                 <div class="table-card">
-                    <div class="table-header"><h3>Produtos Inativos</h3></div>
+                    <div class="table-header"><h3>Produtos Inativos</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        <input type="text" placeholder="Buscar Inativos..." id="searchInputInativos">
+                        </div>
+                    </div>
                     <table class="data-table" id="estoqueTableInativos">
                         <thead>
                         <tr>
                             <th>Cód. Barras</th>
                             <th>Produto</th>
                             <th>Categoria</th>
-                            <th>Fornecedor</th>
+                            <th>Status</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
@@ -133,10 +154,10 @@
                         <tr th:each="p : ${listaInativos}">
                             <td th:text="${p.codigoBarras}"></td>
                             <td th:text="${p.nome}"></td>
-                            <td th:text="${p.categoriaId}"></td>
-                            <td th:text="${p.fornecedorId?.nomeFantasia}"></td>
+                            <td th:text="${p.categoria?.tipo}"></td>
+                            <td><span class="badge badge-inactive">Inativo</span></td>
                             <td>
-                                <a th:href="@{/estoque/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore">🔄</a>
+                                <a th:href="@{/estoque/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore" onclick="return confirm('Restaurar produto?')">🔄</a>
                             </td>
                         </tr>
                         </tbody>
@@ -172,7 +193,7 @@
                         <label>Categoria</label>
                         <select id="prodCategoria" name="categoria.id" class="form-control" required>
                             <option value="">Selecione...</option>
-                                <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.tipo}"></option>
+                            <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.tipo}"></option>
                         </select>
                     </div>
                     <div class="form-group col-6">
@@ -214,6 +235,131 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal" id="modalAlimentar">
+    <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+            <h2>Alimentar Estoque</h2>
+            <button class="btn-close" onclick="fecharModalAlimentar()">&times;</button>
+        </div>
+        <form th:action="@{/estoque/alimentar}" method="POST">
+            <input type="hidden" id="alimentarId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group col-12">
+                        <label>Produto</label>
+                        <input type="text" id="alimentarNome" class="form-control" readonly style="background: #f9fafb; font-weight: bold;">
+                    </div>
+                    <div class="form-group col-12" style="margin-top: 15px;">
+                        <label>Quantidade a Adicionar</label>
+                        <input type="number" name="quantidade" class="form-control" min="1" required placeholder="Ex: 10">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn-secondary" onclick="fecharModalAlimentar()">Cancelar</button>
+                <button type="submit" class="btn-submit">Confirmar Entrada</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal" id="modalRetirar">
+    <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+            <h2>Retirar do Estoque</h2>
+            <button class="btn-close" onclick="fecharModalRetirar()">&times;</button>
+        </div>
+        <form th:action="@{/estoque/retirar}" method="POST">
+            <input type="hidden" id="retirarId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group col-12">
+                        <label>Produto</label>
+                        <input type="text" id="retirarNome" class="form-control" readonly style="background: #f9fafb; font-weight: bold;">
+                    </div>
+                    <div class="form-group col-12" style="margin-top: 15px;">
+                        <label>Quantidade a Retirar</label>
+                        <input type="number" name="quantidade" class="form-control" min="1" required placeholder="Ex: 5">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn-secondary" onclick="fecharModalRetirar()">Cancelar</button>
+                <button type="submit" class="btn-submit" style="background-color: #ef4444;">Confirmar Retirada</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal" id="modalMovimentacoes">
+    <div class="modal-content" style="max-width: 800px; height: 85vh; display: flex; flex-direction: column; padding: 0;">
+
+        <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #eee;">
+            <div>
+                <h2>⚡ Movimentação em Lote</h2>
+                <p style="color: #666; font-size: 0.9em; margin: 0;">Selecione os itens e aplique a movimentação.</p>
+            </div>
+            <button class="btn-close" onclick="fecharModalMovimentacoes()">&times;</button>
+        </div>
+
+        <div style="padding: 15px; background: #f9fafb;">
+            <input type="text" id="searchMovimentacao" class="form-control"
+                   placeholder="🔍 Buscar produto..." onkeyup="filtrarTabelaMovimentacao()">
+        </div>
+
+        <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 0;">
+            <table class="data-table" id="tabelaMovimentacao">
+                <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <tr>
+                    <th style="width: 40px; text-align: center;">
+                        <input type="checkbox" id="checkMaster" onclick="toggleSelecionarTodos()" style="cursor: pointer; transform: scale(1.2);">
+                    </th>
+                    <th>Produto</th>
+                    <th style="width: 100px; text-align: center;">Atual</th>
+                    <th style="width: 100px; text-align: center;">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${listaAtivos}">
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="produto-check" th:value="${p.id}" style="cursor: pointer; transform: scale(1.2);">
+                    </td>
+                    <td>
+                        <div style="font-weight: bold; font-size: 1.05em;" th:text="${p.nome}">Nome</div>
+                        <small th:text="${p.codigoBarras}" style="color: #888;">000000</small>
+                    </td>
+                    <td style="text-align: center;">
+                            <span th:id="'qtd-atual-' + ${p.id}" th:text="${p.quantidade}"
+                                  style="font-weight: bold; font-size: 1.1em; background: #f3f4f6; padding: 4px 10px; border-radius: 6px;">0</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span th:id="'status-' + ${p.id}">-</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bulk-actions" style="padding: 15px; background: white; border-top: 1px solid #ddd; display: flex; align-items: center; gap: 15px; box-shadow: 0 -4px 10px rgba(0,0,0,0.05);">
+
+            <div style="font-weight: bold; color: #374151;">
+                Selecionados: <span id="contadorSelecionados" style="color: #6366f1;">0</span>
+            </div>
+
+            <div style="flex: 1;"></div> <div style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-weight: 600;">Quantidade:</label>
+            <input type="number" id="inputQtdMassa" class="form-control" value="1" min="1" style="width: 100px; text-align: center;">
+        </div>
+
+            <button onclick="aplicarMovimentacaoEmMassa('entrada')" class="btn-submit" style="background-color: #10b981; padding: 10px 20px;">
+                ➕ Entrada
+            </button>
+
+            <button onclick="aplicarMovimentacaoEmMassa('saida')" class="btn-submit" style="background-color: #ef4444; padding: 10px 20px;">
+                ➖ Saída
+            </button>
+        </div>
     </div>
 </div>
 
