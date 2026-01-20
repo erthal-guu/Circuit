@@ -113,3 +113,16 @@ document.addEventListener("DOMContentLoaded", function() {
     configurarPesquisaLocal('searchInputAtivos', 'estoqueTable');
     configurarPesquisaLocal('searchInputInativos', 'estoqueTableInativos');
 });
+const modalMovimentacoes = document.getElementById('modalMovimentacoes');
+const contadorSelecionados = document.getElementById('contadorSelecionados');
+
+function abrirModalMovimentacoes() {
+    if(modalMovimentacoes) modalMovimentacoes.classList.add('active');
+}
+
+function fecharModalMovimentacoes() {
+    if(modalMovimentacoes) modalMovimentacoes.classList.remove('active');
+    document.querySelectorAll('.produto-check').forEach(cb => cb.checked = false);
+    document.getElementById('checkMaster').checked = false;
+    atualizarContador();
+}
