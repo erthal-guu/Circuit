@@ -51,21 +51,7 @@ public class ProdutoService {
         return produtoRepository.save(produtoEditar);
     }
 
-    public void alimentarEstoque(Long id, Integer quantidadeAdicionada) {
-        Produto produto = produtoRepository.getReferenceById(id);
-        produto.setQuantidade(produto.getQuantidade() + quantidadeAdicionada);
-        produtoRepository.save(produto);
-    }
 
-    public void retirarEstoque(Long id, Integer quantidadeRetirada) {
-        Produto produto = produtoRepository.getReferenceById(id);
-
-        if (produto.getQuantidade() < quantidadeRetirada) {
-            throw new RuntimeException("Estoque insuficiente!");
-        }
-        produto.setQuantidade(produto.getQuantidade() - quantidadeRetirada);
-        produtoRepository.save(produto);
-    }
     public long contarCriticos() {
         return produtoRepository.countItensCriticos();
     }

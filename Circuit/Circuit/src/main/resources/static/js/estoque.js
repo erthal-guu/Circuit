@@ -126,3 +126,51 @@ function fecharModalMovimentacoes() {
     document.getElementById('checkMaster').checked = false;
     atualizarContador();
 }
+
+function filtrarTabelaMovimentacao() {
+    const termo = document.getElementById('searchMovimentacao').value.toLowerCase();
+    const linhas = document.querySelectorAll('#tabelaMovimentacao tbody tr');
+
+    linhas.forEach(linha => {
+        const texto = linha.innerText.toLowerCase();
+        linha.style.display = texto.includes(termo) ? '' : 'none';
+    });
+}
+function atualizarContador() {
+    const total = document.querySelectorAll('.produto-check:checked').length;
+    const contador = document.getElementById('contadorSelecionados');
+    if(contador) contador.innerText = total;
+}
+
+function toggleSelecionarTodos() {
+    const master = document.getElementById('checkMaster');
+    const checks = document.querySelectorAll('.produto-check');
+
+    checks.forEach(check => {
+        if(check.closest('tr').style.display !== 'none') {
+            check.checked = master.checked;
+        }
+    });
+    atualizarContador();
+}
+document.addEventListener('change', function(e) {
+    if(e.target.classList.contains('produto-check')) {
+        atualizarContador();
+    }
+});
+document.getElementById('formMovimentacao').addEventListener('submit', function(event) {
+    const selecionados = document.querySelectorAll('.produto-check:checked').length;
+    const quantidade = document.getElementById('inputQtdMassa').value;
+
+    if (selecionados === 0) {
+        event.preventDefault();
+        alert("Selecione pelo menos um produto!");
+        return;
+    }
+
+    if (!quantidade || quantidade < 1) {
+        event.preventDefault();
+        alert("Digite uma quantidade válida!");
+        return;
+    }
+});

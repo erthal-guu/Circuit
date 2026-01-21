@@ -25,9 +25,11 @@
                     <div class="tab-container">
                         <button class="tab-btn active" onclick="switchTab('ativos', event)">Produtos Ativos</button>
                         <button class="tab-btn" onclick="switchTab('inativos', event)">Produtos Inativos</button>
-                        <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes()">
-                            <i class="fas fa-dolly-flatbed"></i> Central de Movimentações
-                        </button>
+                    </div>
+                    <div class="tab-container">
+                    <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes()">
+                        <i class="fas fa-dolly-flatbed"></i> Central de Movimentações
+                    </button>
                     </div>
 
                     <button class="btn-primary" onclick="abrirModalNovo()">
@@ -296,73 +298,78 @@
     </div>
 </div>
 <div class="modal" id="modalMovimentacoes">
-    <div class="modal-content">
+    <form method="POST" id="formMovimentacao">
 
-        <div class="modal-header">
-            <div>
-                <h2> Movimentação em Lote</h2>
-                <p>Selecione os itens e aplique a movimentação.</p>
-            </div>
-            <button class="btn-close" onclick="fecharModalMovimentacoes()">&times;</button>
-        </div>
+        <div class="modal-content modal-content-movimentacao">
 
-        <div>
-            <input type="text" id="searchMovimentacao" class="form-control"
-                   placeholder="🔍 Buscar produto..." onkeyup="filtrarTabelaMovimentacao()">
-        </div>
-
-        <div class="modal-body">
-            <table class="data-table" id="tabelaMovimentacao">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox" id="checkMaster" onclick="toggleSelecionarTodos()" style="cursor: pointer; transform: scale(1.2);">
-                    </th>
-                    <th>Produto</th>
-                    <th>Atual</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="p : ${listaAtivos}">
-                    <td>
-                        <input type="checkbox" class="produto-check" th:value="${p.id}">
-                    </td>
-                    <td>
-                        <div th:text="${p.nome}">Nome</div>
-                        <small th:text="${p.codigoBarras}">000000</small>
-                    </td>
-                    <td>
-                        <span th:id="'qtd-atual-' + ${p.id}" th:text="${p.quantidade}">0</span>
-                    </td>
-                    <td>
-                        <span th:id="'status-' + ${p.id}" >-</span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="bulk-actions">
-
-            <div>
-                Selecionados: <span id="contadorSelecionados">0</span>
+            <div class="modal-header modal-header-border">
+                <div>
+                    <h2>Movimentação em Lote</h2>
+                    <p class="modal-subtitle">Selecione os itens e aplique a movimentação.</p>
+                </div>
+                <button type="button" class="btn-close" onclick="fecharModalMovimentacoes()">&times;</button>
             </div>
 
-            <div></div> <div>
-            <label>Quantidade:</label>
-            <input type="number" id="inputQtdMassa" class="form-control" value="1" min="1">
-        </div>
+            <div class="search-box mov" style="margin: 15px;"> <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+                <input type="text" id="searchMovimentacao" class="form-control"
+                       placeholder="Buscar produto..." onkeyup="filtrarTabelaMovimentacao()">
+            </div>
 
-            <button onclick="aplicarMovimentacaoEmMassa('entrada')" class="btn-submit add">
-                 Entrada
-            </button>
+            <div class="modal-body modal-body-scroll">
+                <table class="data-table" id="tabelaMovimentacao">
+                    <thead class="sticky-header">
+                    <tr>
+                        <th class="col-check">
+                            <input type="checkbox" id="checkMaster" onclick="toggleSelecionarTodos()" class="checkbox-lg">
+                        </th>
+                        <th>Produto</th>
+                        <th class="col-status">Atual</th>
+                        <th class="col-status">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${listaAtivos}">
+                        <td class="cell-center">
+                            <input type="checkbox" name="ids" class="produto-check checkbox-lg" th:value="${p.id}">
+                        </td>
+                        <td>
+                            <div class="product-name-lg" th:text="${p.nome}">Nome</div>
+                            <small class="product-code-muted" th:text="${p.codigoBarras}">000000</small>
+                        </td>
+                        <td class="cell-center">
+                            <span th:id="'qtd-atual-' + ${p.id}" th:text="${p.quantidade}" class="badge-stock">0</span>
+                        </td>
+                        <td class="cell-center">
+                            <span th:id="'status-' + ${p.id}" >-</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <button onclick="aplicarMovimentacaoEmMassa('saida')" class="btn-submit remove">
-                 Saída
-            </button>
+            <div class="bulk-actions">
+                <div class="text-selected-label">
+                    Selecionados: <span id="contadorSelecionados" class="text-highlight"> 0</span>
+                </div>
+
+                <div class="bulk-controls">
+                    <label style="font-weight: 600;">Quantidade:</label>
+                    <input type="number" name="quantidade" id="inputQtdMassa" class="form-control input-qty-center" value="1" min="1" required>
+                </div>
+
+                <button type="submit" formaction="/estoque/movimentacao/entrada" class="btn-submit btn-entry">
+                    Entrada
+                </button>
+
+                <button type="submit" formaction="/estoque/movimentacao/saida" class="btn-submit btn-exit">
+                    Saída
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script th:src="@{/js/estoque.js}"></script>

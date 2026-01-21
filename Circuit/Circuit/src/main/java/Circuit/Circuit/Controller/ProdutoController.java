@@ -85,24 +85,4 @@ public class ProdutoController {
         }
         return "redirect:/estoque";
     }
-    @PostMapping("/alimentar")
-    public String alimentar(@ModelAttribute Produto produto, RedirectAttributes redirectAttributes) {
-        try{
-            produtoService.alimentarEstoque(produto.getId(), produto.getQuantidade());
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Estoque alimentado!");
-        }catch(Exception e){
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao Alimentar: " + e.getMessage());
-        }
-        return "redirect:/estoque";
-    }
-    @PostMapping("/retirar")
-    public String retirar(@ModelAttribute Produto produto, RedirectAttributes redirectAttributes) {
-        try{
-            produtoService.retirarEstoque(produto.getId(), produto.getQuantidade());
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto removido com sucesso!");
-        }catch(Exception e){
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao remover do estoque: " + e.getMessage());
-    }
-        return "redirect:/estoque";
-    }
 }
