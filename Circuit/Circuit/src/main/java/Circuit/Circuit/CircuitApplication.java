@@ -8,5 +8,4 @@ public class CircuitApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CircuitApplication.class, args);
 	}
-
 }

@@ -174,3 +174,15 @@ document.getElementById('formMovimentacao').addEventListener('submit', function(
         return;
     }
 });
+document.addEventListener("DOMContentLoaded", function() {
+    const alertas = document.querySelectorAll('.auto-close');
+    alertas.forEach(alerta => {
+        setTimeout(() => {
+            alerta.style.opacity = '0';
+            setTimeout(() => {
+                alerta.remove();
+            }, 500);
+
+        }, 3000);
+    });
+});

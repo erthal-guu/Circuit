@@ -81,11 +81,17 @@
                                             th:data-cidade="${c.cidade}"
                                             th:data-estado="${c.estado}"
                                             th:data-ativo="${c.ativo}"
-                                            onclick="abrirModalEdicao(this)">✏️</button>
+                                            onclick="abrirModalEdicao(this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg></button>
 
                                     <a th:href="@{/clientes/excluir/{id}(id=${c.id})}"
                                        class="btn-action btn-delete"
-                                       onclick="return confirm('Desativar este cliente?')">🗑️</a>
+                                       onclick="return confirm('Desativar este cliente?')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg></a>
                                 </div>
                             </td>
                         </tr>
@@ -130,7 +136,10 @@
                             <td>
                                 <a th:href="@{/clientes/restaurar/{id}(id=${c.id})}"
                                    class="btn-action btn-restore"
-                                   onclick="return confirm('Restaurar este cliente?')">🔄</a>
+                                   onclick="return confirm('Restaurar este cliente?')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg></a>
                             </td>
                         </tr>
                         </tbody>

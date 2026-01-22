@@ -5,7 +5,7 @@ const msgDiv = document.getElementById('mensagem');
 document.addEventListener("DOMContentLoaded", function () {
     configurarPesquisa('searchInputAtivos', 'funcionarioTable');
     configurarPesquisa('searchInputInativos', 'funcionarioTableInativos');
-
+    aplicarMascaras();
     const cepInput = document.getElementById('funcCep');
     if (cepInput) {
         cepInput.addEventListener('blur', function() {
@@ -97,4 +97,33 @@ function switchTab(tabName, event) {
     const id = tabName === 'ativos' ? 'tabAtivos' : 'tabInativos';
     document.getElementById(id).style.display = 'block';
     event.currentTarget.classList.add('active');
+}
+function aplicarMascaras() {
+    const masks = {
+        funcCpf: v => v.replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+            .slice(0, 14),
+
+        funcTelefone: v => {
+            v = v.replace(/\D/g, '').slice(0, 11);
+            return v.length > 10
+                ? v.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
+                : v.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        },
+
+        funcCep: v => v.replace(/\D/g, '')
+            .replace(/^(\d{5})(\d)/, '$1-$2')
+            .slice(0, 9)
+    };
+
+    Object.keys(masks).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', e => {
+                e.target.value = masks[id](e.target.value);
+            });
+        }
+    });
 }

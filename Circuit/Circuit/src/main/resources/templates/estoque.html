@@ -9,12 +9,12 @@
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="content">
-            <div th:if="${mensagemSucesso}" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+            <div th:if="${mensagemSucesso}" class="auto-close"  style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                 <span>✅</span>
                 <span th:text="${mensagemSucesso}"></span>
             </div>
 
-            <div th:if="${mensagemErro}" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+            <div th:if="${mensagemErro}" class="auto-close" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
                 <span>⚠️</span>
                 <span th:text="${mensagemErro}"></span>
             </div>
@@ -124,7 +124,9 @@
                                             th:data-compra="${p.precoCompra}"
                                             th:data-venda="${p.precoVenda}"
                                             th:data-codigobarras="${p.codigoBarras}"
-                                            onclick="abrirModalEdicao(this)">✏️</button>
+                                            onclick="abrirModalEdicao(this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg></button>
                                     <a th:href="@{/estoque/excluir/{id}(id=${p.id})}" class="btn-action btn-delete" onclick="return confirm('Desativar produto?')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -166,7 +168,10 @@
                             <td th:text="${p.categoria?.tipo}"></td>
                             <td><span class="badge badge-inactive">Inativo</span></td>
                             <td>
-                                <a th:href="@{/estoque/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore" onclick="return confirm('Restaurar produto?')">🔄</a>
+                                <a th:href="@{/estoque/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore" onclick="return confirm('Restaurar produto?')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg></a>
                             </td>
                         </tr>
                         </tbody>
@@ -347,7 +352,7 @@
                             <span th:id="'qtd-atual-' + ${p.id}" th:text="${p.quantidade}" class="badge-stock">0</span>
                         </td>
                         <td class="cell-center">
-                            <span th:id="'status-' + ${p.id}" >-</span>
+                            <span th:text="${p.categoria.tipo}" style="font-weight: 600; color: #3b82f6"></span>
                         </td>
                     </tr>
                     </tbody>
@@ -355,22 +360,24 @@
             </div>
 
             <div class="bulk-actions">
-                <div class="text-selected-label">
-                    Selecionados: <span id="contadorSelecionados" class="text-highlight"> 0</span>
+                <div class="bulk-left">
+                    Selecionados: <span id="contadorSelecionados" class="text-highlight">0</span>
                 </div>
 
-                <div class="bulk-controls">
-                    <label style="font-weight: 600;">Quantidade:</label>
-                    <input type="number" name="quantidade" id="inputQtdMassa" class="form-control input-qty-center" value="1" min="1" required>
+                <div class="bulk-right">
+                    <div class="qty-group">
+                        <label>Quantidade:</label>
+                        <input type="number" name="quantidade" id="inputQtdMassa" class="form-control input-qty-center" value="1" min="1" required>
+                    </div>
+
+                    <button type="submit" formaction="/estoque/movimentacao/entrada" class="btn-submit btn-entry">
+                        Entrada
+                    </button>
+
+                    <button type="submit" formaction="/estoque/movimentacao/saida" class="btn-submit btn-exit">
+                        Saída
+                    </button>
                 </div>
-
-                <button type="submit" formaction="/estoque/movimentacao/entrada" class="btn-submit btn-entry">
-                    Entrada
-                </button>
-
-                <button type="submit" formaction="/estoque/movimentacao/saida" class="btn-submit btn-exit">
-                    Saída
-                </button>
             </div>
         </div>
     </form>

@@ -772,9 +772,6 @@ body {
     font-weight: 700;
 }
 
-.modal-body {
-    padding: 25px;
-}
 
 .modal-footer {
     padding: 20px 25px;
@@ -885,7 +882,7 @@ body {
 }
 
 .stat-card.alert {
-    border-left-color: darkorange;
+    border-left-color: dodgerblue;
 }
 
 .stat-header {
@@ -981,19 +978,21 @@ body {
     padding: 15px;
     background: #f9fafb;
 }
-
+.modal-body{
+    padding: 20px;
+}
 .modal-body-scroll {
     flex: 1;
     overflow-y: auto;
-    padding: 0 20px;
+    padding: 0;
+    width: 100%;
 }
-
 .sticky-header th {
     position: sticky;
     top: 0;
     z-index: 20;
     background-color: #f8fafc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     border-bottom: 1px solid #e2e8f0;
     padding: 16px 25px;
 }
@@ -1031,21 +1030,47 @@ body {
 
 .bulk-actions {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 20px 30px;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
     background: white;
     border-top: 1px solid #e2e8f0;
+    box-sizing: border-box;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+    padding-right: 100px;
 }
 
-.text-selected-label {
+.bulk-left {
     font-weight: bold;
     color: #374151;
+    white-space: nowrap;
 }
 
+.bulk-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.qty-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 50px;
+}
+
+.qty-group label {
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.input-qty-center {
+    width: 80px;
+    text-align: center;
+}
 .text-highlight {
     color: #6366f1;
 }
@@ -1063,6 +1088,10 @@ body {
 
 .btn-entry {
     background-color: #10b981;
+    padding: 10px 20px;
+}
+.btn-submit:hover.btn-entry {
+    background-color: olivedrab;
     padding: 10px 20px;
 }
 
