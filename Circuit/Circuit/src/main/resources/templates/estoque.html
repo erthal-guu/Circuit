@@ -9,6 +9,23 @@
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="content">
+
+            <div class="context-nav">
+                <a th:href="@{/estoque}"
+                   class="context-btn"
+                   th:classappend="${tipoEstoque == 'produto'} ? 'active' : ''">
+                    <i class="fas fa-box-open"></i>
+                    <span>Produtos</span>
+                </a>
+
+                <a th:href="@{/pecas}"
+                   class="context-btn"
+                   th:classappend="${tipoEstoque == 'peca'} ? 'active' : ''">
+                    <i class="fas fa-tools"></i>
+                    <span>Peças</span>
+                </a>
+            </div>
+
             <div th:if="${mensagemSucesso}" class="auto-close"  style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                 <span>✅</span>
                 <span th:text="${mensagemSucesso}"></span>
@@ -27,9 +44,9 @@
                         <button class="tab-btn" onclick="switchTab('inativos', event)">Produtos Inativos</button>
                     </div>
                     <div class="tab-container">
-                    <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes()">
-                        <i class="fas fa-dolly-flatbed"></i> Central de Movimentações
-                    </button>
+                        <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes()">
+                            <i class="fas fa-dolly-flatbed"></i> Central de Movimentações
+                        </button>
                     </div>
 
                     <button class="btn-primary" onclick="abrirModalNovo()">
@@ -148,7 +165,7 @@
                                 <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
                                 <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
-                        <input type="text" placeholder="Buscar Inativos..." id="searchInputInativos">
+                            <input type="text" placeholder="Buscar Inativos..." id="searchInputInativos">
                         </div>
                     </div>
                     <table class="data-table" id="estoqueTableInativos">
