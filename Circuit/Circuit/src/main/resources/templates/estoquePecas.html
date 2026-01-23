@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Estoque de Peças')}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/menu :: sidebar('pecas')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
+
+        <div class="content">
+            <div th:if="${mensagemSucesso}" class="auto-close"  style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                <span>✅</span>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+
+            <div th:if="${mensagemErro}" class="auto-close" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+                <span>⚠️</span>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Peças</h1>
+                <div class="header-actions">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('ativos', event)">Peças Ativas</button>
+                        <button class="tab-btn" onclick="switchTab('inativos', event)">Peças Inativas</button>
+                    </div>
+                    <div class="tab-container">
+                        <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes()">
+                            <i class="fas fa-dolly-flatbed"></i> Movimentação em Lote
+                        </button>
+                    </div>
+
+                    <button class="btn-primary" onclick="abrirModalNovo()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Nova Peça
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Custo em Peças</span>
+                        <i class="fas fa-tools stat-icon"></i>
+                    </div>
+                    <div class="stat-value">
+                        <small style="font-size: 0.5em; vertical-align: middle;">R$</small>
+                        <span th:text="${valorTotalEstoque != null ? #numbers.formatDecimal(valorTotalEstoque, 0, 'POINT', 2, 'COMMA') : '0,00'}">0,00</span>
+                    </div>
+                </div>
+
+                <div class="stat-card alert">
+                    <div class="stat-header">
+                        <span class="stat-title">Estoque Baixo</span>
+                        <i class="fas fa-exclamation-triangle stat-icon icon-alert"></i>
+                    </div>
+                    <div class="stat-value text-alert" th:text="${totalCriticos}">0</div>
+                </div>
+
+                <div class="stat-card" id="stat-total">
+                    <div class="stat-header">
+                        <span id="stat-title">Total de Peças</span>
+                        <i class="fas fa-cogs stat-icon"></i>
+                    </div>
+                    <div class="stat-value"
+                         id="displayTotal"
+                         th:data-ativos="${listaAtivos != null ? #lists.size(listaAtivos) : 0}"
+                         th:data-inativos="${listaInativos != null ? #lists.size(listaInativos) : 0}"
+                         th:text="${listaAtivos != null ? #lists.size(listaAtivos) : 0}">
+                        0
+                    </div>
+                </div>
+            </div>
+
+            <div id="tabAtivos" class="tab-content active">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Peças Disponíveis</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar Peças..." id="searchInputAtivos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="estoqueTable">
+                        <thead>
+                        <tr>
+                            <th>Cód.</th>
+                            <th>Descrição da Peça</th>
+                            <th>Categoria</th>
+                            <th>Qtd</th>
+                            <th>Fornecedor</th>
+                            <th>Venda</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${listaAtivos}">
+                            <td th:text="${p.codigoBarras}"></td>
+                            <td th:text="${p.nome}" style="font-weight: 600;"></td>
+                            <td th:text="${p.categoria?.tipo}"></td>
+                            <td th:text="${p.quantidade}" th:style="${p.quantidade <= p.quantidadeMinima ? 'color:red; font-weight:bold;' : ''}"></td>
+                            <td th:text="${p.fornecedor?.nomeFantasia}"></td>
+                            <td th:text="${'R$ ' + #numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${p.id}"
+                                            th:data-nome="${p.nome}"
+                                            th:data-categoria="${p.categoria?.id}"
+                                            th:data-fornecedor="${p.fornecedor?.id}"
+                                            th:data-quantidade="${p.quantidade}"
+                                            th:data-minima="${p.quantidadeMinima}"
+                                            th:data-compra="${p.precoCompra}"
+                                            th:data-venda="${p.precoVenda}"
+                                            th:data-codigobarras="${p.codigoBarras}"
+                                            onclick="abrirModalEdicao(this)">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <a th:href="@{/pecas/excluir/{id}(id=${p.id})}" class="btn-action btn-delete" onclick="return confirm('Desativar peça?')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tabInativos" class="tab-content">
+                <div class="table-card">
+                    <div class="table-header"><h3>Peças Inativas</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar Peças Inativas..." id="searchInputInativos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="estoqueTableInativos">
+                        <thead>
+                        <tr>
+                            <th>Cód.</th>
+                            <th>Peça</th>
+                            <th>Categoria</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${listaInativos}">
+                            <td th:text="${p.codigoBarras}"></td>
+                            <td th:text="${p.nome}"></td>
+                            <td th:text="${p.categoria?.tipo}"></td>
+                            <td><span class="badge badge-inactive">Inativo</span></td>
+                            <td>
+                                <a th:href="@{/pecas/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore" onclick="return confirm('Restaurar peça?')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="estoqueModal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h2 id="modalTitle">Cadastrar Peça</h2>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <form id="estoqueForm" th:action="@{/pecas/cadastrar}" method="POST">
+            <input type="hidden" id="prodId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <h3 class="section-title">Dados da Peça</h3>
+                    <div class="form-group col-8">
+                        <label>Nome da Peça</label>
+                        <input type="text" id="prodNome" name="nome" class="form-control" required placeholder="Ex: Tela iPhone 11 Original">
+                    </div>
+                    <div class="form-group col-4">
+                        <label>Código Interno/Barras</label>
+                        <input type="text" id="prodCodigoBarras" name="codigoBarras" class="form-control">
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label>Categoria</label>
+                        <select id="prodCategoria" name="categoria.id" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.tipo}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Fornecedor</label>
+                        <select id="prodFornecedor" name="fornecedor.id" class="form-control">
+                            <option value="">Selecione...</option>
+                            <option th:each="f : ${listaFornecedores}" th:value="${f.id}" th:text="${f.nomeFantasia}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-4">
+                        <label>Qtd. Atual</label>
+                        <input type="number" id="prodQuantidade" name="quantidade" class="form-control">
+                    </div>
+                    <div class="form-group col-4">
+                        <label>Estoque Mínimo</label>
+                        <input type="number" id="prodQuantidadeMinima" name="quantidadeMinima" class="form-control">
+                    </div>
+                    <div class="form-group col-4">
+                        <label>Status</label>
+                        <select id="prodAtivo" name="ativo" class="form-control">
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label>Custo Unitário (R$)</label>
+                        <input type="number" step="0.01" id="prodPrecoCompra" name="precoCompra" class="form-control">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Valor Venda/Serviço (R$)</label>
+                        <input type="number" step="0.01" id="prodPrecoVenda" name="precoVenda" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Salvar Peça</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalAlimentar">
+    <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+            <h2>Alimentar Estoque</h2>
+            <button class="btn-close" onclick="fecharModalAlimentar()">&times;</button>
+        </div>
+        <form th:action="@{/pecas/alimentar}" method="POST">
+            <input type="hidden" id="alimentarId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group col-12">
+                        <label>Peça</label>
+                        <input type="text" id="alimentarNome" class="form-control" readonly style="background: #f9fafb; font-weight: bold;">
+                    </div>
+                    <div class="form-group col-12" style="margin-top: 15px;">
+                        <label>Quantidade a Adicionar</label>
+                        <input type="number" name="quantidade" class="form-control" min="1" required placeholder="Ex: 10">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn-secondary" onclick="fecharModalAlimentar()">Cancelar</button>
+                <button type="submit" class="btn-submit">Confirmar Entrada</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalRetirar">
+    <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+            <h2>Baixa de Peça</h2>
+            <button class="btn-close" onclick="fecharModalRetirar()">&times;</button>
+        </div>
+        <form th:action="@{/pecas/retirar}" method="POST">
+            <input type="hidden" id="retirarId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group col-12">
+                        <label>Peça</label>
+                        <input type="text" id="retirarNome" class="form-control" readonly style="background: #f9fafb; font-weight: bold;">
+                    </div>
+                    <div class="form-group col-12" style="margin-top: 15px;">
+                        <label>Quantidade a Retirar</label>
+                        <input type="number" name="quantidade" class="form-control" min="1" required placeholder="Ex: 1 (Uso em serviço)">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="fecharModalRetirar()">Cancelar</button>
+                <button type="submit" class="btn-submit">Confirmar Baixa</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalMovimentacoes">
+    <form method="POST" id="formMovimentacao">
+
+        <div class="modal-content modal-content-movimentacao">
+
+            <div class="modal-header modal-header-border">
+                <div>
+                    <h2>Movimentação de Peças em Lote</h2>
+                    <p class="modal-subtitle">Selecione as peças para dar entrada ou saída em massa.</p>
+                </div>
+                <button type="button" class="btn-close" onclick="fecharModalMovimentacoes()">&times;</button>
+            </div>
+
+            <div class="search-box mov" style="margin: 15px;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" id="searchMovimentacao" class="form-control"
+                       placeholder="Buscar peça..." onkeyup="filtrarTabelaMovimentacao()">
+            </div>
+
+            <div class="modal-body modal-body-scroll">
+                <table class="data-table" id="tabelaMovimentacao">
+                    <thead class="sticky-header">
+                    <tr>
+                        <th class="col-check">
+                            <input type="checkbox" id="checkMaster" onclick="toggleSelecionarTodos()" class="checkbox-lg">
+                        </th>
+                        <th>Peça / Código</th>
+                        <th class="col-status">Estoque</th>
+                        <th class="col-status">Categoria</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${listaAtivos}">
+                        <td class="cell-center">
+                            <input type="checkbox" name="ids" class="produto-check checkbox-lg" th:value="${p.id}">
+                        </td>
+                        <td>
+                            <div class="product-name-lg" th:text="${p.nome}">Nome</div>
+                            <small class="product-code-muted" th:text="${p.codigoBarras}">CÓDIGO</small>
+                        </td>
+                        <td class="cell-center">
+                            <span th:id="'qtd-atual-' + ${p.id}" th:text="${p.quantidade}" class="badge-stock">0</span>
+                        </td>
+                        <td class="cell-center">
+                            <span th:text="${p.categoria.tipo}" style="font-weight: 600; color: #3b82f6"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bulk-actions">
+                <div class="bulk-left">
+                    Selecionados: <span id="contadorSelecionados" class="text-highlight">0</span>
+                </div>
+
+                <div class="bulk-right">
+                    <div class="qty-group">
+                        <label>Quantidade:</label>
+                        <input type="number" name="quantidade" id="inputQtdMassa" class="form-control input-qty-center" value="1" min="1" required>
+                    </div>
+
+                    <button type="submit" formaction="/pecas/movimentacao/entrada" class="btn-submit btn-entry">
+                        Entrada
+                    </button>
+
+                    <button type="submit" formaction="/pecas/movimentacao/saida" class="btn-submit btn-exit">
+                        Saída
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/js/pecas.js}"></script>
+</body>
+</html>

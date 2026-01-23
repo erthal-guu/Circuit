@@ -47,13 +47,16 @@ body {
     display: flex;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0 20px;
-    height: 70px;
+    height: 90px;
     justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    padding-right: 40px;
+
 }
 
 .logo {
-    width: 180px;
+    width: 100px;
+    height: 100px;
 }
 
 .brand {
@@ -421,6 +424,7 @@ body {
     border: 1px solid var(--border-color);
     overflow: hidden;
     margin-bottom: 20px;
+
 }
 
 .table-header {
@@ -429,16 +433,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #0c3a97;
 }
 
 .table-header h3 {
     font-size: 18px;
-    color: var(--text-main);
+    color: white;
     font-weight: 600;
 }
 
 .search-box {
     position: relative;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
 }
 .search-box.mov{
     margin-top: 20px;
@@ -821,6 +827,7 @@ body {
     }
     .logo-container {
         justify-content: center;
+        background: rgba(0, 0, 0, 0.2);
         padding: 0;
     }
     .logo {
@@ -830,7 +837,7 @@ body {
     .menu-item {
         justify-content: center;
         margin: 0 10px 8px;
-    }
+    }''
     .main-content {
         margin-left: 70px;
         width: calc(100% - 70px);

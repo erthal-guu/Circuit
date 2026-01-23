@@ -1,6 +1,6 @@
 package Circuit.Circuit.Controller;
 
-import Circuit.Circuit.ApiDto.viaCep;
+import Circuit.Circuit.Api.viaCep;
 import Circuit.Circuit.Model.Fornecedor;
 import Circuit.Circuit.Service.CepService;
 import Circuit.Circuit.Service.FornecedorService;

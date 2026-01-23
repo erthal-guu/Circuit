@@ -1,4 +1,4 @@
-package Circuit.Circuit.ApiDto;
+package Circuit.Circuit.Api;
 
 import lombok.Data;
 
