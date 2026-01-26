@@ -30,11 +30,13 @@ public class PecasController {
         List<Pecas> inativos = pecasService.listarPecasInativas();
         List<CategoriaPecas> categorias =categoriasRepository.findAllByOrderByTipoAsc();
 
+
         model.addAttribute("listaAtivos", ativos);
         model.addAttribute("listaInativos", inativos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
         model.addAttribute("totalCriticos", pecasService.contarCriticos());
+        model.addAttribute("tipoEstoque", "peca");
         model.addAttribute("peca", new Pecas());
         return "estoquePecas";
     }
@@ -47,7 +49,7 @@ public class PecasController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
         }
-        return "redirect:/pecas";
+        return "redirect:/estoquePecas";
     }
 
     @PostMapping("/editar")
@@ -58,7 +60,7 @@ public class PecasController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao editar: " + e.getMessage());
         }
-        return "redirect:/pecas";
+        return "redirect:/estoquePecas";
     }
 
     @GetMapping("/excluir/{id}")
@@ -69,7 +71,7 @@ public class PecasController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao desativar: " + e.getMessage());
         }
-        return "redirect:/pecas";
+        return "redirect:/estoquePecas";
     }
 
     @GetMapping("/restaurar/{id}")
@@ -80,6 +82,6 @@ public class PecasController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao restaurar: " + e.getMessage());
         }
-        return "redirect:/pecas";
+        return "redirect:/estoquePecas";
     }
 }

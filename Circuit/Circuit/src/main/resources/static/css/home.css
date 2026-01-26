@@ -17,7 +17,7 @@ body {
 
 .sidebar {
   width: 280px;
-  background: #0c3a97;
+  background: #053875;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -131,8 +131,6 @@ body {
   margin-left: 280px;
   background: #f8fafc;
 }
-
-/* Updated top bar with icon buttons */
 .top-bar {
   background: #ffffff;
   padding: 20px 40px;
@@ -521,7 +519,6 @@ body {
             overflow-x: hidden;
         }
 
-        /* Estilização da scrollbar */
         .menu::-webkit-scrollbar {
             width: 6px;
         }

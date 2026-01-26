@@ -34,7 +34,7 @@ public class Pecas {
     private BigDecimal precoVenda;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "categoria_pecas_id")
     private CategoriaPecas categoria;
 
     @Column(nullable = false)

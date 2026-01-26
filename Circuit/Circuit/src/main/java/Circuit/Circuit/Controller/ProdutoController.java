@@ -36,7 +36,7 @@ public class ProdutoController {
         model.addAttribute("categorias", categorias);
         model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
         model.addAttribute("totalCriticos", produtoService.contarCriticos());
-
+        model.addAttribute("tipoEstoque", "produto");
         model.addAttribute("produto", new Produto());
 
         return "estoque";

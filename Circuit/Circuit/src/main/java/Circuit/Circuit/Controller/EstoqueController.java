@@ -25,7 +25,7 @@ public class EstoqueController {
 
         try {
             for (Long id : ids) {
-                estoqueService.alimentarEstoque(id, quantidade);
+                estoqueService.alimentarEstoqueProd(id, quantidade);
             }
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Entrada realizada com sucesso!");
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class EstoqueController {
 
         try {
             for (Long id : ids) {
-                estoqueService.retirarEstoque(id, quantidade);
+                estoqueService.retirarEstoqueProd(id, quantidade);
             }
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Saída realizada com sucesso!");
         } catch (Exception e) {
@@ -56,4 +56,47 @@ public class EstoqueController {
 
         return "redirect:/estoque";
     }
-}
+    @PostMapping("/entradaPecas")
+            public String entradaPecas(@RequestParam(value = "ids", required = false) List<Long> ids, @RequestParam("quantidade") Integer quantidade,
+                                       RedirectAttributes redirectAttributes) {
+        if (ids == null || ids.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Nenhum produto selecionado!");
+            return "redirect:/estoquePecas";
+        }
+        try {
+            for (Long id : ids) {
+                estoqueService.alimentarEstoquePeca(id, quantidade);
+            }
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Entrada realizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
+        }
+
+        return "redirect:/estoquePecas";
+    }
+    @PostMapping("/saidaPecas")
+    public String saidaPecas(@RequestParam(value = "ids", required = false) List<Long> ids,
+                             @RequestParam("quantidade") Integer quantidade,
+                             RedirectAttributes redirectAttributes) {
+
+        if (ids == null || ids.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Nenhuma peça selecionada!");
+            return "redirect:/estoquePecas";
+        }
+
+        try {
+            for (Long id : ids) {
+                estoqueService.retirarEstoquePeca(id, quantidade);
+            }
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Saída realizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao processar saída: " + e.getMessage());
+        }
+
+        return "redirect:/estoquePecas";
+    }
+
+
+
+    }
+

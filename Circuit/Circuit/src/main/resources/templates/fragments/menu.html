@@ -40,7 +40,7 @@
             <span class="menu-text">Clientes</span>
         </a>
         <a th:href="@{/estoque}" class="menu-item"
-           th:classappend="${activePage == 'estoque'} ? 'active' : ''">
+           th:classappend="${activePage == 'estoque' || activePage == 'pecas'} ? 'active' : ''">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
@@ -51,19 +51,6 @@
         </a>
 
         <div class="menu-section"><span class="menu-section-title">ESTOQUE</span></div>
-        <a th:href="@{/estoquePecas}" class="menu-item"
-           th:classappend="${activePage == 'pecas'} ? 'active' : ''">
-            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-            </svg>
-            <span class="menu-text">Peças</span>
-        </a>
 
         <a th:href="@{/fornecedores}" class="menu-item"
            th:classappend="${activePage == 'fornecedores'} ? 'active' : ''">

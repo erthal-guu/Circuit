@@ -10,6 +10,22 @@
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="content">
+
+            <div class="context-nav">
+                <a th:href="@{/estoque}"
+                   class="context-btn"
+                   th:classappend="${tipoEstoque == 'produto'} ? 'active' : ''">
+                    <i class="fas fa-box-open"></i>
+                    <span>Produtos</span>
+                </a>
+
+                <a th:href="@{/estoquePecas}"
+                   class="context-btn"
+                   th:classappend="${tipoEstoque == 'peca'} ? 'active' : ''">
+                    <i class="fas fa-tools"></i>
+                    <span>Peças</span>
+                </a>
+            </div>
             <div th:if="${mensagemSucesso}" class="auto-close"  style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                 <span>✅</span>
                 <span th:text="${mensagemSucesso}"></span>
@@ -28,15 +44,14 @@
                         <button class="tab-btn" onclick="switchTab('inativos', event)">Peças Inativas</button>
                     </div>
                     <div class="tab-container">
-                        <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes()">
-                            <i class="fas fa-dolly-flatbed"></i> Movimentação em Lote
+                        <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes(this)">
+                            <i class="fas fa-dolly-flatbed"></i> Central de Movimentações
                         </button>
                     </div>
 
                     <button class="btn-primary" onclick="abrirModalNovo()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Nova Peça
                     </button>
@@ -129,7 +144,7 @@
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </button>
-                                    <a th:href="@{/pecas/excluir/{id}(id=${p.id})}" class="btn-action btn-delete" onclick="return confirm('Desativar peça?')">
+                                    <a th:href="@{/estoquePecas/excluir/{id}(id=${p.id})}" class="btn-action btn-delete" onclick="return confirm('Desativar peça?')">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -172,7 +187,7 @@
                             <td th:text="${p.categoria?.tipo}"></td>
                             <td><span class="badge badge-inactive">Inativo</span></td>
                             <td>
-                                <a th:href="@{/pecas/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore" onclick="return confirm('Restaurar peça?')">
+                                <a th:href="@{/estoquePecas/restaurar/{id}(id=${p.id})}" class="btn-action btn-restore" onclick="return confirm('Restaurar peça?')">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -195,7 +210,7 @@
             <button class="btn-close" onclick="closeModal()">&times;</button>
         </div>
 
-        <form id="estoqueForm" th:action="@{/pecas/cadastrar}" method="POST">
+        <form id="estoqueForm" th:action="@{/estoquePecas/cadastrar}" method="POST">
             <input type="hidden" id="prodId" name="id">
             <div class="modal-body">
                 <div class="form-grid">
@@ -218,7 +233,7 @@
                     </div>
                     <div class="form-group col-6">
                         <label>Fornecedor</label>
-                        <select id="prodFornecedor" name="fornecedor.id" class="form-control">
+                        <select id="prodFornecedor" name="fornecedor.id" class="form-control" required>
                             <option value="">Selecione...</option>
                             <option th:each="f : ${listaFornecedores}" th:value="${f.id}" th:text="${f.nomeFantasia}"></option>
                         </select>
@@ -257,74 +272,15 @@
         </form>
     </div>
 </div>
-
-<div class="modal" id="modalAlimentar">
-    <div class="modal-content" style="max-width: 450px;">
-        <div class="modal-header">
-            <h2>Alimentar Estoque</h2>
-            <button class="btn-close" onclick="fecharModalAlimentar()">&times;</button>
-        </div>
-        <form th:action="@{/pecas/alimentar}" method="POST">
-            <input type="hidden" id="alimentarId" name="id">
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group col-12">
-                        <label>Peça</label>
-                        <input type="text" id="alimentarNome" class="form-control" readonly style="background: #f9fafb; font-weight: bold;">
-                    </div>
-                    <div class="form-group col-12" style="margin-top: 15px;">
-                        <label>Quantidade a Adicionar</label>
-                        <input type="number" name="quantidade" class="form-control" min="1" required placeholder="Ex: 10">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" style="margin-top: 20px;">
-                <button type="button" class="btn-secondary" onclick="fecharModalAlimentar()">Cancelar</button>
-                <button type="submit" class="btn-submit">Confirmar Entrada</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="modal" id="modalRetirar">
-    <div class="modal-content" style="max-width: 450px;">
-        <div class="modal-header">
-            <h2>Baixa de Peça</h2>
-            <button class="btn-close" onclick="fecharModalRetirar()">&times;</button>
-        </div>
-        <form th:action="@{/pecas/retirar}" method="POST">
-            <input type="hidden" id="retirarId" name="id">
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group col-12">
-                        <label>Peça</label>
-                        <input type="text" id="retirarNome" class="form-control" readonly style="background: #f9fafb; font-weight: bold;">
-                    </div>
-                    <div class="form-group col-12" style="margin-top: 15px;">
-                        <label>Quantidade a Retirar</label>
-                        <input type="number" name="quantidade" class="form-control" min="1" required placeholder="Ex: 1 (Uso em serviço)">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="fecharModalRetirar()">Cancelar</button>
-                <button type="submit" class="btn-submit">Confirmar Baixa</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <div class="modal" id="modalMovimentacoes">
     <form method="POST" id="formMovimentacao">
-
         <div class="modal-content modal-content-movimentacao">
-
             <div class="modal-header modal-header-border">
                 <div>
                     <h2>Movimentação de Peças em Lote</h2>
                     <p class="modal-subtitle">Selecione as peças para dar entrada ou saída em massa.</p>
                 </div>
-                <button type="button" class="btn-close" onclick="fecharModalMovimentacoes()">&times;</button>
+                <button type="button" class="btn-close" onclick="fecharModalMovimentacoes(this)">&times;</button>
             </div>
 
             <div class="search-box mov" style="margin: 15px;">
@@ -379,11 +335,11 @@
                         <input type="number" name="quantidade" id="inputQtdMassa" class="form-control input-qty-center" value="1" min="1" required>
                     </div>
 
-                    <button type="submit" formaction="/pecas/movimentacao/entrada" class="btn-submit btn-entry">
+                    <button type="submit" formaction="/estoque/movimentacao/entradaPecas" class="btn-submit btn-entry">
                         Entrada
                     </button>
 
-                    <button type="submit" formaction="/pecas/movimentacao/saida" class="btn-submit btn-exit">
+                    <button type="submit" formaction="/estoque/movimentacao/saidaPecas" class="btn-submit btn-exit">
                         Saída
                     </button>
                 </div>
@@ -392,6 +348,6 @@
     </form>
 </div>
 
-<script th:src="@{/js/pecas.js}"></script>
+<script th:src="@{/js/estoque.js}"></script>
 </body>
 </html>

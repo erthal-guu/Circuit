@@ -12,4 +12,5 @@ public interface PecasRepository extends JpaRepository<Pecas,Long> {
     List<Pecas> findByAtivoFalseOrderById();
     @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidade <= p.quantidadeMinima AND p.ativo = true")
     long countItensCriticos();
+
 }
