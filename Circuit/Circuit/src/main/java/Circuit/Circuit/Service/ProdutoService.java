@@ -4,6 +4,8 @@ import Circuit.Circuit.Model.Produto;
 import Circuit.Circuit.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -54,6 +56,9 @@ public class ProdutoService {
 
     public long contarCriticos() {
         return produtoRepository.countItensCriticos();
+    }
+    public BigDecimal valorTotalProdutos(){
+        return produtoRepository.sumPrecoVenda();
     }
 
 }

@@ -5,6 +5,7 @@ import Circuit.Circuit.Repository.PecasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -52,5 +53,8 @@ public class PecasService {
     }
     public long contarCriticos() {
         return pecasRepository.countItensCriticos();
+    }
+    public BigDecimal valorTotalPecas(){
+        return pecasRepository.sumPrecoVenda();
     }
 }

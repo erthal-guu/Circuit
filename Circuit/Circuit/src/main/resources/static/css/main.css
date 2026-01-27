@@ -877,10 +877,13 @@ body {
     border-radius: 10px;
     padding: 25px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.2);
-    border-left: 5px solid #001d3d;
+    border-left: 5px solid orangered;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s;
+}
+.stat-price{
+    border-left: 5px solid #10b981;
 }
 
 .stat-card:hover {
@@ -888,26 +891,28 @@ body {
 }
 
 .stat-card.alert {
-    border-left-color: dodgerblue;
+    border-left-color: #f93816;
 }
-
 .stat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
     font-weight: 700;
 }
 
-#stat-title {
+#stat-title,
+.stat-title-alert,
+.stat-title-price {
     color: #64748b;
     font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: -20px;
 }
 #stat-total{
-    border-left: 5px solid forestgreen;
+    border-left: 5px solid #282cb2;
+    transition: border-left-color 0.4s ease-in-out;
 }
 
 .stat-icon {
@@ -915,13 +920,8 @@ body {
     color: #cbd5e1;
     background: #f8fafc;
     padding: 10px;
-    border-radius: 50%;
-}
-
-.stat-icon.icon-alert {
-    color: #fee2e2;
-    background: #fef2f2;
-    color: #001d3d;
+    width: 80px;
+    height: 80px;
 }
 
 .stat-value {
@@ -1148,3 +1148,20 @@ body {
 .context-btn i {
     font-size: 1.1em;
 }
+.icon-price{
+    color: #10b981;
+}
+.icon-alert{
+    color: orangered;
+    width: 75px;
+    height: 75px;
+}
+.icon-status{
+    color: #282cb2;
+}
+#icon-status{
+    transition: color 0.4s ease-in-out, transform 0.4s ease-in-out;
+    transform-origin: center center;
+}
+
+

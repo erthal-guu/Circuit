@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -30,12 +31,14 @@ public class ProdutoController {
         List<Produto> inativos = produtoService.listarProdutosInativos();
         List<Categoria>categorias = categoriaRepository.findAll();
         Long produtosCriticos = produtoService.contarCriticos();
+        BigDecimal valorTotal = produtoService.valorTotalProdutos();
 
         model.addAttribute("listaAtivos", ativos);
         model.addAttribute("listaInativos", inativos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
         model.addAttribute("totalCriticos", produtoService.contarCriticos());
+        model.addAttribute("valorTotal", valorTotal);
         model.addAttribute("tipoEstoque", "produto");
         model.addAttribute("produto", new Produto());
 

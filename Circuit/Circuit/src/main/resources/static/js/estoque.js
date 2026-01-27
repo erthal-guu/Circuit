@@ -1,6 +1,10 @@
 const modal = document.getElementById('estoqueModal');
 const formEstoque = document.getElementById('estoqueForm');
 
+
+function obterTipoEstoque(){
+    return document.getElementById("tipoEstoqueGlobal").value;
+}
 function switchTab(tabName, event) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -10,22 +14,41 @@ function switchTab(tabName, event) {
     }
     const displayTotal = document.getElementById('displayTotal');
     const tituloTotal = document.getElementById('stat-title');
-    const colorCard = document.getElementById("stat-total")
+    const colorCard = document.getElementById("stat-total");
+    const colorSvg = document.getElementById("icon-status")
+    const tipo = obterTipoEstoque();
+    const isProduto = (tipo === "produto");
 
-    if (tabName === 'ativos') {
-        document.getElementById('tabAtivos').classList.add('active');
-        displayTotal.innerText = displayTotal.getAttribute('data-ativos');
-        tituloTotal.innerText = "Total de produtos Ativos";
-        colorCard.style.borderLeft = "4px solid forestgreen";
-
+    if (isProduto) {
+        if (tabName === 'ativos') {
+            document.getElementById('tabAtivos').classList.add('active');
+            displayTotal.innerText = displayTotal.getAttribute('data-ativos');
+            tituloTotal.innerText = "Total de produtos Ativos";
+            colorCard.style.borderLeft = "5px solid #282cb2";
+            colorSvg.style.color = "#282cb2";
+        } else {
+            document.getElementById('tabInativos').classList.add('active');
+            displayTotal.innerText = displayTotal.getAttribute('data-inativos');
+            tituloTotal.innerText = "Total de produtos Inativos";
+            colorCard.style.borderLeft = "5px solid red";
+            colorSvg.style.color = "red";
+        }
     } else {
-        document.getElementById('tabInativos').classList.add('active');
-        displayTotal.innerText = displayTotal.getAttribute('data-inativos');
-        tituloTotal.innerText = "Total de produtos Inativos";
-        colorCard.style.borderLeft = "4px solid red";
+        if (tabName === 'ativos') {
+            document.getElementById('tabAtivos').classList.add('active');
+            displayTotal.innerText = displayTotal.getAttribute('data-ativos');
+            tituloTotal.innerText = "Total de peças Ativas";
+            colorCard.style.borderLeft = "5px solid #282cb2";
+            colorSvg.style.color = "#282cb2";
+        } else {
+            document.getElementById('tabInativos').classList.add('active');
+            displayTotal.innerText = displayTotal.getAttribute('data-inativos');
+            tituloTotal.innerText = "Total de peças Inativas";
+            colorCard.style.borderLeft = "5px solid red";
+            colorSvg.style.color = "red";
+        }
     }
 }
-
 function abrirModalNovo() {
     formEstoque.reset();
     document.getElementById('prodId').value = '';
@@ -184,5 +207,25 @@ document.addEventListener("DOMContentLoaded", function() {
             }, 500);
 
         }, 3000);
+    });
+});
+function mascaraMoeda(event) {
+    const input = event.target;
+    let valor = input.value;
+    valor = valor.replace(/\D/g, "");
+    valor = (valor / 100).toFixed(2) + "";
+    valor = valor.replace(".", ",");
+    valor = valor.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+    valor = valor.replace(/(\d)(\d{3}),/g, "$1.$2,");
+
+    input.value = valor;
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const camposPreco = [document.getElementById('prodPrecoCompra'), document.getElementById('prodPrecoVenda')];
+
+    camposPreco.forEach(campo => {
+        if (campo) {
+            campo.addEventListener('input', mascaraMoeda);
+        }
     });
 });

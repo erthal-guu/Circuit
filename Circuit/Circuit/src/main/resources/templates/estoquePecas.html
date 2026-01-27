@@ -3,14 +3,13 @@
 <head th:replace="~{fragments/head.html :: head(titulo = 'Estoque de Peças')}">
 </head>
 <body>
+<input type="hidden" id="tipoEstoqueGlobal" th:value="${tipoEstoque}">
 <div class="container">
     <div th:replace="~{fragments/menu :: sidebar('pecas')}"></div>
 
     <main class="main-content">
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
-
         <div class="content">
-
             <div class="context-nav">
                 <a th:href="@{/estoque}"
                    class="context-btn"
@@ -59,29 +58,40 @@
             </div>
 
             <div class="stats-container">
-                <div class="stat-card">
+                <div class="stat-card stat-price">
                     <div class="stat-header">
-                        <span class="stat-title">Custo em Peças</span>
-                        <i class="fas fa-tools stat-icon"></i>
+                        <span class="stat-title-price">Valor em Estoque</span>
+                        <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
                     </div>
                     <div class="stat-value">
                         <small style="font-size: 0.5em; vertical-align: middle;">R$</small>
-                        <span th:text="${valorTotalEstoque != null ? #numbers.formatDecimal(valorTotalEstoque, 0, 'POINT', 2, 'COMMA') : '0,00'}">0,00</span>
+                        <span th:text="${valorTotalPecas != null ? #numbers.formatDecimal(valorTotalPecas, 0, 'POINT', 2, 'COMMA') : '0,00'}">0,00</span>
                     </div>
                 </div>
 
                 <div class="stat-card alert">
                     <div class="stat-header">
-                        <span class="stat-title">Estoque Baixo</span>
-                        <i class="fas fa-exclamation-triangle stat-icon icon-alert"></i>
+                        <span class="stat-title-alert">Itens Critícos</span>
+                        <svg class="stat-icon icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
                     </div>
                     <div class="stat-value text-alert" th:text="${totalCriticos}">0</div>
                 </div>
 
                 <div class="stat-card" id="stat-total">
                     <div class="stat-header">
-                        <span id="stat-title">Total de Peças</span>
-                        <i class="fas fa-cogs stat-icon"></i>
+                        <span id="stat-title">Total de Peças Ativas</span>
+                        <svg class="stat-icon icon-status" id="icon-status" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
                     </div>
                     <div class="stat-value"
                          id="displayTotal"
@@ -216,9 +226,14 @@
                 <div class="form-grid">
                     <h3 class="section-title">Dados da Peça</h3>
                     <div class="form-group col-8">
-                        <label>Nome da Peça</label>
-                        <input type="text" id="prodNome" name="nome" class="form-control" required placeholder="Ex: Tela iPhone 11 Original">
-                    </div>
+                        <div class="form-group col-4">
+                            <label>Código de NB</label>
+                            <input type="text" id="prodCodigoNB" name="codigoNB" class="form-control" placeholder="Ex: NB-123">
+                        </div>
+                        <div class="form-group col-8">
+                            <label>Nome da Peça</label>
+                            <input type="text" id="prodNome" name="nome" class="form-control" required placeholder="Ex: Pastilha de Freio">
+                        </div>
                     <div class="form-group col-4">
                         <label>Código Interno/Barras</label>
                         <input type="text" id="prodCodigoBarras" name="codigoBarras" class="form-control">
@@ -257,17 +272,18 @@
 
                     <div class="form-group col-6">
                         <label>Custo Unitário (R$)</label>
-                        <input type="number" step="0.01" id="prodPrecoCompra" name="precoCompra" class="form-control">
+                        <input type="text" id="prodPrecoCompra" name="precoCompra" class="form-control" placeholder="0,00">
                     </div>
                     <div class="form-group col-6">
                         <label>Valor Venda/Serviço (R$)</label>
-                        <input type="number" step="0.01" id="prodPrecoVenda" name="precoVenda" class="form-control">
+                        <input type="text" id="prodPrecoVenda" name="precoVenda" class="form-control" placeholder="0,00">
                     </div>
                 </div>
                 <div class="modal-footer" style="margin-top: 20px;">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
                     <button type="submit" class="btn-submit">Salvar Peça</button>
                 </div>
+            </div>
             </div>
         </form>
     </div>

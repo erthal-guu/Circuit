@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -29,6 +30,7 @@ public class PecasController {
         List<Pecas> ativos = pecasService.listarPecasAtivas();
         List<Pecas> inativos = pecasService.listarPecasInativas();
         List<CategoriaPecas> categorias =categoriasRepository.findAllByOrderByTipoAsc();
+        BigDecimal valorTotalPecas = pecasService.valorTotalPecas();
 
 
         model.addAttribute("listaAtivos", ativos);
@@ -36,6 +38,7 @@ public class PecasController {
         model.addAttribute("categorias", categorias);
         model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
         model.addAttribute("totalCriticos", pecasService.contarCriticos());
+        model.addAttribute("valorTotalPecas", valorTotalPecas);
         model.addAttribute("tipoEstoque", "peca");
         model.addAttribute("peca", new Pecas());
         return "estoquePecas";
