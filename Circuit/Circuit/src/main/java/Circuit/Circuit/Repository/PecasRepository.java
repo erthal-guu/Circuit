@@ -11,8 +11,9 @@ import java.util.List;
 public interface PecasRepository extends JpaRepository<Pecas,Long> {
     List<Pecas> findByAtivoTrueOrderById();
     List<Pecas> findByAtivoFalseOrderById();
-    @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidade <= p.quantidadeMinima AND p.ativo = true")
+    @Query("SELECT COUNT(p) FROM Pecas p WHERE p.quantidade <= p.quantidadeMinima AND p.ativo = true")
     long countItensCriticos();
+
     @Query("SELECT SUM(p.precoVenda) FROM Pecas p")
     BigDecimal sumPrecoVenda();
 

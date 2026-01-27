@@ -29,7 +29,7 @@ public class PecasController {
     public String abrirPecas(Model model) {
         List<Pecas> ativos = pecasService.listarPecasAtivas();
         List<Pecas> inativos = pecasService.listarPecasInativas();
-        List<CategoriaPecas> categorias =categoriasRepository.findAllByOrderByTipoAsc();
+        List<CategoriaPecas> categorias = categoriasRepository.findAllByOrderByTipoAsc();
         BigDecimal valorTotalPecas = pecasService.valorTotalPecas();
 
 
@@ -37,7 +37,7 @@ public class PecasController {
         model.addAttribute("listaInativos", inativos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("listaFornecedores", fornecedorService.listarFornecedoresAtivos());
-        model.addAttribute("totalCriticos", pecasService.contarCriticos());
+        model.addAttribute("totalCriticas", pecasService.contarCriticos());
         model.addAttribute("valorTotalPecas", valorTotalPecas);
         model.addAttribute("tipoEstoque", "peca");
         model.addAttribute("peca", new Pecas());
