@@ -1118,12 +1118,9 @@ body {
 .context-btn {
     display: flex;
     align-items: center;
-
-
     justify-content: center;
     min-width: 100px;
     padding: 8px 0;
-
     gap: 8px;
     border-radius: 50px;
     text-decoration: none;
@@ -1132,6 +1129,7 @@ body {
     font-weight: 600;
     font-size: 14px;
     transition: all 0.3s ease;
+    padding-right: 10px;
 }
 
 .context-btn:hover:not(.active) {
