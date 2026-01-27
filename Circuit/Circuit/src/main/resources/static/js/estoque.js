@@ -229,3 +229,42 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+function exportarParaPDF() {
+    const abaAtiva = document.querySelector('.tab-content.active');
+    if (!abaAtiva) {
+        alert("Nenhuma tabela visível para exportar.");
+        return;
+    }
+    const tabelaOriginal = abaAtiva.querySelector('table');
+    const tabelaClone = tabelaOriginal.cloneNode(true);
+    const ths = tabelaClone.querySelectorAll('th');
+    if (ths.length > 0) ths[ths.length - 1].remove();
+    tabelaClone.querySelectorAll('tr').forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length > 0) tds[tds.length - 1].remove();
+    });
+    const container = document.createElement('div');
+    container.style.padding = '20px';
+    container.style.fontFamily = 'Arial, sans-serif';
+    container.style.color = '#000';
+    const dataHoje = new Date().toLocaleDateString('pt-BR');
+    const titulo = document.querySelector('.page-title').innerText;
+    const subtitulo = abaAtiva.id === 'tabAtivos' ? 'Listagem de Itens Ativos' : 'Listagem de Itens Inativos';
+
+    container.innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #001d3d; padding-bottom: 10px;">
+            <h2 style="color: #001d3d; margin: 0;">${titulo}</h2>
+            <h4 style="color: #666; margin: 5px 0;">${subtitulo}</h4>
+            <small>Gerado em: ${dataHoje}</small>
+        </div>
+    `;
+    container.appendChild(tabelaClone);
+    const opt = {
+        margin:       10,
+        filename:     `Listagem de estoque ${dataHoje.replace(/\//g, '-')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(container).save();
+}
