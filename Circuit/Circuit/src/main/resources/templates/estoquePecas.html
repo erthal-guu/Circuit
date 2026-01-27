@@ -38,13 +38,14 @@
             <div class="page-header">
                 <h1 class="page-title">Gerenciamento de Peças</h1>
                 <div class="header-actions">
+                    <button class="btn-secondary" onclick="exportarParaPDF()" style="margin-right: 10px;background-color: var(--primary-color); color: white;">
+                        <i class="fas fa-file-pdf"></i> Exportar Lista
+                    </button>
                     <div class="tab-container">
+
                         <button class="tab-btn active" onclick="switchTab('ativos', event)">Peças Ativas</button>
                         <button class="tab-btn" onclick="switchTab('inativos', event)">Peças Inativas</button>
                     </div>
-                    <button class="btn-secondary" onclick="exportarParaPDF()" style="margin-right: 10px;">
-                        <i class="fas fa-file-pdf"></i> Exportar Lista
-                    </button>
 
                     <div class="tab-container">
                         <button class="tab-btn modalMov" onclick="abrirModalMovimentacoes(this)">
