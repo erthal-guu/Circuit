@@ -30,12 +30,6 @@ function closeModal() {
     }
 }
 
-window.onclick = function(event) {
-    if (event.target == modalAparelho) {
-        closeModal();
-    }
-}
-
 function abrirModalNovo() {
     if (formAparelho) {
         formAparelho.reset();

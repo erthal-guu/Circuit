@@ -95,8 +95,5 @@ public class EstoqueController {
 
         return "redirect:/estoquePecas";
     }
-
-
-
-    }
+}
 
