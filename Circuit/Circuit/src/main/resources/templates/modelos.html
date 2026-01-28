@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Gerenciamento de Modelos')}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/menu :: sidebar('modelos')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
+
+        <div class="content">
+            <div th:if="${mensagemSucesso}" class="auto-close" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                <span>✅</span>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+
+            <div th:if="${mensagemErro}" class="auto-close" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+                <span>⚠️</span>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Modelos de Aparelhos</h1>
+                <div class="header-actions">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('ativos', event)">Modelos Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos', event)">Modelos Inativos</button>
+                    </div>
+
+                    <button class="btn-primary" onclick="abrirModalNovo()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Novo Modelo
+                    </button>
+                </div>
+            </div>
+
+            <div id="tabAtivos" class="tab-content active">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Modelos Disponíveis</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar Modelo..." id="searchInputAtivos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="modelosTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome do Modelo</th>
+                            <th>Marca</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="m : ${listaAtivos}">
+                            <td th:text="${m.id}"></td>
+                            <td th:text="${m.nome}" style="font-weight: 600;"></td>
+                            <td th:text="${m.marca != null ? m.marca.nome : 'Sem Marca'}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${m.id}"
+                                            th:data-nome="${m.nome}"
+                                            th:data-marcaid="${m.marca != null ? m.marca.id : ''}"
+                                            th:data-ativo="${m.ativo}"
+                                            onclick="abrirModalEdicao(this)">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+
+                                    <a th:href="@{/modelos/excluir/{id}(id=${m.id})}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('Desativar este modelo?')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="5" style="text-align:center; padding: 20px;">Nenhum modelo ativo.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tabInativos" class="tab-content">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Modelos Inativos</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar inativos..." id="searchInputInativos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="modelosTableInativos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome do Modelo</th>
+                            <th>Marca</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="m : ${listaInativos}">
+                            <td th:text="${m.id}"></td>
+                            <td th:text="${m.nome}"></td>
+                            <td th:text="${m.nome != null ? m.nome : 'Sem Marca'}"></td>
+                            <td><span class="badge badge-inactive">Inativo</span></td>
+                            <td>
+                                <a th:href="@{/modelos/restaurar/{id}(id=${m.id})}"
+                                   class="btn-action btn-restore"
+                                   onclick="return confirm('Restaurar este modelo?')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaInativos)}">
+                            <td colspan="5" style="text-align:center; padding: 20px;">Nenhum modelo Inativo.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="modeloModal">
+    <div class="modal-content" style="max-width: 600px; margin-top: 20px">
+        <div class="modal-header">
+            <h2 id="modalTitle">Cadastrar Modelo</h2>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <form id="modeloForm" th:action="@{/modelos/cadastrar}" method="POST">
+            <input type="hidden" id="modId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+
+                    <div class="form-group col-12">
+                        <label>Nome do Modelo</label>
+                        <input type="text" id="modNome" name="nome" class="form-control" required placeholder="Ex: iPhone 15, Galaxy S24...">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label>Marca</label>
+                        <select id="modMarca" name="marca.id" class="form-control" required>
+                            <option value="">Selecione a Marca...</option>
+                            <option th:each="marcas : ${ListaMarcas}"
+                                    th:value="${marcas.id}"
+                                    th:text="${marcas.nome}">Marca X</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label>Status</label>
+                        <select id="modAtivo" name="ativo" class="form-control" required>
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/modelo.js}"></script>
+</body>
+</html>

@@ -1,22 +1,18 @@
 package Circuit.Circuit.Service;
 
-import Circuit.Circuit.Model.Categoria;
-import Circuit.Circuit.Model.Pecas;
+import Circuit.Circuit.Model.Peca;
 import Circuit.Circuit.Model.Produto;
-import Circuit.Circuit.Repository.CategoriaRepository;
-import Circuit.Circuit.Repository.PecasRepository;
+import Circuit.Circuit.Repository.PecaRepository;
 import Circuit.Circuit.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EstoqueService {
     @Autowired
     private ProdutoRepository produtoRepository;
     @Autowired
-    private PecasRepository pecasRepository;
+    private PecaRepository pecasRepository;
 
     public void alimentarEstoqueProd(Long id, Integer quantidadeAdicionada) {
         Produto produto = produtoRepository.getReferenceById(id);
@@ -34,13 +30,13 @@ public class EstoqueService {
         produtoRepository.save(produto);
     }
     public void alimentarEstoquePeca(Long id, Integer quantidadeAdicionada) {
-        Pecas pecas = pecasRepository.getReferenceById(id);
+        Peca pecas = pecasRepository.getReferenceById(id);
         pecas.setQuantidade(pecas.getQuantidade() + quantidadeAdicionada);
         pecasRepository.save(pecas);
     }
 
     public void retirarEstoquePeca(Long id, Integer quantidadeRetirada) {
-        Pecas pecas = pecasRepository.getReferenceById(id);
+        Peca pecas = pecasRepository.getReferenceById(id);
         if (pecas.getQuantidade() < quantidadeRetirada) {
             throw new RuntimeException("Estoque insuficiente!");
         }

@@ -23,7 +23,7 @@ public class ClienteController {
     @Autowired
     private CepService viaCepService;
     @GetMapping
-    public String listarClientes(Model model) {
+    public String abrirClientes(Model model) {
         List<Cliente> ativos = clienteService.listarAtivos();
         List<Cliente> inativos = clienteService.listarInativos();
         model.addAttribute("listaAtivos", ativos);

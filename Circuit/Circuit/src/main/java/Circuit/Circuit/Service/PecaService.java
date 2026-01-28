@@ -1,7 +1,7 @@
 package Circuit.Circuit.Service;
 
-import Circuit.Circuit.Model.Pecas;
-import Circuit.Circuit.Repository.PecasRepository;
+import Circuit.Circuit.Model.Peca;
+import Circuit.Circuit.Repository.PecaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,35 +9,34 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class PecasService {
+public class PecaService {
 
     @Autowired
-    private PecasRepository pecasRepository;
+    private PecaRepository pecasRepository;
 
-    public Pecas cadastrar(Pecas pecas){
-        pecas.setAtivo(true);
+    public Peca cadastrar(Peca pecas){
         return pecasRepository.save(pecas);
     }
 
-    public Pecas excluirPeca(Long id){
-        Pecas pecas = pecasRepository.getReferenceById(id);
-        pecas.setAtivo(false);
-        return pecasRepository.save(pecas);
+    public Peca excluirPeca(Long id){
+        Peca peca = pecasRepository.getReferenceById(id);
+        peca.setAtivo(false);
+        return pecasRepository.save(peca);
     }
-    public Pecas restaurarPeca(Long id){
-        Pecas pecas = pecasRepository.getReferenceById(id);
+    public Peca restaurarPeca(Long id){
+        Peca pecas = pecasRepository.getReferenceById(id);
         pecas.setAtivo(true);
         return  pecasRepository.save(pecas);
     }
 
-    public List<Pecas> listarPecasAtivas(){
+    public List<Peca> listarPecasAtivas(){
         return pecasRepository.findByAtivoTrueOrderById();
     }
-    public List<Pecas> listarPecasInativas(){
+    public List<Peca> listarPecasInativas(){
         return pecasRepository.findByAtivoFalseOrderById();
     }
-    public Pecas editarPeca(Long id, Pecas dadosAtualizados) {
-        Pecas pecas = pecasRepository.getReferenceById(id);
+    public Peca editarPeca(Long id, Peca dadosAtualizados) {
+        Peca pecas = pecasRepository.getReferenceById(id);
 
         pecas.setNome(dadosAtualizados.getNome());
         pecas.setQuantidade(dadosAtualizados.getQuantidade());

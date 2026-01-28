@@ -17,7 +17,6 @@ public class FornecedorService {
         if (fornecedorRepository.existsByCnpj(fornecedor.getCnpj())) {
             throw new RuntimeException("Este CNPJ já está cadastrado no sistema.");
         }
-        fornecedor.setAtivo(true);
         return fornecedorRepository.save(fornecedor);
     }
 

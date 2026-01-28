@@ -41,7 +41,7 @@ public class Produto {
     private Boolean ativo = true;
 
     @Column(name = "codigo_barras", nullable = false)
-    private Long codigoBarras;
+    private String codigoBarras;
 
     @ManyToOne
     @JoinColumn(name = "fornecedor_id")

@@ -15,7 +15,6 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
 
     public Produto cadastrar(Produto produto) {
-        produto.setAtivo(true);
         return produtoRepository.save(produto);
     }
 

@@ -10,10 +10,7 @@ import java.util.List;
 
 @Repository
 public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
-
     boolean existsByCnpj(String cnpj);
-
     List<Fornecedor> findByAtivoTrueOrderById();
-
     List<Fornecedor> findByAtivoFalseOrderById();
 }

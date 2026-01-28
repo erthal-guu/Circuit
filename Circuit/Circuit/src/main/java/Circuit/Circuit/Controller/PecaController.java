@@ -1,10 +1,10 @@
 package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.Model.CategoriaPecas;
-import Circuit.Circuit.Model.Pecas;
+import Circuit.Circuit.Model.Peca;
 import Circuit.Circuit.Repository.CategoriaPecasRepository;
 import Circuit.Circuit.Service.FornecedorService;
-import Circuit.Circuit.Service.PecasService;
+import Circuit.Circuit.Service.PecaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +16,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/estoquePecas")
-public class PecasController {
+public class PecaController {
 
     @Autowired
-    private PecasService pecasService;
+    private PecaService pecasService;
     @Autowired
     private CategoriaPecasRepository categoriasRepository;
     @Autowired
@@ -27,8 +27,8 @@ public class PecasController {
 
     @GetMapping
     public String abrirPecas(Model model) {
-        List<Pecas> ativos = pecasService.listarPecasAtivas();
-        List<Pecas> inativos = pecasService.listarPecasInativas();
+        List<Peca> ativos = pecasService.listarPecasAtivas();
+        List<Peca> inativos = pecasService.listarPecasInativas();
         List<CategoriaPecas> categorias = categoriasRepository.findAllByOrderByTipoAsc();
         BigDecimal valorTotalPecas = pecasService.valorTotalPecas();
 
@@ -40,12 +40,12 @@ public class PecasController {
         model.addAttribute("totalCriticas", pecasService.contarCriticos());
         model.addAttribute("valorTotalPecas", valorTotalPecas);
         model.addAttribute("tipoEstoque", "peca");
-        model.addAttribute("peca", new Pecas());
+        model.addAttribute("peca", new Peca());
         return "estoquePecas";
     }
 
     @PostMapping("/cadastrar")
-    public String cadastrar(@ModelAttribute Pecas pecas, RedirectAttributes redirectAttributes) {
+    public String cadastrar(@ModelAttribute Peca pecas, RedirectAttributes redirectAttributes) {
         try {
             pecasService.cadastrar(pecas);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Peça salva com sucesso!");
@@ -56,7 +56,7 @@ public class PecasController {
     }
 
     @PostMapping("/editar")
-    public String editar(@ModelAttribute Pecas pecas, RedirectAttributes redirectAttributes) {
+    public String editar(@ModelAttribute Peca pecas, RedirectAttributes redirectAttributes) {
         try {
             pecasService.editarPeca(pecas.getId(), pecas);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Peça atualizada com sucesso!");

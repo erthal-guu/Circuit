@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Gerenciamento de Aparelhos')}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/menu :: sidebar('aparelhos')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
+
+        <div class="content">
+            <div th:if="${mensagemSucesso}" class="auto-close" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                <span>✅</span>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+
+            <div th:if="${mensagemErro}" class="auto-close" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
+                <span>⚠️</span>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Aparelhos dos Clientes</h1>
+                <div class="header-actions">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('ativos', event)">Aparelhos Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos', event)">Aparelhos Inativos</button>
+                    </div>
+
+                    <button class="btn-primary" onclick="abrirModalNovo()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Novo Aparelho
+                    </button>
+                </div>
+            </div>
+
+            <div id="tabAtivos" class="tab-content active">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Equipamentos em Uso</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar por Série, Modelo ou Cliente..." id="searchInputAtivos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="aparelhosTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nº de Série</th>
+                            <th>Modelo/Marca</th>
+                            <th>Dono (Cliente)</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${listaAtivos}">
+                            <td th:text="${a.id}"></td>
+                            <td th:text="${a.numeroSerie}" style="font-weight: 600;"></td>
+                            <td th:text="${a.modelo.marca.nome + ' ' + a.modelo.nome}"></td>
+                            <td th:text="${a.cliente.nome}"></td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${a.id}"
+                                            th:data-serie="${a.numeroSerie}"
+                                            th:data-modeloid="${a.modelo.id}"
+                                            th:data-clienteid="${a.cliente.id}"
+                                            th:data-obs="${a.observacoes}"
+                                            th:data-ativo="${a.ativo}"
+                                            onclick="abrirModalEdicao(this)">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+
+                                    <a th:href="@{/aparelhos/excluir/{id}(id=${a.id})}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('Desativar este aparelho?')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="6" style="text-align:center; padding: 20px;">Nenhum aparelho cadastrado.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tabInativos" class="tab-content">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Aparelhos Inativos</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar inativos..." id="searchInputInativos">
+                        </div>
+                    </div>
+                    <table class="data-table" id="aparelhosTableInativos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nº de Série</th>
+                            <th>Modelo</th>
+                            <th>Dono</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${listaInativos}">
+                            <td th:text="${a.id}"></td>
+                            <td th:text="${a.numeroSerie}"></td>
+                            <td th:text="${a.modelo.nome}"></td>
+                            <td th:text="${a.cliente.nome}"></td>
+                            <td>
+                                <a th:href="@{/aparelhos/restaurar/{id}(id=${a.id})}"
+                                   class="btn-action btn-restore"
+                                   onclick="return confirm('Restaurar este aparelho?')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="aparelhoModal">
+    <div class="modal-content" style="max-width: 700px; margin-top: 20px">
+        <div class="modal-header">
+            <h2 id="modalTitle">Cadastrar Aparelho</h2>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <form id="aparelhoForm" th:action="@{/aparelhos/cadastrar}" method="POST">
+            <input type="hidden" id="apaId" name="id">
+            <div class="modal-body">
+                <div class="form-grid">
+
+                    <div class="form-group col-6">
+                        <label>Número de Série</label>
+                        <input type="text" id="apaSerie" name="numeroSerie" class="form-control" required maxlength="15" placeholder="Digite o número de série...">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Modelo do Aparelho</label>
+                        <select id="apaModelo" name="modelo.id" class="form-control" required>
+                            <option value="">Selecione o Modelo...</option>
+                            <option th:each="modelo : ${listaModelos}"
+                                    th:value="${modelo.id}"
+                                    th:text="${modelo.marca.nome + ' ' + modelo.nome}">Modelo X</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label>Cliente</label>
+                        <select id="apaCliente" name="cliente.id" class="form-control" required>
+                            <option value="">Selecione o Cliente...</option>
+                            <option th:each="cli : ${listaClientes}"
+                                    th:value="${cli.id}"
+                                    th:text="${cli.nome + ' (' + cli.cpf + ')'}">Cliente X</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Status</label>
+                        <select id="apaAtivo" name="ativo" class="form-control" required>
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label>Observações Adicionais</label>
+                        <textarea id="apaObs" name="observacoes" class="form-control" rows="3" placeholder="Ex: Detalhes sobre o estado físico, cor, etc..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/aparelho.js}"></script>
+</body>
+</html>
