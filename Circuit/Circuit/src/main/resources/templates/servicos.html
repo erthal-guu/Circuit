@@ -177,12 +177,7 @@
                                     <span class="price" th:text="${'R$ ' + peca.getPrecoVenda()}">R$ 0.00</span>
                                 </label>
                             </div>
-                        </div>
-                        <small class="text-muted mt-2 d-block">Marque as peças que normalmente são usadas neste serviço.</small>
                     </div>
-
-                </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" onclick="fecharModalServico()">Cancelar</button>
                     <button type="submit" class="btn-primary">Salvar Serviço</button>
@@ -191,57 +186,6 @@
         </form>
     </div>
 </div>
-
-<script>
-    const modal = document.getElementById('modalServico');
-
-    // Lógica de Abas (Tabs) - Igual ao Modelos
-    function switchTab(tabName, event) {
-        // Esconde todos os conteúdos
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-
-        // Remove active de todos os botões
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        // Ativa o selecionado
-        document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-
-    // Lógica do Modal
-    function abrirModalServico() {
-        const forms = modal.querySelectorAll('form');
-        forms.forEach(form => form.reset()); // Limpa o formulário
-        modal.classList.add('active');
-        modal.style.display = 'flex';
-    }
-
-    function fecharModalServico() {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            fecharModalServico();
-        }
-    }
-
-    // Auto-close alerts
-    document.addEventListener("DOMContentLoaded", function () {
-        const alertas = document.querySelectorAll('.auto-close');
-        alertas.forEach(alerta => {
-            setTimeout(() => {
-                alerta.style.opacity = '0';
-                setTimeout(() => { alerta.remove(); }, 500);
-            }, 3000);
-        });
-    });
-</script>
-
+<script th:src="@{/js/servico.js}"></script>
 </body>
 </html>
