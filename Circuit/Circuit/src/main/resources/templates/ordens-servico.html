@@ -1,10 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Ordens de Serviço')}">
 </head>
 <body>
+<div class="container">
+    <div th:replace="~{fragments/menu :: sidebar('ordens')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
+
+        <div class="content">
+
+            <div th:if="${mensagemSucesso}" class="auto-close alert-success">
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+            <div th:if="${mensagemErro}" class="auto-close alert-error">
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Ordens de Serviço</h1>
+                <div class="header-actions">
+                    <div class="tab-container">
+                        <a th:href="@{/ordens}" class="tab-btn active">Todas</a>
+                        <a th:href="@{/ordens?status=ABERTA}" class="tab-btn">Abertas</a>
+                        <a th:href="@{/ordens?status=FINALIZADA}" class="tab-btn">Finalizadas</a>
+                    </div>
+
+                    <button class="btn-primary" onclick="abrirModalNovaOs()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Lançar Nova OS
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>Serviços Recentes</h3>
+                    <div class="search-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="searchOs" placeholder="Buscar por cliente, OS ou serial...">
+                    </div>
+                </div>
+
+                <table class="data-table" id="tabelaOrdens">
+                    <thead>
+                    <tr>
+                        <th>Nº OS</th>
+                        <th>Cliente</th>
+                        <th>Aparelho / Defeito</th>
+                        <th>Data Entrada</th>
+                        <th>Técnico</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="os : ${listaOrdens}">
+                        <td><strong th:text="'#' + ${os.id}"></strong></td>
+                        <td th:text="${os.cliente.nome}"></td>
+                        <td>
+                            <div th:text="${os.aparelho.modelo.nome}" style="font-weight: 600;"></div>
+                            <div th:text="${os.defeito}" style="font-size: 0.85em; color: #666;"></div>
+                        </td>
+                        <td th:text="${#temporals.format(os.dataEntrada, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${os.funcionario.nome}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${os.status == 'ABERTA' ? 'badge-active' : (os.status == 'CANCELADA' ? 'badge-inactive' : 'badge-success')}"
+                                  th:text="${os.status}">
+                            </span>
+                        </td>
+                        <td th:text="${'R$ ' + os.valorTotal}"></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a th:href="@{/ordens/editar/{id}(id=${os.id})}" class="btn-action btn-edit" title="Editar">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </a>
+                                <a th:href="@{/ordens/imprimir/{id}(id=${os.id})}" target="_blank" class="btn-action" title="Imprimir">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(listaOrdens)}">
+                        <td colspan="8" style="text-align: center; padding: 30px; color: #666;">
+                            Nenhuma ordem de serviço encontrada.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="modalNovaOs">
+    <div class="modal-content" style="max-width: 800px; margin-top: 20px">
+        <div class="modal-header">
+            <h2 id="modalTitle">Nova Ordem de Serviço</h2>
+            <button class="btn-close" onclick="closeModalOs()">&times;</button>
+        </div>
+
+        <form id="formOs" th:action="@{/ordens/cadastrar}" method="POST">
+            <input type="hidden" name="status" value="ABERTA"> <div class="modal-body">
+            <div class="form-grid">
+
+                <div class="form-group col-6">
+                    <label>Cliente</label>
+                    <select id="osCliente" name="cliente.id" class="form-control" required onchange="carregarAparelhosCliente(this.value)">
+                        <option value="">Selecione o Cliente...</option>
+                        <option th:each="cli : ${listaClientes}"
+                                th:value="${cli.id}"
+                                th:text="${cli.nome}">Cliente X</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-6">
+                    <label>Aparelho do Cliente</label>
+                    <select id="osAparelho" name="aparelho.id" class="form-control" required disabled>
+                        <option value="">Selecione um Cliente primeiro...</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-6">
+                    <label>Técnico Responsável</label>
+                    <select id="osTecnico" name="funcionario.id" class="form-control" required>
+                        <option value="">Selecione o Técnico...</option>
+                        <option th:each="tec : ${listaFuncionarios}"
+                                th:value="${tec.id}"
+                                th:text="${tec.nome}">Técnico X</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-6">
+                    <label>Previsão de Entrega</label>
+                    <input type="date" name="dataPrevisao" class="form-control">
+                </div>
+
+                <div class="form-group col-12">
+                    <label>Defeito Reclamado / Relato</label>
+                    <textarea name="defeito" class="form-control" rows="4" required placeholder="Descreva o problema relatado pelo cliente..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn-secondary" onclick="closeModalOs()">Cancelar</button>
+                <button type="submit" class="btn-submit">Abrir Ordem</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modalOs = document.getElementById('modalNovaOs');
+    const formOs = document.getElementById('formOs');
+
+    function abrirModalNovaOs() {
+        if (formOs) formOs.reset();
+        document.getElementById('osAparelho').innerHTML = '<option value="">Selecione um Cliente primeiro...</option>';
+        document.getElementById('osAparelho').disabled = true;
+
+        modalOs.classList.add('active');
+        modalOs.style.display = 'flex';
+    }
+
+    function closeModalOs() {
+        modalOs.classList.remove('active');
+        modalOs.style.display = 'none';
+    }
+
+    // Fecha ao clicar fora
+    window.onclick = function(event) {
+        if (event.target == modalOs) {
+            closeModalOs();
+        }
+    }
+
+    // Lógica para carregar Aparelhos via AJAX ao selecionar Cliente
+    // REQUISITO: Você precisa criar um endpoint no AparelhoController: @GetMapping("/api/aparelhos/cliente/{id}")
+    async function carregarAparelhosCliente(clienteId) {
+        const selectAparelho = document.getElementById('osAparelho');
+
+        if (!clienteId) {
+            selectAparelho.innerHTML = '<option value="">Selecione um Cliente primeiro...</option>';
+            selectAparelho.disabled = true;
+            return;
+        }
+
+        selectAparelho.innerHTML = '<option>Carregando...</option>';
+        selectAparelho.disabled = true;
+
+        try {
+            // AJUSTE AQUI: Essa rota precisa existir no seu Controller
+            const response = await fetch(`/aparelhos/json/cliente/${clienteId}`);
+            if (response.ok) {
+                const aparelhos = await response.json();
+
+                selectAparelho.innerHTML = '<option value="">Selecione o Aparelho...</option>';
+
+                aparelhos.forEach(apa => {
+                    const option = document.createElement('option');
+                    option.value = apa.id;
+                    option.text = `${apa.modelo.nome} (S/N: ${apa.numeroSerie})`;
+                    selectAparelho.appendChild(option);
+                });
+
+                selectAparelho.disabled = false;
+            } else {
+                selectAparelho.innerHTML = '<option>Erro ao carregar</option>';
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            selectAparelho.innerHTML = '<option>Erro na conexão</option>';
+        }
+    }
+
+    // Auto-close alerts
+    document.addEventListener("DOMContentLoaded", function () {
+        const alertas = document.querySelectorAll('.auto-close');
+        alertas.forEach(alerta => {
+            setTimeout(() => {
+                alerta.style.opacity = '0';
+                setTimeout(() => { alerta.remove(); }, 500);
+            }, 3000);
+        });
+
+        // Busca na tabela
+        const input = document.getElementById('searchOs');
+        const table = document.getElementById('tabelaOrdens');
+        if (input && table) {
+            input.addEventListener('keyup', function () {
+                const termo = input.value.toLowerCase();
+                const linhas = table.querySelectorAll('tbody tr');
+                linhas.forEach(linha => {
+                    const texto = linha.innerText.toLowerCase();
+                    linha.style.display = texto.includes(termo) ? '' : 'none';
+                });
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

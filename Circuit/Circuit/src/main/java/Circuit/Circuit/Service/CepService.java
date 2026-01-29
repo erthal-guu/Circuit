@@ -1,6 +1,6 @@
 package Circuit.Circuit.Service;
 
-import Circuit.Circuit.Api.viaCep;
+import Circuit.Circuit.Model.viaCep;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

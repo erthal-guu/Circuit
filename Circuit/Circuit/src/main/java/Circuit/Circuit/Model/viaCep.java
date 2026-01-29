@@ -1,4 +1,4 @@
-package Circuit.Circuit.Api;
+package Circuit.Circuit.Model;
 
 import lombok.Data;
 

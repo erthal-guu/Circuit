@@ -16,4 +16,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     List<Funcionario> findByAtivoFalseOrderById();
 
+    List<Funcionario> findByAtivoAndCargoOrderById(Boolean ativo, String cargo);
+
 }

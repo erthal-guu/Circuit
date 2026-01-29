@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Catálogo de Serviços')}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/menu :: sidebar('servicos')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
+
+        <div class="content">
+
+            <div th:if="${mensagemSucesso}" class="auto-close alert-success">
+                <span>✅</span>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+            <div th:if="${mensagemErro}" class="auto-close alert-error">
+                <span>⚠️</span>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Catálogo de Serviços</h1>
+                <div class="header-actions">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('ativos', event)">Serviços Ativos</button>
+                        <button class="tab-btn" onclick="switchTab('inativos', event)">Serviços Inativos</button>
+                    </div>
+
+                    <button class="btn-primary" onclick="abrirModalServico()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Novo Serviço
+                    </button>
+                </div>
+            </div>
+
+            <div id="tabAtivos" class="tab-content active">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Serviços Disponíveis</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar serviços..." id="searchAtivos">
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th width="80">ID</th>
+                            <th>Nome do Serviço</th>
+                            <th>Mão de Obra (Base)</th>
+                            <th>Peças Vinculadas</th>
+                            <th>Status</th>
+                            <th width="120">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="servico : ${listaAtivos}">
+                            <td th:text="${'#' + servico.id}">#1</td>
+                            <td><strong th:text="${servico.nome}">Troca de Tela</strong></td>
+                            <td th:text="${'R$ ' + servico.valorBase}">R$ 150.00</td>
+                            <td>
+                                <span class="badge" th:if="${!servico.pecasSugeridas.isEmpty()}"
+                                      th:text="${servico.pecasSugeridas.size() + ' itens'}">
+                                </span>
+                                <span class="text-muted small" th:if="${servico.pecasSugeridas.isEmpty()}">-</span>
+                            </td>
+                            <td><span class="badge badge-active">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                    </button>
+
+                                    <a th:href="@{/servicos/excluir/{id}(id=${servico.id})}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('Tem certeza que deseja desativar este serviço?')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6H21"></path><path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6"></path><path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6"></path></svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="6" style="text-align: center; padding: 20px;">Nenhum serviço ativo.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tabInativos" class="tab-content">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Serviços Desativados</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" placeholder="Buscar inativos..." id="searchInativos">
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="servico : ${listaInativos}">
+                            <td th:text="${'#' + servico.id}"></td>
+                            <td th:text="${servico.nome}"></td>
+                            <td th:text="${'R$ ' + servico.valorBase}"></td>
+                            <td><span class="badge badge-inactive">Inativo</span></td>
+                            <td>
+                                <a th:href="@{/servicos/restaurar/{id}(id=${servico.id})}"
+                                   class="btn-action btn-restore"
+                                   title="Restaurar Serviço"
+                                   onclick="return confirm('Reativar este serviço?')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                            <td colspan="6" style="text-align: center; padding: 20px;">Nenhum serviço Inativo.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="modalServico">
+    <div class="modal-content" style="max-width: 700px;"> <div class="modal-header">
+        <h2>Novo Serviço</h2>
+        <button class="btn-close" onclick="fecharModalServico()">&times;</button>
+    </div>
+
+        <form th:action="@{/servicos/cadastrar}" method="POST">
+            <div class="modal-body">
+                <div class="form-grid">
+
+                    <div class="form-group col-8"> <label>Nome do Serviço</label>
+                        <input type="text" name="nome" class="form-control" required placeholder="Ex: Troca de Tela iPhone 11">
+                    </div>
+
+                    <div class="form-group col-4"> <label>Mão de Obra (R$)</label>
+                        <input type="number" step="0.01" name="valorBase" class="form-control" required placeholder="0.00">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label>Peças Compatíveis / Sugeridas</label>
+
+                        <div class="checklist-container">
+                            <div th:each="peca : ${listaPecas}" class="checklist-item">
+                                <input type="checkbox"
+                                       name="pecasId"
+                                       th:value="${peca.id}"
+                                       th:id="${'peca-' + peca.id}">
+
+                                <label th:for="${'peca-' + peca.id}" class="checklist-label">
+                                    <span th:text="${peca.nome}">Nome da Peça</span>
+                                    <span class="price" th:text="${'R$ ' + peca.getPrecoVenda()}">R$ 0.00</span>
+                                </label>
+                            </div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">Marque as peças que normalmente são usadas neste serviço.</small>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="fecharModalServico()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Serviço</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('modalServico');
+
+    // Lógica de Abas (Tabs) - Igual ao Modelos
+    function switchTab(tabName, event) {
+        // Esconde todos os conteúdos
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // Remove active de todos os botões
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Ativa o selecionado
+        document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Lógica do Modal
+    function abrirModalServico() {
+        const forms = modal.querySelectorAll('form');
+        forms.forEach(form => form.reset()); // Limpa o formulário
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+    }
+
+    function fecharModalServico() {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            fecharModalServico();
+        }
+    }
+
+    // Auto-close alerts
+    document.addEventListener("DOMContentLoaded", function () {
+        const alertas = document.querySelectorAll('.auto-close');
+        alertas.forEach(alerta => {
+            setTimeout(() => {
+                alerta.style.opacity = '0';
+                setTimeout(() => { alerta.remove(); }, 500);
+            }, 3000);
+        });
+    });
+</script>
+
+</body>
+</html>
