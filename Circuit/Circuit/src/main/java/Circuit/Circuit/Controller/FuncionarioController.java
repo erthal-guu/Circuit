@@ -55,7 +55,7 @@ public class FuncionarioController {
     public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             funcionarioService.ExcluirFuncionario(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Funcionário desativado com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemDelete", "Funcionário desativado com sucesso!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
         }

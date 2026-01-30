@@ -11,11 +11,16 @@
 
         <div class="content">
 
-            <div th:if="${mensagemSucesso}" class="auto-close alert-success">
+            <div th:if="${mensagemSucesso}" class="auto-close" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                 <span>✅</span>
                 <span th:text="${mensagemSucesso}"></span>
             </div>
-            <div th:if="${mensagemErro}" class="auto-close alert-error">
+
+            <div th:if="${mensagemDelete}" class="auto-close" style="background: #FFFFE0; color: goldenrod; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid yellow; display: flex; align-items: center; gap: 10px;">
+                <span>🗑️</span>
+                <span th:text="${mensagemDelete}"></span>
+            </div>
+            <div th:if="${mensagemErro}" class="auto-close" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
                 <span>⚠️</span>
                 <span th:text="${mensagemErro}"></span>
             </div>
@@ -55,7 +60,7 @@
                         <tr>
                             <th width="80">ID</th>
                             <th>Nome do Serviço</th>
-                            <th>Mão de Obra (Base)</th>
+                            <th>Mão de Obra</th>
                             <th>Peças Vinculadas</th>
                             <th>Status</th>
                             <th width="120">Ações</th>
@@ -63,7 +68,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="servico : ${listaAtivos}">
-                            <td th:text="${'#' + servico.id}">#1</td>
+                            <td th:text="${servico.id}"></td>
                             <td><strong th:text="${servico.nome}">Troca de Tela</strong></td>
                             <td th:text="${'R$ ' + servico.valorBase}">R$ 150.00</td>
                             <td>
@@ -75,8 +80,16 @@
                             <td><span class="badge badge-active">Ativo</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn-action btn-edit" title="Editar">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                    <button class="btn-action btn-edit" type="button" title="Editar"
+                                            th:data-id="${servico.id}"
+                                            th:data-nome="${servico.nome}"
+                                            th:data-valor="${servico.valorBase}"
+                                            th:data-ativo="${servico.ativo}"
+                                            th:data-pecas="${servico.pecasSugeridas != null ? servico.pecasSugeridas.![id] : '[]'}"
+                                            onclick="abrirModalEdicao(this)">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                        </svg>
                                     </button>
 
                                     <a th:href="@{/servicos/excluir/{id}(id=${servico.id})}"
@@ -132,7 +145,7 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(listaAtivos)}">
+                        <tr th:if="${#lists.isEmpty(listaInativos)}">
                             <td colspan="6" style="text-align: center; padding: 20px;">Nenhum serviço Inativo.</td>
                         </tr>
                         </tbody>
@@ -145,26 +158,38 @@
 </div>
 
 <div class="modal" id="modalServico">
-    <div class="modal-content" style="max-width: 700px;"> <div class="modal-header">
-        <h2>Novo Serviço</h2>
-        <button class="btn-close" onclick="fecharModalServico()">&times;</button>
-    </div>
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h2 id="modalTitle">Novo Serviço</h2>
+            <button class="btn-close" onclick="fecharModalServico()">&times;</button>
+        </div>
 
         <form th:action="@{/servicos/cadastrar}" method="POST">
+            <input type="hidden" id="servId" name="id">
+
             <div class="modal-body">
                 <div class="form-grid">
 
-                    <div class="form-group col-8"> <label>Nome do Serviço</label>
+                    <div class="form-group col-8">
+                        <label>Nome do Serviço</label>
                         <input type="text" name="nome" class="form-control" required placeholder="Ex: Troca de Tela iPhone 11">
                     </div>
 
-                    <div class="form-group col-4"> <label>Mão de Obra (R$)</label>
+                    <div class="form-group col-4">
+                        <label>Mão de Obra (R$)</label>
                         <input type="number" step="0.01" name="valorBase" class="form-control" required placeholder="0.00">
                     </div>
 
                     <div class="form-group col-12">
-                        <label>Peças Compatíveis / Sugeridas</label>
+                        <label>Status</label>
+                        <select name="ativo" class="form-control" required>
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
 
+                    <div class="form-group col-12">
+                        <label>Peças Compatíveis / Sugeridas</label>
                         <div class="checklist-container">
                             <div th:each="peca : ${listaPecas}" class="checklist-item">
                                 <input type="checkbox"
@@ -174,17 +199,21 @@
 
                                 <label th:for="${'peca-' + peca.id}" class="checklist-label">
                                     <span th:text="${peca.nome}">Nome da Peça</span>
-                                    <span class="price" th:text="${'R$ ' + peca.getPrecoVenda()}">R$ 0.00</span>
+                                    <span class="price" th:text="${'R$ ' + peca.precoVenda}">R$ 0.00</span>
                                 </label>
                             </div>
+                        </div>
                     </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="fecharModalServico()">Cancelar</button>
-                    <button type="submit" class="btn-primary">Salvar Serviço</button>
-                </div>
+
+                </div> <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="fecharModalServico()">Cancelar</button>
+                <button type="submit" class="btn-primary">Salvar Serviço</button>
             </div>
-        </form>
+            </div> </form>
     </div>
+</div>
+</form>
+</div>
 </div>
 <script th:src="@{/js/servico.js}"></script>
 </body>

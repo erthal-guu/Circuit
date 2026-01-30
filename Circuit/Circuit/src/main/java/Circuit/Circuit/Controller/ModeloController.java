@@ -48,7 +48,7 @@ public class ModeloController {
     public String excluir(@PathVariable Long id , RedirectAttributes redirectAttributes){
         try{
             modeloService.excluir(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Modelo excluído com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemDelete", "Modelo excluído com sucesso!");
         }catch (Exception e){
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
         }

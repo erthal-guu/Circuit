@@ -70,7 +70,7 @@ public class PecaController {
     public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             pecasService.excluirPeca(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Peça desativada!");
+            redirectAttributes.addFlashAttribute("mensagemDelete", "Peça desativada!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao desativar: " + e.getMessage());
         }

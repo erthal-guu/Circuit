@@ -49,6 +49,7 @@ public class ProdutoService {
         produtoEditar.setCategoria(dadosAtualizados.getCategoria());
         produtoEditar.setFornecedor(dadosAtualizados.getFornecedor());
         produtoEditar.setAtivo(dadosAtualizados.getAtivo());
+
         return produtoRepository.save(produtoEditar);
     }
 

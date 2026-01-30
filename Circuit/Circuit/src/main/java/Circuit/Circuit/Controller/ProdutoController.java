@@ -71,9 +71,9 @@ public class ProdutoController {
     public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             produtoService.excluirProduto(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto desativado!");
+            redirectAttributes.addFlashAttribute("mensagemDelete", "Produto desativado!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
         }
         return "redirect:/estoque";
     }

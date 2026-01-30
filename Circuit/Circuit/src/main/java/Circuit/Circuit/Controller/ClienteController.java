@@ -58,7 +58,7 @@ public class ClienteController {
     public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             clienteService.ExcluirCliente(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente desativado com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemDelete", "Cliente desativado com sucesso!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao desativar: " + e.getMessage());
         }

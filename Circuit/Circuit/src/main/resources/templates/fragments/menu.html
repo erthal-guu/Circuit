@@ -36,16 +36,6 @@
             </svg>
             <span class="menu-text">Serviços</span>
         </a>
-
-        <a th:href="@{/clientes}" class="menu-item"
-           th:classappend="${activePage == 'clientes'} ? 'active' : ''">
-            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="menu-text">Clientes</span>
-        </a>
         <a th:href="@{/estoque}" class="menu-item"
            th:classappend="${activePage == 'estoque' || activePage == 'pecas'} ? 'active' : ''">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -93,6 +83,16 @@
             </svg>
             <span class="menu-text">Funcionários</span>
         </a>
+        <a th:href="@{/clientes}" class="menu-item"
+           th:classappend="${activePage == 'clientes'} ? 'active' : ''">
+            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="menu-text">Clientes</span>
+        </a>
+
         <a th:href="@{/fornecedores}" class="menu-item"
            th:classappend="${activePage == 'fornecedores'} ? 'active' : ''">
             <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"

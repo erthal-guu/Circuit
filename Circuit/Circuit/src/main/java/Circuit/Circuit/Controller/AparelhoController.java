@@ -55,7 +55,7 @@ public class AparelhoController {
     public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             aparelhoService.excluir(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Aparelho desativado com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemDelete", "Aparelho desativado com sucesso!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao desativar: " + e.getMessage());
         }

@@ -13,6 +13,7 @@ public class LoginController {
     @Autowired
     private LoginService service;
 
+
     @PostMapping("/login")
     public ResponseEntity<?> logar(@RequestBody User loginDados) {
         try {

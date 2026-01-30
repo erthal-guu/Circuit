@@ -194,7 +194,6 @@ document.getElementById('formMovimentacao').addEventListener('submit', function(
     if (!quantidade || quantidade < 1) {
         event.preventDefault();
         alert("Digite uma quantidade válida!");
-        return;
     }
 });
 document.addEventListener("DOMContentLoaded", function() {

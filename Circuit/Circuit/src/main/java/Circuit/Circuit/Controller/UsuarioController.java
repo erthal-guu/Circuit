@@ -39,18 +39,20 @@
         }
 
         @GetMapping("/excluir/{id}")
+
         public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-            userService.excluirUsuarios(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário desativado com sucesso.");
+            try {
+                userService.excluirUsuarios(id);
+                redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário desativado com sucesso.");
+            }catch (Exception e){
+                redirectAttributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
+            }
             return "redirect:/usuarios";
         }
 
         @PostMapping("/editar")
         public String editar(@ModelAttribute User usuario, RedirectAttributes redirectAttributes) {
             try {
-                if (usuario.getId() == null) {
-                    throw new RuntimeException("Erro: Tentativa de edição sem ID.");
-                }
                 userService.editarUsuario(usuario.getId(), usuario);
                 redirectAttributes.addFlashAttribute("mensagemSucesso", "Usuário atualizado com sucesso!");
             } catch (Exception e) {
