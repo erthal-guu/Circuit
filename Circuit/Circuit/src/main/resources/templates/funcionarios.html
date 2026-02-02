@@ -67,7 +67,7 @@
                         <tr th:each="u : ${listaAtivos}">
                             <td th:text="${u.id}"></td>
                             <td th:text="${u.nome}"></td>
-                            <td th:text="${u.cargo}"></td>
+                            <td th:text="${u.cargo}" class="col-cargo" th:data-cargo="${u.cargo}"></td>
                             <td th:text="${u.email}"></td>
                             <td><span class="badge badge-active">Ativo</span></td>
                             <td>
@@ -136,7 +136,7 @@
                         <tr th:each="u : ${listaInativos}">
                             <td th:text="${u.id}"></td>
                             <td th:text="${u.nome}"></td>
-                            <td th:text="${u.cargo}"></td>
+                            <td th:text="${u.cargo}" class="col-cargo" th:data-cargo="${u.cargo}"></td>
                             <td th:text="${u.email}"></td>
                             <td><span class="badge badge-inactive">Inativo</span></td>
                             <td>
@@ -190,12 +190,13 @@
                         <select id="funcCargo" name="cargo" required class="form-control">
                             <option value="" disabled selected>Selecione...</option>
                             <optgroup label="Administrativo">
-                                <option value="Gerente Geral">Gerente Geral</option>
-                                <option value="Supervisor de Loja">Supervisor de Loja</option>
+                                <option value="GERENTE">Gerente</option>
+                                <option value="RECEPCIONISTA">Recepcionista</option>
+                                <option value="VENDEDOR">Vendedor</option>
                             </optgroup>
                             <optgroup label="Técnico">
-                                <option value="Técnico Líder">Técnico Líder</option>
-                                <option value="Técnico de Hardware">Técnico de Hardware</option>
+                                <option value="TECNICO">Técnico</option>
+                                <option value="AUXILIAR">Auxiliar</option>
                             </optgroup>
                         </select>
                     </div>

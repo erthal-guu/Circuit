@@ -41,4 +41,7 @@ public class AparelhoService {
         aparelho.setAtivo(dadosAtualizados.getAtivo());
         return aparelhoRepository.save(aparelho);
     }
+    public List<Aparelho> buscarAtivosPorCliente(Long clienteId) {
+        return aparelhoRepository.findByClienteIdAndAtivoTrue(clienteId);
+    }
 }

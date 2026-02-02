@@ -29,8 +29,8 @@ public class Funcionario {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String cargo;
+    @Enumerated(EnumType.STRING)
+    private Cargo cargo;
 
     @Column(length = 9)
     private String cep;

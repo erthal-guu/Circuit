@@ -1,5 +1,6 @@
 package Circuit.Circuit.Repository;
 
+import Circuit.Circuit.Model.Cargo;
 import Circuit.Circuit.Model.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     List<Funcionario> findByAtivoFalseOrderById();
 
-    List<Funcionario> findByAtivoAndCargoOrderById(Boolean ativo, String cargo);
+    List<Funcionario> findByAtivoAndCargoOrderById(Boolean ativo, Cargo cargo);
 
 }

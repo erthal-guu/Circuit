@@ -72,4 +72,9 @@ public class AparelhoController {
         }
         return "redirect:/aparelhos";
     }
+    @GetMapping("/json/cliente/{clienteId}")
+    @ResponseBody
+    public List<Aparelho> listarPorCliente(@PathVariable Long clienteId) {
+        return aparelhoService.buscarAtivosPorCliente(clienteId);
+    }
 }

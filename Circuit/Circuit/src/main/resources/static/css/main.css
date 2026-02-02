@@ -1272,7 +1272,7 @@ body {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     height: 35px;
-    margin-left: 15%;
+    margin-left: 45%;
 }
 
 .input-compact {
@@ -1310,4 +1310,62 @@ body {
 .btn-icon.clean:hover {
     background: #fef2f2;
 }
+
+/* GRID DO MODAL */
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    gap: 15px;
+}
+
+/* CARD BASE */
+.status-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.status-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #3b82f6;
+}
+
+.status-card span {
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+/* Cores específicas para Finalizar e Cancelar no Hover */
+.status-card.success-card:hover { border-color: #10b981; background-color: #f0fdf4; }
+.status-card.danger-card:hover { border-color: #ef4444; background-color: #fef2f2; }
+
+/* ÍCONES CIRCULARES */
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.icon-circle.info { background: #eff6ff; color: #3b82f6; }
+.icon-circle.warning { background: #fefce8; color: #ca8a04; }
+.icon-circle.purple { background: #f3e8ff; color: #9333ea; }
+.icon-circle.orange { background: #fff7ed; color: #ea580c; }
+.icon-circle.success { background: #dcfce7; color: #16a34a; }
+.icon-circle.danger { background: #fee2e2; color: #dc2626; }
+
 

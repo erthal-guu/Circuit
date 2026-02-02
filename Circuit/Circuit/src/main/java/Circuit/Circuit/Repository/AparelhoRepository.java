@@ -10,4 +10,5 @@ import java.util.List;
 public interface AparelhoRepository extends JpaRepository<Aparelho, Long> {
     List<Aparelho> findByAtivoTrueOrderById();
     List<Aparelho> findByAtivoFalseOrderById();
+    List<Aparelho> findByClienteIdAndAtivoTrue(Long clienteId);
 }

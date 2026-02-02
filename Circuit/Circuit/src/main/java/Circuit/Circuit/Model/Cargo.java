@@ -4,5 +4,7 @@ public enum Cargo {
     ADMIN,
     TECNICO,
     VENDEDOR,
-    GERENTE
+    GERENTE,
+    AUXILIAR,
+    RECEPCIONISTA
 }

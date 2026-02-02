@@ -15,4 +15,5 @@ public interface ServicoRepository extends JpaRepository<Servico, Long> {
     List<Servico> findByAtivoTrue();
     List<Servico> findByAtivoFalse();
 
+    List<Servico> findByid(Long id);
 }

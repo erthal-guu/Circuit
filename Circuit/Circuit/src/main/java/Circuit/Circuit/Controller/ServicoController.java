@@ -3,6 +3,7 @@ package Circuit.Circuit.Controller;
 import Circuit.Circuit.Dto.ServicoDto;
 import Circuit.Circuit.Model.Peca;
 import Circuit.Circuit.Model.Servico;
+import Circuit.Circuit.Repository.ServicoRepository;
 import Circuit.Circuit.Service.PecaService;
 import Circuit.Circuit.Service.ServicoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class ServicoController {
 
     @Autowired
     private PecaService pecaService;
+
+    @Autowired
+    private ServicoRepository servicoRepository;
 
     @GetMapping
     public String ListarServicos(Model model){
@@ -77,5 +82,12 @@ public class ServicoController {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao atualizar: " + e.getMessage());
         }
         return "redirect:/servicos";
+    }
+    @GetMapping("/json/valor/{id}")
+    @ResponseBody
+    public BigDecimal buscarValor(@PathVariable Long id) {
+        return servicoRepository.findById(id)
+                .map(Servico::getValorBase)
+                .orElse(BigDecimal.ZERO);
     }
 }

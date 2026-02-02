@@ -46,15 +46,11 @@
                         <h3>Todas as Ordens</h3>
                         <div class="date-filter-inline">
                             <input type="date" id="dataInicio" class="input-compact" title="Data Inicial">
-
                             <span style="color: #888; font-size: 14px;">até</span>
-
                             <input type="date" id="dataFim" class="input-compact" title="Data Final">
-
                             <button type="button" class="btn-icon" onclick="filtrarPorData()" title="Filtrar">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                             </button>
-
                             <button type="button" class="btn-icon clean" onclick="limparFiltroData()" title="Limpar Datas">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             </button>
@@ -95,12 +91,16 @@
                                       th:text="${os.status}">
                                 </span>
                             </td>
-                            <td th:text="${'R$ ' + os.valorTotal}"></td>
+                            <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
                                     <a th:href="@{/ordens/editar/{id}(id=${os.id})}" class="btn-action btn-edit" title="Editar">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                     </a>
+                                    <button class="btn-action" type="button" title="Mudar Status"
+                                            th:onclick="'abrirModalStatus(' + ${os.id} + ', \'' + ${os.status} + '\')'">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -115,37 +115,25 @@
             <div id="tabAbertas" class="tab-content" style="display: none;">
                 <div class="table-card">
                     <div class="table-header">
-                        <h3>Ordens abertas</h3>
+                        <h3>Ordens Abertas</h3>
                         <div class="date-filter-inline">
-                            <input type="date" id="dataInicioAbertas" class="input-compact" title="Data Inicial">
-
-                            <span style="color: #888; font-size: 14px;">até</span>
-
-                            <input type="date" id="dataFimAbertas" class="input-compact" title="Data Final">
-
-                            <button type="button" class="btn-icon" onclick="filtrarPorData()" title="Filtrar">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                            </button>
-
-                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()" title="Limpar Datas">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
+                            <input type="date" id="dataInicioAbertas" class="input-compact">
+                            <span style="color: #888;">até</span>
+                            <input type="date" id="dataFimAbertas" class="input-compact">
+                            <button type="button" class="btn-icon" onclick="filtrarPorData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></button>
+                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                         </div>
                         <div class="search-box">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             <input type="text" id="searchAbertas" placeholder="Buscar abertas...">
                         </div>
                     </div>
-
                     <table class="data-table" id="tabelaAbertas">
                         <thead>
                         <tr>
                             <th>Nº OS</th>
                             <th>Cliente</th>
-                            <th>Aparelho / Defeito</th>
+                            <th>Aparelho</th>
                             <th>Data</th>
                             <th>Status</th>
                             <th>Valor</th>
@@ -157,58 +145,48 @@
                             <td><strong th:text="'#' + ${os.id}"></strong></td>
                             <td th:text="${os.cliente.nome}"></td>
                             <td th:text="${os.aparelho.modelo.nome}"></td>
-                            <td th:text="${os.funcionario.nome}"></td>
-                            <td th:text="${os.dataPrevisao != null ? #temporals.format(os.dataPrevisao, 'dd/MM/yyyy') : '-'}"></td>
+                            <td th:text="${#temporals.format(os.dataEntrada, 'dd/MM/yyyy')}"></td>
                             <td><span class="badge badge-active">ABERTA</span></td>
+                            <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a th:href="@{/ordens/editar/{id}(id=${os.id})}" class="btn-action btn-edit" title="Gerenciar OS">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </a>
+                                    <a th:href="@{/ordens/editar/{id}(id=${os.id})}" class="btn-action btn-edit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></a>
+
+                                    <button class="btn-action" type="button"
+                                            th:onclick="'abrirModalStatus(' + ${os.id} + ', \'' + ${os.status} + '\')'">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(listaAbertas)}">
-                            <td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem aberta no momento.</td>
-                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaAbertas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem aberta.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <div id="tabFinalizadas" class="tab-content" style="display: none;">
                 <div class="table-card">
                     <div class="table-header">
-                        <h3>Ordens finalizadas</h3>
+                        <h3>Ordens Finalizadas</h3>
                         <div class="date-filter-inline">
-                            <input type="date" id="dataInicioFinalizadas" class="input-compact" title="Data Inicial">
-
-                            <span style="color: #888; font-size: 14px;">até</span>
-
-                            <input type="date" id="dataFimFinalizadas" class="input-compact" title="Data Final">
-
-                            <button type="button" class="btn-icon" onclick="filtrarPorData()" title="Filtrar">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                            </button>
-
-                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()" title="Limpar Datas">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
+                            <input type="date" id="dataInicioFinalizadas" class="input-compact">
+                            <span style="color: #888;">até</span>
+                            <input type="date" id="dataFimFinalizadas" class="input-compact">
+                            <button type="button" class="btn-icon" onclick="filtrarPorData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></button>
+                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                         </div>
                         <div class="search-box">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             <input type="text" id="searchFinalizadas" placeholder="Buscar histórico...">
                         </div>
                     </div>
-
                     <table class="data-table" id="tabelaFinalizadas">
                         <thead>
                         <tr>
                             <th>Nº OS</th>
                             <th>Cliente</th>
-                            <th>Aparelho / Defeito</th>
+                            <th>Aparelho</th>
                             <th>Data</th>
                             <th>Status</th>
                             <th>Valor</th>
@@ -222,23 +200,20 @@
                             <td th:text="${os.aparelho.modelo.nome}"></td>
                             <td th:text="${os.dataSaida != null ? #temporals.format(os.dataSaida, 'dd/MM/yyyy') : '-'}"></td>
                             <td>
-                                <span class="badge"
-                                      th:classappend="${os.status == 'CANCELADA' ? 'badge-inactive' : 'badge-success'}"
-                                      th:text="${os.status}">
-                                </span>
+                                <span class="badge" th:classappend="${os.status == 'CANCELADA' ? 'badge-inactive' : 'badge-success'}" th:text="${os.status}"></span>
                             </td>
-                            <td th:text="${'R$ ' + os.valorTotal}"></td>
+                            <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a th:href="@{/ordens/imprimir/{id}(id=${os.id})}" target="_blank" class="btn-action" title="Imprimir Recibo">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                                    </a>
+                                    <a th:href="@{/ordens/imprimir/{id}(id=${os.id})}" target="_blank" class="btn-action" title="Imprimir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
+                                    <button class="btn-action" type="button"
+                                            th:onclick="'abrirModalStatus(' + ${os.id} + ', \'' + ${os.status} + '\')'">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(listaFinalizadas)}">
-                            <td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem finalizada.</td>
-                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaFinalizadas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem finalizada.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -248,16 +223,17 @@
 </div>
 
 <div class="modal" id="modalNovaOs">
-    <div class="modal-content" style="max-width: 800px; margin-top: 20px">
+    <div class="modal-content" style="max-width: 850px; margin-top: 10px">
         <div class="modal-header">
-            <h2 id="modalTitle">Nova Ordem de Serviço</h2>
+            <h2 id="modalTitle">Lançar Nova Ordem de Serviço</h2>
             <button class="btn-close" onclick="closeModalOs()">&times;</button>
         </div>
 
-        <form id="formOs" th:action="@{/ordens/cadastrar}" method="POST">
+        <form id="formOs" th:action="@{/ordens-servico/cadastrar}" method="POST">
             <input type="hidden" name="status" value="ABERTA">
             <div class="modal-body">
                 <div class="form-grid">
+
                     <div class="form-group col-6">
                         <label>Cliente</label>
                         <select id="osCliente" name="cliente.id" class="form-control" required onchange="carregarAparelhosCliente(this.value)">
@@ -265,7 +241,6 @@
                             <option th:each="cli : ${listaClientes}" th:value="${cli.id}" th:text="${cli.nome}"></option>
                         </select>
                     </div>
-
                     <div class="form-group col-6">
                         <label>Aparelho do Cliente</label>
                         <select id="osAparelho" name="aparelho.id" class="form-control" required disabled>
@@ -274,26 +249,144 @@
                     </div>
 
                     <div class="form-group col-6">
+                        <label>Serviço Principal</label>
+                        <select id="osServico" name="servico.id" class="form-control" required onchange="buscarPecasVinculadas(this.value)">
+                            <option value="">Selecione o serviço...</option>
+                            <option th:each="ser : ${listaServicos}" th:value="${ser.id}" th:text="${ser.nome}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
                         <label>Técnico Responsável</label>
                         <select id="osTecnico" name="funcionario.id" class="form-control" required>
                             <option value="">Selecione o Técnico...</option>
-                            <option th:each="tec : ${listaFuncionarios}" th:value="${tec.id}" th:text="${tec.nome}"></option>
+                            <option th:each="tec : ${listaTecnicos}" th:value="${tec.id}" th:text="${tec.nome}"></option>
                         </select>
                     </div>
 
-                    <div class="form-group col-6">
+                    <div id="containerPecas" class="form-group col-12" style="display:none; margin-bottom: 15px;">
+                        <label style="color: #2563eb; font-weight: bold; margin-bottom: 8px; display: block;">Peças Utilizadas:</label>
+                        <div id="listaCheckboxesPecas" class="pecas-selection-grid">
+                        </div>
+                    </div>
+
+                    <div class="row col-12" style="display:flex; gap:15px; margin-top:5px;">
+                        <div class="form-group" style="flex:1">
+                            <label>Senha / Padrão</label>
+                            <input type="text" name="senhaDispositivo" class="form-control" placeholder="Ex: 1234">
+                        </div>
+                        <div class="form-group" style="flex:2">
+                            <label>Acessórios Deixados</label>
+                            <div class="checkbox-group-modern">
+                                <label class="chip-check"><input type="checkbox" name="acessorios" value="Capa"> Capa</label>
+                                <label class="chip-check"><input type="checkbox" name="acessorios" value="Chip"> Chip</label>
+                                <label class="chip-check"><input type="checkbox" name="acessorios" value="CartaoSD"> Cartão SD</label>
+                                <label class="chip-check"><input type="checkbox" name="acessorios" value="Carregador"> Carregador</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-8">
+                        <label>Estado de Conservação</label>
+                        <input type="text" name="estadoConservacao" class="form-control" placeholder="Ex: Riscos na tampa, tela trincada...">
+                    </div>
+                    <div class="form-group col-4">
                         <label>Previsão de Entrega</label>
                         <input type="date" name="dataPrevisao" class="form-control">
                     </div>
 
                     <div class="form-group col-12">
                         <label>Defeito Reclamado / Relato</label>
-                        <textarea name="defeito" class="form-control" rows="4" required placeholder="Descreva o problema..."></textarea>
+                        <textarea name="defeito" class="form-control" rows="2" required placeholder="Descreva o problema detalhadamente..."></textarea>
+                    </div>
+
+                    <div class="financial-summary col-12">
+                        <div class="fin-item">
+                            <label>Mão de Obra (R$)</label>
+                            <input type="number" id="valorMaoDeObra" name="valorServico" class="form-control" step="0.01" value="0.00" oninput="calcularTotalOS()">
+                        </div>
+                        <div class="fin-item">
+                            <label>Total Peças (R$)</label>
+                            <input type="number" id="valorTotalPecas" class="form-control" value="0.00" readonly tabindex="-1">
+                        </div>
+                        <div class="fin-item total">
+                            <label>VALOR TOTAL (R$)</label>
+                            <input type="number" id="osValorTotal" name="valorTotal" class="form-control" step="0.01" readonly>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="margin-top: 20px;">
-                    <button type="button" class="btn-secondary" onclick="closeModalOs()">Cancelar</button>
-                    <button type="submit" class="btn-submit">Abrir Ordem</button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModalOs()">Cancelar</button>
+                <button type="submit" class="btn-submit">Gerar Ordem de Serviço</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalStatus">
+    <div class="modal-content" style="max-width: 550px; padding: 0;">
+
+        <div class="modal-header" style="border-bottom: 1px solid #eee; padding: 20px;">
+            <div style="width: 100%;">
+                <h2 style="margin: 0; font-size: 1.25rem; color: #1e293b;">Atualizar Status da OS</h2>
+                <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 0.9rem; color: #64748b;">Status atual:</span>
+                    <span id="badgeStatusAtual" class="badge">Carregando...</span>
+                </div>
+            </div>
+            <button class="btn-close" onclick="fecharModalStatus()" style="align-self: flex-start;">&times;</button>
+        </div>
+
+        <form id="formStatus" th:action="@{/ordens/atualizar-status}" method="POST">
+            <input type="hidden" id="statusOsId" name="id">
+            <input type="hidden" id="novoStatus" name="status">
+
+            <div class="modal-body" style="padding: 20px; background: #f8fafc;">
+                <div class="status-grid">
+
+                    <div class="status-card" onclick="selecionarStatus('EM_ANALISE')">
+                        <div class="icon-circle info">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </div>
+                        <span>Em análise</span>
+                    </div>
+
+                    <div class="status-card" onclick="selecionarStatus('AGUARDANDO_APROVACAO')">
+                        <div class="icon-circle warning">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </div>
+                        <span>Aguardando Aprovação</span>
+                    </div>
+
+                    <div class="status-card" onclick="selecionarStatus('EM_REPARO')">
+                        <div class="icon-circle purple">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                        </div>
+                        <span>Em Reparo</span>
+                    </div>
+
+                    <div class="status-card" onclick="selecionarStatus('AGUARDANDO_PECA')">
+                        <div class="icon-circle orange">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <span>Aguardando Peça</span>
+                    </div>
+
+                    <div class="status-card success-card" onclick="selecionarStatus('FINALIZADA')">
+                        <div class="icon-circle success">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span>Finalizar OS</span>
+                    </div>
+
+                    <div class="status-card danger-card" onclick="selecionarStatus('CANCELADA')">
+                        <div class="icon-circle danger">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </div>
+                        <span>Cancelar OS</span>
+                    </div>
+
                 </div>
             </div>
         </form>

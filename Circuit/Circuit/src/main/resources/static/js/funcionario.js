@@ -6,12 +6,24 @@ document.addEventListener("DOMContentLoaded", function () {
     configurarPesquisa('searchInputAtivos', 'funcionarioTable');
     configurarPesquisa('searchInputInativos', 'funcionarioTableInativos');
     aplicarMascaras();
+    CargosFormatados();
+
     const cepInput = document.getElementById('funcCep');
     if (cepInput) {
         cepInput.addEventListener('blur', function() {
             buscarCep(this.value);
         });
     }
+
+    const alertas = document.querySelectorAll('.auto-close');
+    alertas.forEach(alerta => {
+        setTimeout(() => {
+            alerta.style.opacity = '0';
+            setTimeout(() => {
+                alerta.remove();
+            }, 500);
+        }, 3000);
+    });
 });
 
 function openModal() {
@@ -95,9 +107,12 @@ function switchTab(tabName, event) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
     const id = tabName === 'ativos' ? 'tabAtivos' : 'tabInativos';
-    document.getElementById(id).style.display = 'block';
-    event.currentTarget.classList.add('active');
+    const target = document.getElementById(id);
+    if(target) target.style.display = 'block';
+
+    if(event) event.currentTarget.classList.add('active');
 }
+
 function aplicarMascaras() {
     const masks = {
         funcCpf: v => v.replace(/\D/g, '')
@@ -127,15 +142,22 @@ function aplicarMascaras() {
         }
     });
 }
-document.addEventListener("DOMContentLoaded", function() {
-    const alertas = document.querySelectorAll('.auto-close');
-    alertas.forEach(alerta => {
-        setTimeout(() => {
-            alerta.style.opacity = '0';
-            setTimeout(() => {
-                alerta.remove();
-            }, 500);
 
-        }, 3000);
+function CargosFormatados() {
+    const mapaCargos = {
+        'TECNICO': 'Técnico',
+        'VENDEDOR': 'Vendedor',
+        'GERENTE': 'Gerente',
+        'RECEPCIONISTA': 'Recepcionista',
+        'AUXILIAR': 'Auxiliar'
+    };
+
+    const celulas = document.querySelectorAll('.col-cargo');
+
+    celulas.forEach(td => {
+        const cargoOriginal = td.getAttribute('data-cargo');
+        if (cargoOriginal && mapaCargos[cargoOriginal]) {
+            td.innerText = mapaCargos[cargoOriginal];
+        }
     });
-});
+}

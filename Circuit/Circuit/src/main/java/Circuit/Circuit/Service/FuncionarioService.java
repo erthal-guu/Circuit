@@ -1,5 +1,6 @@
 package Circuit.Circuit.Service;
 
+import Circuit.Circuit.Model.Cargo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import Circuit.Circuit.Model.Funcionario;
@@ -25,6 +26,9 @@ public class FuncionarioService {
 
     public List<Funcionario> ListarFuncionariosInativos() {
         return funcionarioRepository.findByAtivoFalseOrderById();
+    }
+    public List<Funcionario> listarApenasTecnicos() {
+        return funcionarioRepository.findByAtivoAndCargoOrderById(true, Cargo.TECNICO);
     }
 
     public Funcionario ExcluirFuncionario(Long id) {
