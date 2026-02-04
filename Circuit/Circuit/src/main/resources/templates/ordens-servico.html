@@ -11,13 +11,13 @@
 
         <div class="content">
 
-            <div th:if="${mensagemSucesso}" class="auto-close alert-success">
+            <div th:if="${mensagemSucesso}" class="auto-close alert-success" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                 <span th:text="${mensagemSucesso}"></span>
             </div>
             <div th:if="${mensagemDelete}" class="auto-close alert-warning">
                 <span>🗑️</span> <span th:text="${mensagemDelete}"></span>
             </div>
-            <div th:if="${mensagemErro}" class="auto-close alert-error">
+            <div th:if="${mensagemErro}" class="auto-close alert-error" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; display: flex; align-items: center; gap: 10px;">
                 <span th:text="${mensagemErro}"></span>
             </div>
 
@@ -86,20 +86,48 @@
                             </td>
                             <td th:text="${#temporals.format(os.dataEntrada, 'dd/MM/yyyy')}"></td>
                             <td>
-                                <span class="badge"
-                                      th:classappend="${os.status == 'ABERTA' ? 'badge-active' : (os.status == 'CANCELADA' ? 'badge-inactive' : 'badge-success')}"
-                                      th:text="${os.status}">
+                              <span class="badge"
+                                    th:classappend="${
+                                          os.status.name() == 'ABERTA' ? 'badge-active' :
+                                          (os.status.name() == 'EM_ANALISE' ? 'badge-analysis' :
+                                          (os.status.name() == 'AGUARDANDO_APROVACAO' ? 'badge-info' :
+                                          (os.status.name() == 'EM_REPARO' ? 'badge-repair' :
+                                          (os.status.name() == 'AGUARDANDO_PECA' ? 'badge-wait' :
+                                          (os.status.name() == 'FINALIZADA' ? 'badge-success' : 'badge-inactive')))))
+                                      }"
+                                    th:text="${os.status}">
                                 </span>
                             </td>
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a th:href="@{/ordens/editar/{id}(id=${os.id})}" class="btn-action btn-edit" title="Editar">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </a>
+                                    <button class="btn-action btn-edit" type="button"
+                                            th:data-id="${os.id}"
+                                            th:data-cliente="${os.cliente?.id}"
+                                            th:data-aparelho="${os.aparelho?.id}"
+                                            th:data-tecnico="${os.funcionario?.id}"
+                                            th:data-servico="${os.servico?.id}"
+                                            th:data-senha="${os.senhaDispositivo}"
+                                            th:data-previsao="${os.dataPrevisao}"
+                                            th:data-estado="${os.estadoConservacao}"
+                                            th:data-defeito="${os.defeito}"
+                                            th:data-valor="${os.valorServico}"
+                                            th:data-total="${os.valorTotal}"
+                                            onclick="abrirModalEdicao(this)">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
                                     <button class="btn-action" type="button" title="Mudar Status"
-                                            th:onclick="'abrirModalStatus(' + ${os.id} + ', \'' + ${os.status} + '\')'">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                            th:data-id="${os.id}"
+                                            th:data-status="${os.status}"
+                                            onclick="abrirModalStatus(this.getAttribute('data-id'), this.getAttribute('data-status'))">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 4v6h-6"></path>
+                                            <path d="M1 20v-6h6"></path>
+                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </td>
@@ -141,7 +169,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="os : ${listaAbertas}">
+                        <tr th:each="os : ${listaOrdensAbertas}">
                             <td><strong th:text="'#' + ${os.id}"></strong></td>
                             <td th:text="${os.cliente.nome}"></td>
                             <td th:text="${os.aparelho.modelo.nome}"></td>
@@ -150,16 +178,22 @@
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a th:href="@{/ordens/editar/{id}(id=${os.id})}" class="btn-action btn-edit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></a>
+                                    <a th:href="@{/ordens-servico/editar/{id}(id=${os.id})}" class="btn-action btn-edit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></a>
 
-                                    <button class="btn-action" type="button"
-                                            th:onclick="'abrirModalStatus(' + ${os.id} + ', \'' + ${os.status} + '\')'">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                    <button class="btn-action" type="button" title="Mudar Status"
+                                            th:data-id="${os.id}"
+                                            th:data-status="${os.status}"
+                                            onclick="abrirModalStatus(this.getAttribute('data-id'), this.getAttribute('data-status'))">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 4v6h-6"></path>
+                                            <path d="M1 20v-6h6"></path>
+                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(listaAbertas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem aberta.</td></tr>
+                        <tr th:if="${#lists.isEmpty(listaOrdensAbertas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem aberta.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -194,26 +228,32 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="os : ${listaFinalizadas}">
+                        <tr th:each="os : ${listaOrdensFinalizadas}">
                             <td><strong th:text="'#' + ${os.id}"></strong></td>
                             <td th:text="${os.cliente.nome}"></td>
                             <td th:text="${os.aparelho.modelo.nome}"></td>
-                            <td th:text="${os.dataSaida != null ? #temporals.format(os.dataSaida, 'dd/MM/yyyy') : '-'}"></td>
                             <td>
-                                <span class="badge" th:classappend="${os.status == 'CANCELADA' ? 'badge-inactive' : 'badge-success'}" th:text="${os.status}"></span>
+                                <span class="badge"
+                                      th:classappend="${os.status.name() == 'CANCELADA' ? 'badge-inactive' : ''}"
+                                      th:text="${os.status}"></span>
                             </td>
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a th:href="@{/ordens/imprimir/{id}(id=${os.id})}" target="_blank" class="btn-action" title="Imprimir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
-                                    <button class="btn-action" type="button"
-                                            th:onclick="'abrirModalStatus(' + ${os.id} + ', \'' + ${os.status} + '\')'">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                    <button class="btn-action" type="button" title="Mudar Status"
+                                            th:data-id="${os.id}"
+                                            th:data-status="${os.status}"
+                                            onclick="abrirModalStatus(this.getAttribute('data-id'), this.getAttribute('data-status'))">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 4v6h-6"></path>
+                                            <path d="M1 20v-6h6"></path>
+                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(listaFinalizadas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem finalizada.</td></tr>
+                        <tr th:if="${#lists.isEmpty(listaOrdensFinalizadas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem finalizada.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -230,7 +270,9 @@
         </div>
 
         <form id="formOs" th:action="@{/ordens-servico/cadastrar}" method="POST">
+            <input type="hidden" id="osId" name="id">
             <input type="hidden" name="status" value="ABERTA">
+
             <div class="modal-body">
                 <div class="form-grid">
 
@@ -241,10 +283,19 @@
                             <option th:each="cli : ${listaClientes}" th:value="${cli.id}" th:text="${cli.nome}"></option>
                         </select>
                     </div>
+
                     <div class="form-group col-6">
                         <label>Aparelho do Cliente</label>
                         <select id="osAparelho" name="aparelho.id" class="form-control" required disabled>
                             <option value="">Selecione um Cliente primeiro...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label>Técnico</label>
+                        <select id="osFuncionario" name="funcionario.id" class="form-control" required>
+                            <option value="">Selecione o Técnico...</option>
+                            <option th:each="func : ${listaTecnicos}" th:value="${func.id}" th:text="${func.nome}"></option>
                         </select>
                     </div>
 
@@ -255,61 +306,41 @@
                             <option th:each="ser : ${listaServicos}" th:value="${ser.id}" th:text="${ser.nome}"></option>
                         </select>
                     </div>
-                    <div class="form-group col-6">
-                        <label>Técnico Responsável</label>
-                        <select id="osTecnico" name="funcionario.id" class="form-control" required>
-                            <option value="">Selecione o Técnico...</option>
-                            <option th:each="tec : ${listaTecnicos}" th:value="${tec.id}" th:text="${tec.nome}"></option>
-                        </select>
-                    </div>
 
                     <div id="containerPecas" class="form-group col-12" style="display:none; margin-bottom: 15px;">
                         <label style="color: #2563eb; font-weight: bold; margin-bottom: 8px; display: block;">Peças Utilizadas:</label>
-                        <div id="listaCheckboxesPecas" class="pecas-selection-grid">
-                        </div>
+                        <div id="listaCheckboxesPecas" class="pecas-selection-grid"></div>
                     </div>
 
                     <div class="row col-12" style="display:flex; gap:15px; margin-top:5px;">
                         <div class="form-group" style="flex:1">
-                            <label>Senha / Padrão</label>
-                            <input type="text" name="senhaDispositivo" class="form-control" placeholder="Ex: 1234">
-                        </div>
-                        <div class="form-group" style="flex:2">
-                            <label>Acessórios Deixados</label>
-                            <div class="checkbox-group-modern">
-                                <label class="chip-check"><input type="checkbox" name="acessorios" value="Capa"> Capa</label>
-                                <label class="chip-check"><input type="checkbox" name="acessorios" value="Chip"> Chip</label>
-                                <label class="chip-check"><input type="checkbox" name="acessorios" value="CartaoSD"> Cartão SD</label>
-                                <label class="chip-check"><input type="checkbox" name="acessorios" value="Carregador"> Carregador</label>
-                            </div>
+                            <label>Senha do Aparelho</label>
+                            <input type="text" id="osSenha" name="senhaDispositivo" class="form-control" placeholder="Ex: 1234">
                         </div>
                     </div>
 
                     <div class="form-group col-8">
-                        <label>Estado de Conservação</label>
-                        <input type="text" name="estadoConservacao" class="form-control" placeholder="Ex: Riscos na tampa, tela trincada...">
+                        <label>Estado de Aparelho</label>
+                        <input type="text" id="osEstado" name="estadoConservacao" class="form-control" placeholder="Ex: Riscos na tampa, tela trincada...">
                     </div>
+
                     <div class="form-group col-4">
                         <label>Previsão de Entrega</label>
-                        <input type="date" name="dataPrevisao" class="form-control">
+                        <input type="date" id="osPrevisao" name="dataPrevisao" class="form-control">
                     </div>
 
                     <div class="form-group col-12">
-                        <label>Defeito Reclamado / Relato</label>
-                        <textarea name="defeito" class="form-control" rows="2" required placeholder="Descreva o problema detalhadamente..."></textarea>
+                        <label>Defeito Reclamado </label>
+                        <textarea id="osDefeito" name="defeito" class="form-control" rows="2" required placeholder="Descreva o problema detalhadamente..."></textarea>
                     </div>
 
                     <div class="financial-summary col-12">
                         <div class="fin-item">
-                            <label>Mão de Obra (R$)</label>
+                            <label><span>Mão de Obra (R$)</span></label>
                             <input type="number" id="valorMaoDeObra" name="valorServico" class="form-control" step="0.01" value="0.00" oninput="calcularTotalOS()">
                         </div>
-                        <div class="fin-item">
-                            <label>Total Peças (R$)</label>
-                            <input type="number" id="valorTotalPecas" class="form-control" value="0.00" readonly tabindex="-1">
-                        </div>
                         <div class="fin-item total">
-                            <label>VALOR TOTAL (R$)</label>
+                            <label><span>Valor Total (R$)</span></label>
                             <input type="number" id="osValorTotal" name="valorTotal" class="form-control" step="0.01" readonly>
                         </div>
                     </div>
@@ -318,7 +349,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeModalOs()">Cancelar</button>
-                <button type="submit" class="btn-submit">Gerar Ordem de Serviço</button>
+                <button type="submit" class="btn-submit">Salvar Ordem de Serviço</button>
             </div>
         </form>
     </div>
@@ -329,7 +360,7 @@
 
         <div class="modal-header" style="border-bottom: 1px solid #eee; padding: 20px;">
             <div style="width: 100%;">
-                <h2 style="margin: 0; font-size: 1.25rem; color: #1e293b;">Atualizar Status da OS</h2>
+                <h2  class="title-atualizar">Atualizar Status da OS</h2>
                 <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
                     <span style="font-size: 0.9rem; color: #64748b;">Status atual:</span>
                     <span id="badgeStatusAtual" class="badge">Carregando...</span>
@@ -338,7 +369,7 @@
             <button class="btn-close" onclick="fecharModalStatus()" style="align-self: flex-start;">&times;</button>
         </div>
 
-        <form id="formStatus" th:action="@{/ordens/atualizar-status}" method="POST">
+        <form id="formStatus" th:action="@{/ordens-servico/atualizar-status}" method="POST">
             <input type="hidden" id="statusOsId" name="id">
             <input type="hidden" id="novoStatus" name="status">
 

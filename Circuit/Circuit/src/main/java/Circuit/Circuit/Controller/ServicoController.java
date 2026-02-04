@@ -14,7 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/servicos")
@@ -85,9 +88,28 @@ public class ServicoController {
     }
     @GetMapping("/json/valor/{id}")
     @ResponseBody
-    public BigDecimal buscarValor(@PathVariable Long id) {
+    public Map<String, Object> buscarServico(@PathVariable Long id) {
         return servicoRepository.findById(id)
-                .map(Servico::getValorBase)
-                .orElse(BigDecimal.ZERO);
+                .map(servico -> Map.<String, Object>of(
+                        "id", servico.getId(),
+                        "nome", servico.getNome(),
+                        "valorBase", servico.getValorBase()
+                ))
+                .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
     }
+    @GetMapping("/json/{id}/pecas")
+    @ResponseBody
+    public List<Map<String, Object>> buscarPecasDoServico(@PathVariable Long id) {
+        return servicoRepository.findById(id)
+                .map(servico -> servico.getPecasSugeridas().stream()
+                        .map(peca -> Map.<String, Object>of(
+                                "id", peca.getId(),
+                                "nome", peca.getNome(),
+                                "preco", peca.getPrecoVenda()
+                        ))
+                        .collect(Collectors.toList())
+                )
+                .orElse(Collections.emptyList());
+    }
+
 }

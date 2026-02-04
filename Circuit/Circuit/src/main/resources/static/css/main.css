@@ -513,6 +513,10 @@ body {
 
 .badge-active { background: #d1fae5; color: #059669; }
 .badge-inactive { background: #fee2e2; color: #dc2626; }
+.badge-info { background: lightyellow; color: yellow; }
+.badge-repair { background: #c8b9ea; color:purple; }
+.badge-analysis { background: lightskyblue; color: #3d3dfd; }
+.badge-wait { background: #fbb393; color: orangered; }
 
 .action-buttons {
     display: flex;
@@ -1369,3 +1373,157 @@ body {
 .icon-circle.danger { background: #fee2e2; color: #dc2626; }
 
 
+/* --- Correção para Acessórios Deixados (Image 1) --- */
+
+/* Contêiner que organiza os acessórios em uma grade */
+.accessories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Colunas responsivas */
+    gap: 10px; /* Espaço entre os itens */
+    padding-top: 5px;
+}
+
+/* O item individual (checkbox + texto) */
+.accessory-item {
+    display: flex;
+    align-items: center; /* Alinha o checkbox e o texto verticalmente no centro */
+    gap: 8px; /* Espaço entre o checkbox e o texto */
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    user-select: none; /* Evita selecionar o texto ao clicar rápido */
+}
+
+/* Estilo do próprio checkbox */
+.accessory-item input[type="checkbox"] {
+    margin: 0; /* Remove margens padrão */
+    width: 16px;
+    height: 16px;
+    accent-color: #f97316; /* Cor laranja quando marcado (combina com o botão) */
+    cursor: pointer;
+}
+
+
+
+.pecas-selection-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.peca-checkbox-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.peca-checkbox-item.selected {
+    border-color: #f97316;
+    background-color: #fff7ed;
+}
+
+.peca-checkbox-item input[type="checkbox"] {
+    margin-right: 12px;
+    width: 16px;
+    height: 16px;
+    accent-color: #f97316;
+}
+
+.peca-info {
+    display: flex;
+    justify-content: start;
+    padding: 12px;
+}
+
+.peca-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1e293b;
+}
+
+.peca-price {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+    margin-left: 10px;
+}
+
+.peca-checkbox-item, .accessory-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    background: white;
+}
+
+.peca-checkbox-item input, .accessory-item input {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+}
+/* Container para segurar o input e o botão juntos */
+.input-with-icon {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon input.form-control {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.btn-inside-input {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-inside-input:hover {
+    background-color: #f1f5f9;
+    color: green;
+}
+
+.btn-inside-input svg {
+    width: 20px;
+    height: 20px;
+}
+.fin-item {
+    margin-bottom: 20px;
+}
+
+.title-atualizar{
+    margin: 0; font-size: 1.25rem; color: white;
+}
