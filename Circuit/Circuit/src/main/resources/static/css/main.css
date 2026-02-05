@@ -517,7 +517,7 @@ body {
 .badge-repair { background: #c8b9ea; color:purple; }
 .badge-analysis { background: lightskyblue; color: #3d3dfd; }
 .badge-wait { background: #fbb393; color: orangered; }
-.badge-success { background: #74a6f3; color: #3d3dfd; }
+.badge-success { background: #fa92d3; color: #e31f98; }
 
 .action-buttons {
     display: flex;
@@ -1315,15 +1315,11 @@ body {
 .btn-icon.clean:hover {
     background: #fef2f2;
 }
-
-/* GRID DO MODAL */
 .status-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    grid-template-columns: 1fr 1fr;
     gap: 15px;
 }
-
-/* CARD BASE */
 .status-card {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -1350,8 +1346,6 @@ body {
     color: #475569;
     font-size: 0.95rem;
 }
-
-/* Cores específicas para Finalizar e Cancelar no Hover */
 .status-card.success-card:hover { border-color: #10b981; background-color: #f0fdf4; }
 .status-card.danger-card:hover { border-color: #ef4444; background-color: #fef2f2; }
 
@@ -1374,33 +1368,27 @@ body {
 .icon-circle.danger { background: #fee2e2; color: #dc2626; }
 
 
-/* --- Correção para Acessórios Deixados (Image 1) --- */
-
-/* Contêiner que organiza os acessórios em uma grade */
 .accessories-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Colunas responsivas */
-    gap: 10px; /* Espaço entre os itens */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
     padding-top: 5px;
 }
-
-/* O item individual (checkbox + texto) */
 .accessory-item {
     display: flex;
-    align-items: center; /* Alinha o checkbox e o texto verticalmente no centro */
-    gap: 8px; /* Espaço entre o checkbox e o texto */
+    align-items: center;
+    gap: 8px;
     font-size: 14px;
     color: #334155;
-    cursor: pointer; /* Muda o cursor para indicar que é clicável */
-    user-select: none; /* Evita selecionar o texto ao clicar rápido */
+    cursor: pointer;
+    user-select: none;
 }
 
-/* Estilo do próprio checkbox */
 .accessory-item input[type="checkbox"] {
-    margin: 0; /* Remove margens padrão */
+    margin: 0;
     width: 16px;
     height: 16px;
-    accent-color: #f97316; /* Cor laranja quando marcado (combina com o botão) */
+    accent-color: #f97316;
     cursor: pointer;
 }
 
@@ -1481,7 +1469,6 @@ body {
     width: 18px;
     height: 18px;
 }
-/* Container para segurar o input e o botão juntos */
 .input-with-icon {
     position: relative;
     width: 100%;
