@@ -154,7 +154,10 @@
                         <tr th:each="os : ${listaOrdensAbertas}">
                             <td><strong th:text="'#' + ${os.id}"></strong></td>
                             <td th:text="${os.cliente.nome}"></td>
-                            <td th:text="${os.aparelho.modelo.nome}"></td>
+                            <td>
+                                <div th:text="${os.aparelho.modelo.nome}" style="font-weight: 600;"></div>
+                                <div th:text="${os.defeito}" style="font-size: 0.85em; color: #666;"></div>
+                            </td>
                             <td th:text="${#temporals.format(os.dataEntrada, 'dd/MM/yyyy')}"></td>
                             <td>
                               <span class="badge"
@@ -209,34 +212,22 @@
                             <th>Aparelho</th>
                             <th>Data</th>
                             <th>Status</th>
-                            <th>Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="os : ${listaOrdensFinalizadas}">
                             <td><strong th:text="'#' + ${os.id}"></strong></td>
                             <td th:text="${os.cliente.nome}"></td>
-                            <td th:text="${os.aparelho.modelo.nome}"></td>
+                            <td>
+                                <div th:text="${os.aparelho.modelo.nome}" style="font-weight: 600;"></div>
+                                <div th:text="${os.defeito}" style="font-size: 0.85em; color: #666;"></div>
+                            </td>
                             <td>
                                 <span class="badge"
                                       th:classappend="${os.status.name() == 'CANCELADA' ? 'badge-inactive' : (os.status.name() == 'FINALIZADA' ? 'badge-success' : '')}"
                                       th:text="${os.status.description}"></span>
                             </td>
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-action" type="button" title="Mudar Status"
-                                            th:data-id="${os.id}"
-                                            th:data-status="${os.status}"
-                                            onclick="abrirModalStatus(this.getAttribute('data-id'), this.getAttribute('data-status'))">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M23 4v6h-6"></path>
-                                            <path d="M1 20v-6h6"></path>
-                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(listaOrdensFinalizadas)}"><td colspan="7" style="text-align: center; padding: 20px;">Nenhuma ordem finalizada.</td></tr>
                         </tbody>
@@ -257,6 +248,7 @@
         <form id="formOs" th:action="@{/ordens-servico/cadastrar}" method="POST">
             <input type="hidden" id="osId" name="id">
             <input type="hidden" name="status" value="ABERTA">
+            <input type="hidden" id="valorPecasOriginal" value="0">
 
             <div class="modal-body">
                 <div class="form-grid">
@@ -341,6 +333,9 @@
                         </div>
                         <input type="hidden" id="osPorcentagemDesconto" name="porcentagemDesconto" value="0">
                         <input type="hidden" id="osMotivoDesconto" name="motivoDesconto">
+                        <div id="infoFinanceira" style="display: none; font-size: 0.8em; color: #475569; margin-top: 4px; padding: 4px; background: #f8fafc; border-radius: 4px; border: 1px dashed #cbd5e1;">
+                            <span id="resumoValores"></span>
+                        </div>
                 </div>
             </div>
 

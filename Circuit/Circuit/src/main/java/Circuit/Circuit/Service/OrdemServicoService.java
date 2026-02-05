@@ -42,6 +42,8 @@ public class OrdemServicoService {
 
     public OrdemServico editar(Long id, OrdemServico ordemAtualizada) {
         OrdemServico ordemBanco = ordemServicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Ordem de serviço não encontrada"));
+
+
         ordemBanco.setFuncionario(ordemAtualizada.getFuncionario());
         ordemBanco.setServico(ordemAtualizada.getServico());
         ordemBanco.setDefeito(ordemAtualizada.getDefeito());
@@ -57,7 +59,6 @@ public class OrdemServicoService {
         else if (ordemAtualizada.getStatus() != Status.FINALIZADA) {
             ordemBanco.setDataSaida(null);
         }
-        ordemBanco.setStatus(ordemAtualizada.getStatus());
         return ordemServicoRepository.save(ordemBanco);
     }
     public void atualizarStatus(Long id, Status novoStatus){

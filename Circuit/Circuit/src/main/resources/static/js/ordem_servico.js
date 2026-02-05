@@ -1,14 +1,17 @@
-const modalOs = document.getElementById('modalNovaOs');
-const formOs = document.getElementById('formOs');
-const modalStatus = document.getElementById('modalStatus');
+let elMaoDeObra, elTotal, elPorcentagemHidden, elMotivoHidden, formOs;
 
 document.addEventListener("DOMContentLoaded", function () {
+    elMaoDeObra = document.getElementById('valorMaoDeObra');
+    elTotal = document.getElementById('osValorTotal');
+    elPorcentagemHidden = document.getElementById('osPorcentagemDesconto');
+    elMotivoHidden = document.getElementById('osMotivoDesconto');
+    formOs = document.getElementById('formOs');
+
     configurarPesquisaLocal('searchTodas', 'tabelaTodas');
     configurarPesquisaLocal('searchAbertas', 'tabelaAbertas');
     configurarPesquisaLocal('searchFinalizadas', 'tabelaFinalizadas');
 
-    const alertas = document.querySelectorAll('.auto-close');
-    alertas.forEach(alerta => {
+    document.querySelectorAll('.auto-close').forEach(alerta => {
         setTimeout(() => {
             alerta.style.opacity = '0';
             setTimeout(() => { alerta.remove(); }, 500);
@@ -17,122 +20,77 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function switchTab(tabName, event) {
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.style.display = 'none';
-        content.classList.remove('active');
+    document.querySelectorAll('.tab-content').forEach(c => {
+        c.style.display = 'none';
+        c.classList.remove('active');
     });
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
     const tabId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
-    const targetDiv = document.getElementById(tabId);
-    if (targetDiv) {
-        targetDiv.style.display = 'block';
-        targetDiv.classList.add('active');
+    const target = document.getElementById(tabId);
+    if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
     }
-
-    if (event) {
-        event.currentTarget.classList.add('active');
-    }
+    if (event) event.currentTarget.classList.add('active');
 }
 
-function filtrarPorData() {
-    const abaAtiva = document.querySelector('.tab-content.active');
-    if (!abaAtiva) return;
+function calcularTotalOS() {
+    if (!elMaoDeObra || !elTotal || !elPorcentagemHidden) return;
 
-    let idInicio, idFim, idTabela;
+    const maoDeObra = parseFloat(elMaoDeObra.value) || 0;
+    const porcentagem = parseFloat(elPorcentagemHidden.value) || 0;
+    const elPecasOriginal = document.getElementById('valorPecasOriginal');
+    const valorPecasOriginal = elPecasOriginal ? parseFloat(elPecasOriginal.value) || 0 : 0;
 
-    if (abaAtiva.id === 'tabTodas') {
-        idInicio = 'dataInicio';
-        idFim = 'dataFim';
-        idTabela = 'tabelaTodas';
-    } else if (abaAtiva.id === 'tabAbertas') {
-        idInicio = 'dataInicioAbertas';
-        idFim = 'dataFimAbertas';
-        idTabela = 'tabelaAbertas';
-    } else if (abaAtiva.id === 'tabFinalizadas') {
-        idInicio = 'dataInicioFinalizadas';
-        idFim = 'dataFimFinalizadas';
-        idTabela = 'tabelaFinalizadas';
-    }
+    let totalPecas = 0;
+    const pecasSelecionadas = document.querySelectorAll('input[name="pecasIds"]:checked');
 
-    const inicioVal = document.getElementById(idInicio).value;
-    const fimVal = document.getElementById(idFim).value;
-
-    if (!inicioVal && !fimVal) return;
-
-    const dataInicio = inicioVal ? new Date(inicioVal + 'T00:00:00') : null;
-    const dataFim = fimVal ? new Date(fimVal + 'T23:59:59') : null;
-
-    const tabela = document.getElementById(idTabela);
-    const linhas = tabela.querySelectorAll('tbody tr');
-
-    linhas.forEach(linha => {
-        const celulaData = linha.cells[3].innerText.trim();
-        if (!celulaData) return;
-
-        const partes = celulaData.split('/');
-        const dataLinha = new Date(partes[2], partes[1] - 1, partes[0]);
-
-        let mostrar = true;
-        if (dataInicio && dataLinha < dataInicio) mostrar = false;
-        if (dataFim && dataLinha > dataFim) mostrar = false;
-
-        linha.style.display = mostrar ? '' : 'none';
-    });
-}
-
-function limparFiltroData() {
-    const abaAtiva = document.querySelector('.tab-content.active');
-    if (!abaAtiva) return;
-
-    if (abaAtiva.id === 'tabTodas') {
-        document.getElementById('dataInicio').value = '';
-        document.getElementById('dataFim').value = '';
-    } else if (abaAtiva.id === 'tabAbertas') {
-        document.getElementById('dataInicioAbertas').value = '';
-        document.getElementById('dataFimAbertas').value = '';
-    } else if (abaAtiva.id === 'tabFinalizadas') {
-        document.getElementById('dataInicioFinalizadas').value = '';
-        document.getElementById('dataFimFinalizadas').value = '';
-    }
-
-    const tabela = abaAtiva.querySelector('table tbody');
-    if (tabela) {
-        tabela.querySelectorAll('tr').forEach(linha => linha.style.display = '');
-    }
-}
-
-function configurarPesquisaLocal(inputId, tableId) {
-    const input = document.getElementById(inputId);
-    const table = document.getElementById(tableId);
-    if (!input || !table) return;
-
-    input.addEventListener('keyup', function () {
-        const termo = input.value.toLowerCase();
-        const linhas = table.querySelectorAll('tbody tr');
-
-        linhas.forEach(linha => {
-            const texto = linha.innerText.toLowerCase();
-            linha.style.display = texto.includes(termo) ? '' : 'none';
+    if (pecasSelecionadas.length > 0) {
+        pecasSelecionadas.forEach(cb => {
+            totalPecas += parseFloat(cb.getAttribute('data-preco')) || 0;
         });
-    });
+    } else {
+        totalPecas = valorPecasOriginal;
+    }
+
+    const subtotal = maoDeObra + totalPecas;
+    const valorDesconto = subtotal * (porcentagem / 100);
+    const totalFinal = subtotal - valorDesconto;
+
+    elTotal.value = Math.max(0, totalFinal).toFixed(2);
+
+    const infoDiv = document.getElementById('infoFinanceira');
+    const resumoTxt = document.getElementById('resumoValores');
+
+    if (infoDiv && resumoTxt) {
+        if (subtotal > 0) {
+            resumoTxt.innerText = `Subtotal: R$ ${subtotal.toFixed(2)} | Desconto: -R$ ${valorDesconto.toFixed(2)}`;
+            infoDiv.style.display = 'block';
+        } else {
+            infoDiv.style.display = 'none';
+        }
+    }
 }
 
 function abrirModalNovaOs() {
     formOs.reset();
     formOs.action = "/ordens-servico/cadastrar";
     document.getElementById('osId').value = '';
+
+    const elPecasOriginal = document.getElementById('valorPecasOriginal');
+    if (elPecasOriginal) elPecasOriginal.value = "0.00";
+
+    const statusInput = document.querySelector('input[name="status"]');
+    if (statusInput) statusInput.value = 'ABERTA';
+
     document.getElementById('modalTitle').innerText = 'Lançar Nova Ordem de Serviço';
 
     const selectAparelho = document.getElementById('osAparelho');
     selectAparelho.innerHTML = '<option value="">Selecione um Cliente primeiro...</option>';
     selectAparelho.disabled = true;
 
-    modalOs.classList.add('active');
-    modalOs.style.display = 'flex';
+    document.getElementById('modalNovaOs').style.display = 'flex';
 }
 
 function abrirModalEdicao(btn) {
@@ -140,207 +98,176 @@ function abrirModalEdicao(btn) {
     document.getElementById('modalTitle').innerText = 'Editar Ordem de Serviço';
 
     const id = btn.getAttribute('data-id');
-    const clienteId = btn.getAttribute('data-cliente');
-    const aparelhoId = btn.getAttribute('data-aparelho');
-    const tecnicoId = btn.getAttribute('data-tecnico');
-    const servicoId = btn.getAttribute('data-servico');
-    const defeito = btn.getAttribute('data-defeito');
-    const senha = btn.getAttribute('data-senha');
-    const estado = btn.getAttribute('data-estado');
-    const previsao = btn.getAttribute('data-previsao');
-    const valorMaoObra = btn.getAttribute('data-valor');
-    const valorTotal = btn.getAttribute('data-total');
-    const idsPecas = btn.getAttribute('data-pecas');
+    const status = btn.getAttribute('data-status');
+    const vMaoObra = parseFloat(btn.getAttribute('data-valor')) || 0;
+    const vTotal = parseFloat(btn.getAttribute('data-total')) || 0;
+    const porcentagem = parseFloat(elPorcentagemHidden.value) || 0;
+    const pecasIds = btn.getAttribute('data-pecas') || "";
+
+    const fator = 1 - (porcentagem / 100);
+    const subtotalOriginal = fator > 0 ? vTotal / fator : vTotal;
+    const valorPecasNoBanco = Math.max(0, subtotalOriginal - vMaoObra);
+
+    const elPecasOriginal = document.getElementById('valorPecasOriginal');
+    if (elPecasOriginal) elPecasOriginal.value = valorPecasNoBanco.toFixed(2);
 
     document.getElementById('osId').value = id;
-    document.getElementById('osCliente').value = clienteId;
-    document.getElementById('osFuncionario').value = tecnicoId;
-    document.getElementById('osServico').value = servicoId;
-    document.getElementById('osDefeito').value = defeito;
-    document.getElementById('osSenha').value = senha || '';
-    document.getElementById('osEstado').value = estado || '';
-    document.getElementById('osPrevisao').value = previsao || '';
-    document.getElementById('valorMaoDeObra').value = valorMaoObra;
-    document.getElementById('osValorTotal').value = valorTotal;
 
-    carregarAparelhosCliente(clienteId, aparelhoId);
-    buscarPecasVinculadas(servicoId);
+    const statusInput = document.querySelector('input[name="status"]');
+    if (statusInput && status) statusInput.value = status;
 
-    modalOs.classList.add('active');
-    modalOs.style.display = 'flex';
-}
+    document.getElementById('osCliente').value = btn.getAttribute('data-cliente');
+    document.getElementById('osFuncionario').value = btn.getAttribute('data-tecnico');
+    document.getElementById('osServico').value = btn.getAttribute('data-servico');
+    document.getElementById('osDefeito').value = btn.getAttribute('data-defeito');
+    document.getElementById('osSenha').value = btn.getAttribute('data-senha') || '';
+    document.getElementById('osEstado').value = btn.getAttribute('data-estado') || '';
+    document.getElementById('osPrevisao').value = btn.getAttribute('data-previsao') || '';
 
-function closeModalOs() {
-    modalOs.classList.remove('active');
-    modalOs.style.display = 'none';
+    document.getElementById('valorMaoDeObra').value = vMaoObra.toFixed(2);
+    document.getElementById('osValorTotal').value = vTotal.toFixed(2);
+
+    const infoDiv = document.getElementById('infoFinanceira');
+    const resumoTxt = document.getElementById('resumoValores');
+    if (infoDiv && resumoTxt) {
+        resumoTxt.innerText = `Valor Total salvo: R$ ${vTotal.toFixed(2)}`;
+        infoDiv.style.display = 'block';
+    }
+
+    carregarAparelhosCliente(btn.getAttribute('data-cliente'), btn.getAttribute('data-aparelho'));
+    buscarPecasVinculadas(btn.getAttribute('data-servico'), pecasIds, true);
+
+    document.getElementById('modalNovaOs').style.display = 'flex';
 }
 
 function carregarAparelhosCliente(clienteId, aparelhoIdSelecionado = null) {
     const selectAparelho = document.getElementById('osAparelho');
-
     if (!clienteId) {
         selectAparelho.innerHTML = '<option value="">Selecione um Cliente primeiro...</option>';
         selectAparelho.disabled = true;
         return;
     }
 
-    selectAparelho.innerHTML = '<option value="">Carregando...</option>';
-    selectAparelho.disabled = true;
-
     fetch(`/aparelhos/json/cliente/${clienteId}`)
-        .then(response => {
-            if (!response.ok) throw new Error('Erro ao buscar aparelhos');
-            return response.json();
-        })
+        .then(response => response.json())
         .then(aparelhos => {
             selectAparelho.innerHTML = '<option value="">Selecione o Aparelho...</option>';
-
-            if (aparelhos.length === 0) {
+            aparelhos.forEach(ap => {
                 const option = document.createElement('option');
-                option.text = "Nenhum aparelho cadastrado";
+                option.value = ap.id;
+                option.text = ap.modelo ? ap.modelo.nome : 'Aparelho sem modelo';
+                if (aparelhoIdSelecionado && ap.id == aparelhoIdSelecionado) option.selected = true;
                 selectAparelho.add(option);
-            } else {
-                aparelhos.forEach(ap => {
-                    const option = document.createElement('option');
-                    option.value = ap.id;
-                    option.text = ap.modelo ? ap.modelo.nome : 'Aparelho sem modelo';
-                    if (aparelhoIdSelecionado && ap.id == aparelhoIdSelecionado) {
-                        option.selected = true;
-                    }
-                    selectAparelho.add(option);
-                });
-            }
+            });
             selectAparelho.disabled = false;
-        })
-        .catch(error => {
-            console.error(error);
-            selectAparelho.innerHTML = '<option value="">Erro ao carregar</option>';
         });
 }
 
-function abrirModalStatus(idOs, statusAtual) {
-    document.getElementById('statusOsId').value = idOs;
-    const badge = document.getElementById('badgeStatusAtual');
-    badge.innerText = statusAtual;
-    badge.className = 'badge';
-
-    if (statusAtual === 'ABERTA' || statusAtual === 'EM_ANALISE') badge.classList.add('badge-active');
-    else if (statusAtual === 'FINALIZADA') badge.classList.add('badge-success');
-    else if (statusAtual === 'CANCELADA') badge.classList.add('badge-inactive');
-    else badge.classList.add('badge-warning');
-
-    modalStatus.classList.add('active');
-    modalStatus.style.display = 'flex';
-}
-
-function fecharModalStatus() {
-    modalStatus.classList.remove('active');
-    modalStatus.style.display = 'none';
-}
-
-function selecionarStatus(novoStatus) {
-    if(confirm('Tem certeza que deseja alterar o status para: ' + novoStatus + '?')) {
-        document.getElementById('novoStatus').value = novoStatus;
-        document.getElementById('formStatus').submit();
-    }
-}
-
-function buscarPecasVinculadas(servicoId) {
+function buscarPecasVinculadas(servicoId, idsSelecionadosStr = "", isInitialLoad = false) {
     const container = document.getElementById('containerPecas');
     const lista = document.getElementById('listaCheckboxesPecas');
-    const inputMaoDeObra = document.getElementById('valorMaoDeObra');
     lista.innerHTML = '';
+    const idsSelecionados = idsSelecionadosStr ? idsSelecionadosStr.split(',').map(Number) : [];
 
     if (!servicoId) {
         container.style.display = 'none';
-        if (inputMaoDeObra) inputMaoDeObra.value = '0.00';
-        calcularTotalOS();
         return;
     }
 
-    fetch(`/servicos/json/valor/${servicoId}`)
-        .then(res => res.json())
-        .then(data => {
-            if (inputMaoDeObra && data.valorBase) {
-                inputMaoDeObra.value = data.valorBase.toFixed(2);
+    if (!isInitialLoad) {
+        fetch(`/servicos/json/valor/${servicoId}`).then(res => res.json()).then(data => {
+            if (data.valorBase && elMaoDeObra) {
+                elMaoDeObra.value = data.valorBase.toFixed(2);
+                calcularTotalOS();
             }
-            calcularTotalOS();
         });
+    }
 
-    fetch(`/servicos/json/${servicoId}/pecas`)
-        .then(res => res.json())
-        .then(pecas => {
-            if (pecas.length > 0) {
-                pecas.forEach(p => {
-                    const label = document.createElement('label');
-                    label.className = 'peca-checkbox-item';
-                    label.innerHTML = `
-                        <div class="peca-info">
-                        <input type="checkbox" 
-                               name="pecasIds" 
-                               class="checkbox-icon" 
-                               value="${p.id}" 
-                               data-preco="${p.preco}"
-                               onchange="atualizarEstiloPeca(this)">
-                            <span class="peca-name">${p.nome}</span>
-                            <span class="peca-price">R$ ${p.preco.toFixed(2)}</span>
-                        </div>
-                    `;
-                    lista.appendChild(label);
-                });
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        })
-        .catch(err => console.error(err));
+    fetch(`/servicos/json/${servicoId}/pecas`).then(res => res.json()).then(pecas => {
+        if (pecas.length > 0) {
+            pecas.forEach(p => {
+                const isChecked = idsSelecionados.includes(p.id);
+                const item = document.createElement('label');
+                item.className = `peca-checkbox-item ${isChecked ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <div class="peca-info">
+                        <input type="checkbox" name="pecasIds" value="${p.id}" data-preco="${p.preco}" 
+                               ${isChecked ? 'checked' : ''} onchange="atualizarEstiloPeca(this)">
+                        <span class="peca-name">${p.nome}</span>
+                        <span class="peca-price">R$ ${p.preco.toFixed(2)}</span>
+                    </div>`;
+                lista.appendChild(item);
+            });
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    });
 }
 
 function atualizarEstiloPeca(input) {
-    const item = input.closest('.peca-checkbox-item');
-    if (input.checked) {
-        item.classList.add('selected');
-    } else {
-        item.classList.remove('selected');
-    }
+    input.closest('.peca-checkbox-item').classList.toggle('selected', input.checked);
     calcularTotalOS();
 }
 
-function calcularTotalOS() {
-    const maoDeObra = parseFloat(document.getElementById('valorMaoDeObra').value) || 0;
-    let totalPecas = 0;
-
-    const checkboxes = document.querySelectorAll('#listaCheckboxesPecas input[type="checkbox"]:checked');
-    checkboxes.forEach(chk => {
-        totalPecas += parseFloat(chk.dataset.preco);
-    });
-
-    const campoTotalPecas = document.getElementById('valorTotalPecas');
-    if (campoTotalPecas) campoTotalPecas.value = totalPecas.toFixed(2);
-
-    const campoTotalGeral = document.getElementById('osValorTotal');
-    if (campoTotalGeral) campoTotalGeral.value = (maoDeObra + totalPecas).toFixed(2);
-}
-function selecionarStatus(novoStatus) {
-    document.getElementById('novoStatus').value = novoStatus;
-    document.getElementById('formStatus').submit();
-}
 function abrirModalDesconto() {
     document.getElementById('modalDesconto').style.display = 'flex';
-    document.getElementById('inputPorcentagem').value = document.getElementById('osPorcentagemDesconto').value;
-    document.getElementById('inputMotivo').value = document.getElementById('osMotivoDesconto').value;
-}
-
-function fecharModalDesconto() {
-    document.getElementById('modalDesconto').style.display = 'none';
+    document.getElementById('inputPorcentagem').value = elPorcentagemHidden.value;
+    document.getElementById('inputMotivo').value = elMotivoHidden.value;
 }
 
 function confirmarDesconto() {
-    const porcentagem = parseFloat(document.getElementById('inputPorcentagem').value) || 0;
-    const motivo = document.getElementById('inputMotivo').value;
-    document.getElementById('osPorcentagemDesconto').value = porcentagem;
-    document.getElementById('osMotivoDesconto').value = motivo;
+    const p = document.getElementById('inputPorcentagem').value;
+    const m = document.getElementById('inputMotivo').value;
+    elPorcentagemHidden.value = p || 0;
+    elMotivoHidden.value = m || '';
     calcularTotalOS();
-
     fecharModalDesconto();
 }
+
+function abrirModalStatus(idOs, statusAtual) {
+    const inputId = document.getElementById('statusOsId');
+    const badge = document.getElementById('badgeStatusAtual');
+    const modal = document.getElementById('modalStatus');
+
+    if (inputId && badge && modal) {
+        inputId.value = idOs;
+        badge.innerText = statusAtual.replace('_', ' '); // Formata o texto
+
+        // Aplica a cor correta baseada no status
+        badge.className = 'badge';
+        if (statusAtual === 'ABERTA') badge.classList.add('badge-active');
+        else if (statusAtual === 'FINALIZADA') badge.classList.add('badge-success');
+        else if (statusAtual === 'CANCELADA') badge.classList.add('badge-inactive');
+        else if (statusAtual === 'EM_ANALISE') badge.classList.add('badge-analysis');
+        else if (statusAtual === 'EM_REPARO') badge.classList.add('badge-repair');
+        else badge.classList.add('badge-info');
+
+        modal.style.display = 'flex';
+    }
+}
+
+function selecionarStatus(novoStatus) {
+    const inputNovo = document.getElementById('novoStatus');
+    const form = document.getElementById('formStatus');
+    if (inputNovo && form) {
+        inputNovo.value = novoStatus;
+        form.submit();
+    }
+}
+
+function configurarPesquisaLocal(inputId, tableId) {
+    const input = document.getElementById(inputId);
+    const table = document.getElementById(tableId);
+    if (!input || !table) return;
+    input.addEventListener('keyup', () => {
+        const termo = input.value.toLowerCase();
+        table.querySelectorAll('tbody tr').forEach(linha => {
+            linha.style.display = linha.innerText.toLowerCase().includes(termo) ? '' : 'none';
+        });
+    });
+}
+
+function closeModalOs() { document.getElementById('modalNovaOs').style.display = 'none'; }
+function fecharModalDesconto() { document.getElementById('modalDesconto').style.display = 'none'; }
+function fecharModalStatus() { document.getElementById('modalStatus').style.display = 'none'; }
