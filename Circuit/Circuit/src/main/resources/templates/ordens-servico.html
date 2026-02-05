@@ -324,11 +324,23 @@
                             <label><span>Mão de Obra (R$)</span></label>
                             <input type="number" id="valorMaoDeObra" name="valorServico" class="form-control" step="0.01" value="0.00" oninput="calcularTotalOS()">
                         </div>
+
                         <div class="fin-item total">
                             <label><span>Valor Total (R$)</span></label>
-                            <input type="number" id="osValorTotal" name="valorTotal" class="form-control" step="0.01" readonly>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="number" id="osValorTotal" name="valorTotal" class="form-control" step="0.01" readonly>
+                                <button type="button" class="btn-discount" onclick="abrirModalDesconto()" title="Aplicar Desconto">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="19" y1="5" x2="5" y2="19"></line>
+                                        <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                                        <circle cx="17.5" cy="17.5" r="2.5"></circle>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                        </div>
+                        <input type="hidden" id="osPorcentagemDesconto" name="porcentagemDesconto" value="0">
+                        <input type="hidden" id="osMotivoDesconto" name="motivoDesconto">
                 </div>
             </div>
 
@@ -337,6 +349,28 @@
                 <button type="submit" class="btn-submit">Salvar Ordem de Serviço</button>
             </div>
         </form>
+    </div>
+</div>
+<div class="modal" id="modalDesconto" style="background: rgba(0,0,0,0.3);">
+    <div class="modal-content" style="max-width: 400px; margin-top: 100px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+        <div class="modal-header">
+            <h3 class="title-atualizar">Aplicar Desconto</h3>
+            <button type="button" class="btn-close" onclick="fecharModalDesconto()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Porcentagem (%)</label>
+                <input type="number" id="inputPorcentagem" class="form-control" min="0" max="100" placeholder="Ex: 10" required>
+            </div>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Motivo do Desconto</label>
+                <textarea id="inputMotivo" class="form-control" rows="3" placeholder="Ex: Cliente fidelidade, Black Friday..." required></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="fecharModalDesconto()">Cancelar</button>
+            <button type="button" class="btn-primary" onclick="confirmarDesconto()">Aplicar</button>
+        </div>
     </div>
 </div>
 

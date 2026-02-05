@@ -64,6 +64,13 @@ public class OrdemServico {
 
     @Column(name = "valor_total", precision = 10, scale = 2)
     private BigDecimal valorTotal = BigDecimal.ZERO;
+
+    @Column(name = "motivo_desconto", length = 255)
+    private String motivoDesconto;
+
+    @Column(name = "porcentagem_desconto")
+    private Integer porcentagemDesconto = 0;
+
     @ManyToMany
     @JoinTable(
             name = "ordem_pecas",

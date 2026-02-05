@@ -325,3 +325,22 @@ function selecionarStatus(novoStatus) {
     document.getElementById('novoStatus').value = novoStatus;
     document.getElementById('formStatus').submit();
 }
+function abrirModalDesconto() {
+    document.getElementById('modalDesconto').style.display = 'flex';
+    document.getElementById('inputPorcentagem').value = document.getElementById('osPorcentagemDesconto').value;
+    document.getElementById('inputMotivo').value = document.getElementById('osMotivoDesconto').value;
+}
+
+function fecharModalDesconto() {
+    document.getElementById('modalDesconto').style.display = 'none';
+}
+
+function confirmarDesconto() {
+    const porcentagem = parseFloat(document.getElementById('inputPorcentagem').value) || 0;
+    const motivo = document.getElementById('inputMotivo').value;
+    document.getElementById('osPorcentagemDesconto').value = porcentagem;
+    document.getElementById('osMotivoDesconto').value = motivo;
+    calcularTotalOS();
+
+    fecharModalDesconto();
+}
