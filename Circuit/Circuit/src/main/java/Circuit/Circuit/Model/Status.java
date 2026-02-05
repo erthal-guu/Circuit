@@ -6,7 +6,7 @@ public enum Status {
     AGUARDANDO_APROVACAO("Aguardando aprovação"),
     EM_REPARO("Em reparo"),
     AGUARDANDO_PECA("Aguardando Peça"),
-    FINALIZADA("Finalizad"),
+    FINALIZADA("Finalizada"),
     CANCELADA("Cancelada");
 
     private final String description;

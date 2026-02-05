@@ -513,10 +513,11 @@ body {
 
 .badge-active { background: #d1fae5; color: #059669; }
 .badge-inactive { background: #fee2e2; color: #dc2626; }
-.badge-info { background: lightyellow; color: yellow; }
+.badge-info { background: lightyellow; color: #8d8d00; }
 .badge-repair { background: #c8b9ea; color:purple; }
 .badge-analysis { background: lightskyblue; color: #3d3dfd; }
 .badge-wait { background: #fbb393; color: orangered; }
+.badge-success { background: #74a6f3; color: #3d3dfd; }
 
 .action-buttons {
     display: flex;

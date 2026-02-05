@@ -21,6 +21,7 @@ public class OrdemServicoService {
     public List<OrdemServico> ListarOrdens(){
         return ordemServicoRepository.findAll();
     }
+
     public List<OrdemServico> ListarOrdensAbertas(){
         List<Status> statusAtivos = Arrays.asList(
                 Status.ABERTA,

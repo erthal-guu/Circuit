@@ -44,17 +44,6 @@
                 <div class="table-card">
                     <div class="table-header">
                         <h3>Todas as Ordens</h3>
-                        <div class="date-filter-inline">
-                            <input type="date" id="dataInicio" class="input-compact" title="Data Inicial">
-                            <span style="color: #888; font-size: 14px;">até</span>
-                            <input type="date" id="dataFim" class="input-compact" title="Data Final">
-                            <button type="button" class="btn-icon" onclick="filtrarPorData()" title="Filtrar">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                            </button>
-                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()" title="Limpar Datas">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
                         <div class="search-box">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="11" cy="11" r="8"></circle>
@@ -95,7 +84,7 @@
                                           (os.status.name() == 'AGUARDANDO_PECA' ? 'badge-wait' :
                                           (os.status.name() == 'FINALIZADA' ? 'badge-success' : 'badge-inactive')))))
                                       }"
-                                    th:text="${os.status}">
+                                    th:text="${os.status.description}">
                                 </span>
                             </td>
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
@@ -144,13 +133,6 @@
                 <div class="table-card">
                     <div class="table-header">
                         <h3>Ordens Abertas</h3>
-                        <div class="date-filter-inline">
-                            <input type="date" id="dataInicioAbertas" class="input-compact">
-                            <span style="color: #888;">até</span>
-                            <input type="date" id="dataFimAbertas" class="input-compact">
-                            <button type="button" class="btn-icon" onclick="filtrarPorData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></button>
-                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-                        </div>
                         <div class="search-box">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             <input type="text" id="searchAbertas" placeholder="Buscar abertas...">
@@ -174,7 +156,18 @@
                             <td th:text="${os.cliente.nome}"></td>
                             <td th:text="${os.aparelho.modelo.nome}"></td>
                             <td th:text="${#temporals.format(os.dataEntrada, 'dd/MM/yyyy')}"></td>
-                            <td><span class="badge badge-active">ABERTA</span></td>
+                            <td>
+                              <span class="badge"
+                                    th:classappend="${
+                                          os.status.name() == 'ABERTA' ? 'badge-active' :
+                                          (os.status.name() == 'EM_ANALISE' ? 'badge-analysis' :
+                                          (os.status.name() == 'AGUARDANDO_APROVACAO' ? 'badge-info' :
+                                          (os.status.name() == 'EM_REPARO' ? 'badge-repair' :
+                                          (os.status.name() == 'AGUARDANDO_PECA' ? 'badge-wait' :'badge-inactive'))))
+                                      }"
+                                    th:text="${os.status.description}">
+                                </span>
+                            </td>
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
                                 <div class="action-buttons">
@@ -203,13 +196,6 @@
                 <div class="table-card">
                     <div class="table-header">
                         <h3>Ordens Finalizadas</h3>
-                        <div class="date-filter-inline">
-                            <input type="date" id="dataInicioFinalizadas" class="input-compact">
-                            <span style="color: #888;">até</span>
-                            <input type="date" id="dataFimFinalizadas" class="input-compact">
-                            <button type="button" class="btn-icon" onclick="filtrarPorData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></button>
-                            <button type="button" class="btn-icon clean" onclick="limparFiltroData()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-                        </div>
                         <div class="search-box">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             <input type="text" id="searchFinalizadas" placeholder="Buscar histórico...">
@@ -223,7 +209,6 @@
                             <th>Aparelho</th>
                             <th>Data</th>
                             <th>Status</th>
-                            <th>Valor</th>
                             <th>Ações</th>
                         </tr>
                         </thead>
@@ -234,8 +219,8 @@
                             <td th:text="${os.aparelho.modelo.nome}"></td>
                             <td>
                                 <span class="badge"
-                                      th:classappend="${os.status.name() == 'CANCELADA' ? 'badge-inactive' : ''}"
-                                      th:text="${os.status}"></span>
+                                      th:classappend="${os.status.name() == 'CANCELADA' ? 'badge-inactive' : (os.status.name() == 'FINALIZADA' ? 'badge-success' : '')}"
+                                      th:text="${os.status.description}"></span>
                             </td>
                             <td th:text="${os.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(os.valorTotal, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}"></td>
                             <td>
