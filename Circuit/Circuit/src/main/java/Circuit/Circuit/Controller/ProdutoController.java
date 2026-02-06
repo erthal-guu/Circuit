@@ -1,5 +1,7 @@
 package Circuit.Circuit.Controller;
 
+import Circuit.Circuit.Dto.PecaDto;
+import Circuit.Circuit.Dto.ProdutoDto;
 import Circuit.Circuit.Model.Categoria;
 import Circuit.Circuit.Model.Produto;
 import Circuit.Circuit.Repository.CategoriaRepository;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/estoque")
@@ -87,5 +91,18 @@ public class ProdutoController {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao restaurar: " + e.getMessage());
         }
         return "redirect:/estoque";
+    }
+    @GetMapping("/todos-disponiveis")
+    @ResponseBody
+    public List<Map<String, Object>> listarProdutosJson() {
+        List<Produto> produtos = produtoService.listarProdutos();
+
+        return produtos.stream()
+                .map(produto -> Map.<String, Object>of(
+                        "id", produto.getId(),
+                        "nome", produto.getNome(),
+                        "quantidade", produto.getQuantidade()
+                ))
+                .collect(Collectors.toList());
     }
 }

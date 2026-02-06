@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "fornecedores")
 @Data
@@ -32,6 +35,9 @@ public class Fornecedor {
     private String email;
 
     @Column(nullable = false)
+    private String tipo;
+
+    @Column(nullable = false)
     private Boolean ativo = true;
 
 
@@ -44,4 +50,19 @@ public class Fornecedor {
     private String cidade;
     private String estado;
 
+    @ManyToMany
+    @JoinTable(
+            name = "fornecedor_pecas",
+            joinColumns = @JoinColumn(name = "fornecedor_id"),
+            inverseJoinColumns = @JoinColumn(name = "peca_id")
+    )
+    private Set<Peca> pecas = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "fornecedor_produtos",
+            joinColumns = @JoinColumn(name = "fornecedor_id"),
+            inverseJoinColumns = @JoinColumn(name = "produto_id")
+    )
+    private Set<Produto> produtos = new HashSet<>();
 }

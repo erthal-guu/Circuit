@@ -1,5 +1,6 @@
 package Circuit.Circuit.Controller;
 
+import Circuit.Circuit.Dto.PecaDto;
 import Circuit.Circuit.Model.CategoriaPecas;
 import Circuit.Circuit.Model.Peca;
 import Circuit.Circuit.Repository.CategoriaPecasRepository;
@@ -13,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/estoquePecas")
@@ -87,4 +90,17 @@ public class PecaController {
         }
         return "redirect:/estoquePecas";
     }
+    @GetMapping("/todas-disponiveis")
+    @ResponseBody
+    public List<Map<String, Object>> listarPecasJson() {
+        List<Peca> pecas = pecasService.listarPecasAtivas();
+        return pecas.stream()
+                .map(peca -> Map.<String, Object>of(
+                        "id", peca.getId(),
+                        "nome", peca.getNome(),
+                        "quantidade", peca.getQuantidade()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

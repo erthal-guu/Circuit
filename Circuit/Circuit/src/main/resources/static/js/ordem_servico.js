@@ -232,9 +232,7 @@ function abrirModalStatus(idOs, statusAtual) {
 
     if (inputId && badge && modal) {
         inputId.value = idOs;
-        badge.innerText = statusAtual.replace('_', ' '); // Formata o texto
-
-        // Aplica a cor correta baseada no status
+        badge.innerText = statusAtual.replace('_', ' ');
         badge.className = 'badge';
         if (statusAtual === 'ABERTA') badge.classList.add('badge-active');
         else if (statusAtual === 'FINALIZADA') badge.classList.add('badge-success');

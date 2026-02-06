@@ -26,8 +26,13 @@
                 <h1 class="page-title">Fornecedores Cadastrados</h1>
                 <div class="header-actions">
                     <div class="tab-container">
+                        <button class="btn-primary vincular" onclick="abrirModalVincular()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>Vincular</button>
                         <button class="tab-btn active" onclick="switchTab('ativos', event)">Fornecedores Ativos</button>
                         <button class="tab-btn" onclick="switchTab('inativos', event)">Fornecedores Inativos</button>
+
                     </div>
 
                     <button class="btn-primary" onclick="abrirModalNovo()">
@@ -56,6 +61,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome Fantasia</th>
+                            <th>Tipo</th>
                             <th>CNPJ</th>
                             <th>Telefone</th>
                             <th>E-mail</th>
@@ -67,6 +73,7 @@
                         <tr th:each="f : ${listaAtivos}">
                             <td th:text="${f.id}"></td>
                             <td th:text="${f.nomeFantasia}"></td>
+                            <td th:text="${f.tipo}"></td>
                             <td th:text="${f.cnpj}"></td>
                             <td th:text="${f.telefone}"></td>
                             <td th:text="${f.email}"></td>
@@ -77,6 +84,7 @@
                                             th:data-id="${f.id}"
                                             th:data-nomefantasia="${f.nomeFantasia}"
                                             th:data-razaosocial="${f.razaoSocial}"
+                                            th:data-tipo="${f.tipo}"
                                             th:data-cnpj="${f.cnpj}"
                                             th:data-email="${f.email}"
                                             th:data-telefone="${f.telefone}"
@@ -126,6 +134,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome Fantasia</th>
+                            <th>Tipo</th>
                             <th>CNPJ</th>
                             <th>Telefone</th>
                             <th>E-mail</th>
@@ -136,6 +145,7 @@
                         <tr th:each="f : ${listaInativos}">
                             <td th:text="${f.id}"></td>
                             <td th:text="${f.nomeFantasia}"></td>
+                            <td th:text="${f.tipo}"></td>
                             <td th:text="${f.cnpj}"></td>
                             <td th:text="${f.telefone}"></td>
                             <td th:text="${f.email}"></td>
@@ -178,9 +188,17 @@
                         <label>Razão Social</label>
                         <input type="text" id="fornRazaoSocial" name="razaoSocial" class="form-control" required>
                     </div>
+                    <div class="form-group col-6">
+                        <label>Tipo de Fornecedor</label>
+                        <select id="fornTipo" name="tipo" class="form-control" required>
+                            <option value="" disabled selected>Selecione um tipo de fornecimento...</option>
+                            <option value="Produtos">Produtos</option>
+                            <option value="Peças">Peças</option>
+                        </select>
+                    </div>
 
                     <div class="form-group col-6">
-                        <label>CNPJ *</label>
+                        <label>CNPJ</label>
                         <input type="text" id="fornCnpj" name="cnpj" class="form-control" required maxlength="18">
                     </div>
                     <div class="form-group col-6">
@@ -233,6 +251,58 @@
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
                     <button type="submit" class="btn-submit">Salvar</button>
                 </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal" id="modalVincularItens">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2>Vincular Itens ao Fornecedor</h2>
+            <button class="btn-close" onclick="fecharModalVinculo()">&times;</button>
+        </div>
+
+        <form id="formVinculo" th:action="@{/fornecedores/vincular}" method="POST">
+            <input type="hidden" name="fornecedorId" id="fornecedorIdVinculo">
+            <input type="hidden" id="tipoVinculoAtual" name="tipo">
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="selectFornecedorVinculo">Selecione o Fornecedor Ativo</label>
+                    <select id="selectFornecedorVinculo" name="fornecedorId" class="form-control" required onchange="carregarItensPorTipoFornecedor(this)">
+                        <option value="" data-tipo="">Selecione...</option>
+                        <option th:each="forn : ${listaAtivos}"
+                                th:value="${forn.id}"
+                                th:text="${forn.nomeFantasia}"
+                                th:data-tipo="${forn.tipo}">
+                        </option>
+                    </select>
+                </div>
+
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+                <div id="areaVinculoDinamica" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <label id="tituloListaItens" style="font-weight: 600; color: #334155;">Itens Disponíveis</label>
+
+                        <div id="loadingVinculo" style="display: none; font-size: 0.9em; color: #64748b;">
+                            <svg style="animation: spin 1s linear infinite; margin-right: 5px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                            Carregando itens...
+                        </div>
+                    </div>
+
+                    <div id="listaItensParaVincular" class="checkbox-grid-container">
+                    </div>
+
+                    <div id="msgNenhumItem" style="display: none; padding: 20px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 6px;">
+                        Nenhum item encontrado para este tipo.
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="fecharModalVinculo()">Cancelar</button>
+                <button type="submit" class="btn-submit" id="btnSalvarVinculo" disabled>Salvar Vínculos</button>
             </div>
         </form>
     </div>

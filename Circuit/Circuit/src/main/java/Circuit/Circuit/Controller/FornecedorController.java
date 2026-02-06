@@ -1,9 +1,13 @@
 package Circuit.Circuit.Controller;
 
+import Circuit.Circuit.Model.Peca;
+import Circuit.Circuit.Model.Produto;
 import Circuit.Circuit.Model.viaCep;
 import Circuit.Circuit.Model.Fornecedor;
 import Circuit.Circuit.Service.CepService;
 import Circuit.Circuit.Service.FornecedorService;
+import Circuit.Circuit.Service.PecaService;
+import Circuit.Circuit.Service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +26,12 @@ public class FornecedorController {
 
     @Autowired
     private CepService viaCepService;
+
+    @Autowired
+    private PecaService pecaService;
+
+    @Autowired
+    private ProdutoService produtoService;
 
     @PostMapping("/cadastrar")
     public String cadastrar(@ModelAttribute Fornecedor fornecedor, RedirectAttributes redirectAttributes) {
@@ -48,8 +58,12 @@ public class FornecedorController {
     public String listarFuncionarios(Model model){
         List<Fornecedor> ativos = fornecedorService.listarFornecedoresAtivos();
         List<Fornecedor> Inativos = fornecedorService.listarFornecedoresInativos();
+        List<Peca> pecas = pecaService.listarPecasAtivas();
+        List<Produto> produtos = produtoService.listarProdutos();
         model.addAttribute("listaAtivos", ativos);
         model.addAttribute("listaInativos", Inativos);
+        model.addAttribute("listaPecas", pecas);
+        model.addAttribute("listaProdutos", produtos);
         model.addAttribute("fornecedores", new Fornecedor());
         return "fornecedores";
     }
@@ -83,6 +97,19 @@ public class FornecedorController {
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Fornecedor editado com sucesso!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao editar: " + e.getMessage());
+        }
+        return "redirect:/fornecedores";
+    }
+    @PostMapping("/vincular")
+    public String vincularLote(@RequestParam Long fornecedorId,
+                               @RequestParam List<Long> itensIds,
+                               @RequestParam String tipo,
+                               RedirectAttributes ra) {
+        try {
+            fornecedorService.vincularItens(fornecedorId, itensIds, tipo);
+            ra.addFlashAttribute("mensagemSucesso", "Itens vinculados com sucesso!");
+        } catch (Exception e) {
+            ra.addFlashAttribute("mensagemErro", "Erro ao processar vínculo: " + e.getMessage());
         }
         return "redirect:/fornecedores";
     }

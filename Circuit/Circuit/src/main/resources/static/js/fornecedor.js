@@ -36,7 +36,7 @@ function abrirModalEdicao(btn) {
     formForn.action = "/fornecedores/editar";
     formForn.method = "POST";
     document.getElementById('modalTitle').innerText = 'Editar Fornecedor';
-    const campos = ['id', 'nomeFantasia', 'razaoSocial', 'cnpj', 'email', 'telefone', 'cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'ativo'];
+    const campos = ['id', 'nomeFantasia', 'razaoSocial', 'cnpj','tipo', 'email', 'telefone', 'cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'ativo'];
 
     campos.forEach(campo => {
         const valor = btn.getAttribute(`data-${campo}`);
@@ -126,3 +126,90 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 3000);
     });
 });
+function abrirModalVincular() {
+    document.getElementById('formVinculo').reset();
+    document.getElementById('areaVinculoDinamica').style.display = 'none';
+    document.getElementById('btnSalvarVinculo').disabled = true;
+    document.getElementById('modalVincularItens').style.display = 'flex';
+
+}
+
+function fecharModalVinculo() {
+    document.getElementById('modalVincularItens').style.display = 'none';
+}
+function carregarItensPorTipoFornecedor(selectElement) {
+    const containerArea = document.getElementById('areaVinculoDinamica');
+    const listaContainer = document.getElementById('listaItensParaVincular');
+    const loading = document.getElementById('loadingVinculo');
+    const tituloLabel = document.getElementById('tituloListaItens');
+    const msgNenhum = document.getElementById('msgNenhumItem');
+    const btnSalvar = document.getElementById('btnSalvarVinculo');
+
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const tipoOriginal = selectedOption.getAttribute('data-tipo');
+
+    listaContainer.innerHTML = '';
+    containerArea.style.display = 'none';
+    msgNenhum.style.display = 'none';
+    btnSalvar.disabled = true;
+
+    if (!selectElement.value || !tipoOriginal) return;
+
+    const tipoNormalizado = tipoOriginal.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
+    let urlFetch = '';
+    if (tipoNormalizado === 'pecas') {
+        urlFetch = '/estoquePecas/todas-disponiveis';
+        tituloLabel.innerText = 'Selecione as Peças que ele fornece:';
+    } else if (tipoNormalizado === 'produtos') {
+        urlFetch = '/estoque/todos-disponiveis';
+        tituloLabel.innerText = 'Selecione os Produtos que ele fornece:';
+    } else {
+        return;
+    }
+
+    containerArea.style.display = 'block';
+    loading.style.display = 'flex';
+
+    fetch(urlFetch)
+        .then(response => {
+            if (!response.ok) throw new Error();
+            return response.json();
+        })
+        .then(data => {
+            loading.style.display = 'none';
+
+            if (!data || data.length === 0) {
+                msgNenhum.style.display = 'block';
+                return;
+            }
+
+            data.forEach(item => {
+                const labelCard = document.createElement('label');
+                labelCard.className = 'checkbox-item-card';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'itensIds';
+                checkbox.value = item.id;
+
+                checkbox.addEventListener('change', function() {
+                    labelCard.classList.toggle('selected', this.checked);
+                    const algumMarcado = listaContainer.querySelectorAll('input[type="checkbox"]:checked').length > 0;
+                    btnSalvar.disabled = !algumMarcado;
+                });
+
+                const spanNome = document.createElement('span');
+                spanNome.innerText = item.nome;
+
+                labelCard.appendChild(checkbox);
+                labelCard.appendChild(spanNome);
+                listaContainer.appendChild(labelCard);
+            });
+        })
+        .catch(() => {
+            loading.style.display = 'none';
+            msgNenhum.innerText = 'Erro ao carregar dados do servidor.';
+            msgNenhum.style.display = 'block';
+        });
+}

@@ -561,6 +561,10 @@ body {
     gap: 8px;
     transition: all 0.2s ease;
 }
+.btn-primary.vincular {
+    margin-right: 20px;
+    padding: 10px;
+}
 
 .btn-primary:hover {
     background: var(--primary-hover);
@@ -1593,4 +1597,46 @@ body {
 
 #modalDesconto .btn-close:hover {
     color: #ef4444;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.checkbox-grid-container {
+    min-height: 100px !important;
+    background-color: #fff2f2 !important;
+    display: grid !important;
+}
+#areaVinculoDinamica {
+    display: block !important;
+}
+.checkbox-item-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.checkbox-item-card:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+.checkbox-item-card.selected {
+    background: #f0f9ff;
+    border-color: #0ea5e9;
+}
+
+.checkbox-item-card input[type="checkbox"] {
+    margin-right: 10px;
+    accent-color: #0ea5e9;
+    transform: scale(1.1);
+}
+
+.checkbox-item-card span {
+    font-size: 0.9rem;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
