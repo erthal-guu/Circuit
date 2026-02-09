@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Novo Pedido de Compra')}">
+</head>
+<body>
+<div class="container-fluid">
+    <div th:replace="~{fragments/menu :: sidebar('pedidos')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}"></header>
+
+        <div class="content" style="padding: 20px;">
+
+            <div class="page-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title" style="font-size: 1.5rem; color: #1e293b; font-weight: 700;">Novo Pedido de Compra</h1>
+                    <p style="color: #64748b; font-size: 0.9rem;">Preencha as informações para gerar um novo pedido.</p>
+                </div>
+                <div class="actions">
+                    <a href="/pedidos" class="btn-secondary">Voltar</a>
+                </div>
+            </div>
+
+            <form th:action="@{/pedidos/salvar}" method="POST" id="formPedido">
+
+                <div class="card-erp">
+                    <h3 class="section-title">Dados Gerais</h3>
+
+                    <div class="form-grid-erp">
+                        <div class="form-group">
+                            <label>Número do Pedido</label>
+                            <input type="text" class="form-control" value="AUTO-00123" readonly style="background-color: #f1f5f9; color: #64748b; font-weight: 600;">
+                            <small style="color: #94a3b8; font-size: 0.75rem;">Gerado automaticamente</small>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;"> <label>Fornecedor <span style="color: red;">*</span></label>
+                            <select class="form-control select-search" id="selectFornecedor" name="fornecedorId" required onchange="atualizarDadosFornecedor(this)">
+                                <option value="">Selecione um fornecedor...</option>
+                                <option th:each="f : ${listaFornecedores}"
+                                        th:value="${f.id}"
+                                        th:text="${f.nomeFantasia}"
+                                        th:data-cnpj="${f.cnpj}"
+                                        th:data-cod="${f.id}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>CNPJ / Cód.</label>
+                            <input type="text" id="inputCnpjFornecedor" class="form-control" placeholder="Selecione o fornecedor..." readonly style="background-color: #f8fafc;">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Data do Pedido</label>
+                            <input type="date" class="form-control" name="dataPedido" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Prev. Entrega</label>
+                            <input type="date" class="form-control" name="dataEntrega">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control status-badge-select" name="status">
+                                <option value="RASCUNHO" selected>📝 Rascunho</option>
+                                <option value="ENVIADO">📨 Enviado</option>
+                                <option value="CONFIRMADO">✅ Confirmado</option>
+                                <option value="RECEBIDO">📦 Recebido</option>
+                                <option value="RECEBIDO_PARCIAL">⚠️ Recebido Parcialmente</option>
+                                <option value="CANCELADO">❌ Cancelado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Responsável</label>
+                            <input type="text" class="form-control" value="Admin (Você)" readonly style="border: none; background: transparent; padding-left: 0; font-weight: 600; color: #334155;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-erp" style="margin-top: 20px;">
+                    <div class="card-header-flex">
+                        <h3 class="section-title">Itens do Pedido</h3>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table-erp" id="tabelaItens">
+                            <thead>
+                            <tr>
+                                <th style="width: 40%;">Produto</th>
+                                <th style="width: 15%;">Qtd.</th>
+                                <th style="width: 20%;">Valor Unit. (R$)</th>
+                                <th style="width: 20%;">Total (R$)</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyItens">
+                            <tr class="linha-item">
+                                <td>
+                                    <select class="form-control item-select" name="itens[0].produtoId" onchange="atualizarPreco(this)">
+                                        <option value="">Selecione...</option>
+                                        <option th:each="p : ${listaProdutos}" th:value="${p.id}" th:text="${p.nome}" th:data-preco="${p.precoCusto}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control qtd-input" name="itens[0].quantidade" value="1" min="1" oninput="calcularLinha(this)">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control money-input" name="itens[0].valorUnitario" value="0,00" oninput="calcularLinha(this)">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control total-input" value="0,00" readonly style="background: #f8fafc; font-weight: bold;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <button type="button" class="btn-trash-mini" onclick="removerLinha(this)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn-add-item" onclick="adicionarLinhaItem()">
+                        + Adicionar Produto
+                    </button>
+                </div>
+
+                <div class="pedido-footer">
+
+                    <div class="pedido-obs">
+                        <label>Observações do Pedido:</label>
+                        <textarea rows="3" placeholder="Ex: Entregar na recepção lateral..."></textarea>
+                    </div>
+
+                    <div class="pedido-totais-card">
+                        <div class="linha-resumo">
+                            <span class="label">Subtotal:</span>
+                            <span class="valor" id="spanSubtotal">R$ 0,00</span>
+                        </div>
+
+                        <div class="linha-resumo">
+                            <span class="label">Frete / Outros:</span>
+                            <div class="input-wrapper">
+                                <span class="currency-symbol">R$</span>
+                                <input type="text" id="inputFrete" value="0,00" oninput="calcularTotalFinal()">
+                            </div>
+                        </div>
+
+                        <div class="linha-separadora"></div>
+
+                        <div class="linha-resumo destaque-total">
+                            <span class="label">TOTAL DO PEDIDO:</span>
+                            <span class="valor" id="spanTotalFinal">R$ 0,00</span>
+                        </div>
+
+                        <div class="acoes-footer">
+                            <button type="button" class="btn-cancelar">Cancelar</button>
+                            <button type="submit" class="btn-finalizar">Confirmar Pedido</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions-bottom">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar-pedido">💾 Salvar Pedido</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -144,6 +144,7 @@ function carregarItensPorTipoFornecedor(selectElement) {
     const tituloLabel = document.getElementById('tituloListaItens');
     const msgNenhum = document.getElementById('msgNenhumItem');
     const btnSalvar = document.getElementById('btnSalvarVinculo');
+    const campoTipoHidden = document.getElementById('tipoVinculoAtual');
 
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const tipoOriginal = selectedOption.getAttribute('data-tipo');
@@ -153,7 +154,12 @@ function carregarItensPorTipoFornecedor(selectElement) {
     msgNenhum.style.display = 'none';
     btnSalvar.disabled = true;
 
-    if (!selectElement.value || !tipoOriginal) return;
+    if (!selectElement.value || !tipoOriginal) {
+        campoTipoHidden.value = '';
+        return;
+    }
+
+    campoTipoHidden.value = tipoOriginal;
 
     const tipoNormalizado = tipoOriginal.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
@@ -165,6 +171,7 @@ function carregarItensPorTipoFornecedor(selectElement) {
         urlFetch = '/estoque/todos-disponiveis';
         tituloLabel.innerText = 'Selecione os Produtos que ele fornece:';
     } else {
+        campoTipoHidden.value = '';
         return;
     }
 
@@ -211,5 +218,117 @@ function carregarItensPorTipoFornecedor(selectElement) {
             loading.style.display = 'none';
             msgNenhum.innerText = 'Erro ao carregar dados do servidor.';
             msgNenhum.style.display = 'block';
+        });
+}
+function switchTabVincular(tabName, event) {
+    document.querySelectorAll('.tab-content-modal').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.tab-btn-modal').forEach(b => b.classList.remove('active'));
+    const id = tabName === 'vincular' ? 'tabVincular' : 'tabVinculados';
+    const alvo = document.getElementById(id);
+    if (alvo) {
+        alvo.style.display = 'block';
+    } else {
+        console.error("Erro: Não encontrei a aba com ID:", id);
+    }
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+}
+function carregarItensVinculados(idFornecedor) {
+    const area = document.getElementById('areaItensVinculados');
+    const loading = document.getElementById('loadingVinculados');
+    const list = document.getElementById('listaItensVinculados');
+    const msgEmpty = document.getElementById('msgNenhumVinculado');
+
+    // Pega o tipo do select selecionado
+    const select = document.getElementById('selectFornecedorVinculados');
+    const selectedOption = select.options[select.selectedIndex];
+    const tipoOriginal = selectedOption.getAttribute('data-tipo');
+
+    // Reseta visual
+    area.style.display = 'none';
+    list.innerHTML = '';
+    msgEmpty.style.display = 'none';
+
+    if (!idFornecedor || !tipoOriginal) return;
+
+    const tipoNorm = tipoOriginal.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
+    area.style.display = 'block';
+    loading.style.display = 'flex';
+
+    // Chama Endpoint Java
+    const url = `/fornecedores/json/${idFornecedor}/itens-vinculados?tipo=${tipoNorm}`;
+
+    fetch(url)
+        .then(res => {
+            if(!res.ok) throw new Error("Erro ao buscar vinculados");
+            return res.json();
+        })
+        .then(data => {
+            loading.style.display = 'none';
+            if (!data || data.length === 0) {
+                msgEmpty.style.display = 'block';
+                return;
+            }
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'card-vinculado';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                div.style.padding = '10px';
+                div.style.borderBottom = '1px solid #eee';
+
+                div.innerHTML = `
+                    <span style="font-weight: 500;">${item.nome}</span>
+                    <button type="button" class="btn-desvincular" 
+                        style="background: #fee2e2; color: #dc2626; border: none; padding: 5px 10px; border-radius: 10px; cursor: pointer;"
+                        onclick="desvincularItem(${idFornecedor}, ${item.id}, '${tipoNorm}', this)">
+                        Desvincular
+                    </button>
+                `;
+                list.appendChild(div);
+            });
+        })
+        .catch(err => {
+            console.warn(err);
+            loading.style.display = 'none';
+            msgEmpty.innerText = "Não foi possível carregar os itens vinculados.";
+            msgEmpty.style.display = 'block';
+        });
+}
+
+function desvincularItem(fornId, itemId, tipo, btnElement) {
+    if(!confirm("Remover este vínculo?")) return;
+
+    const row = btnElement.closest('div');
+    btnElement.innerText = '...';
+    btnElement.disabled = true;
+
+    fetch('/fornecedores/desvincular-item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fornecedorId: fornId, itemId: itemId, tipo: tipo })
+    })
+        .then(res => {
+            if(res.ok) {
+                row.remove();
+                const list = document.getElementById('listaItensVinculados');
+                if (list.children.length === 0) {
+                    document.getElementById('msgNenhumVinculado').style.display = 'block';
+                }
+            } else {
+                alert("Erro ao desvincular.");
+                btnElement.innerText = 'Desvincular';
+                btnElement.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro de conexão.");
+            btnElement.innerText = 'Desvincular';
+            btnElement.disabled = false;
         });
 }

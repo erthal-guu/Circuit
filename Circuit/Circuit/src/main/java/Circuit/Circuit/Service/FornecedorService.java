@@ -10,7 +10,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FornecedorService {
@@ -85,7 +88,41 @@ public class FornecedorService {
             fornecedor.getProdutos().clear();
             fornecedor.getProdutos().addAll(produtosSelecionados);
         }
-        System.out.println("DEBUG: Tipo: " + tipo + " | IDs: " + itensIds);
         fornecedorRepository.save(fornecedor);
+    }
+    @Transactional
+    public void desvincularItem(Long fornecedorId, Long itemId, String tipo) {
+        Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+
+        if ("pecas".equalsIgnoreCase(tipo)) {
+            fornecedor.getPecas().removeIf(p -> p.getId().equals(itemId));
+        } else if ("produtos".equalsIgnoreCase(tipo)) {
+            fornecedor.getProdutos().removeIf(p -> p.getId().equals(itemId));
+        }
+        fornecedorRepository.save(fornecedor);
+    }
+
+    public List<Map<String, Object>> listarItensVinculados(Long fornecedorId, String tipo) {
+        Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+        List<Map<String, Object>> lista = new ArrayList<>();
+
+        if ("pecas".equalsIgnoreCase(tipo)) {
+            for (Peca p : fornecedor.getPecas()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", p.getId());
+                item.put("nome", p.getNome());
+                lista.add(item);
+            }
+        } else if ("produtos".equalsIgnoreCase(tipo)) {
+            for (Produto p : fornecedor.getProdutos()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", p.getId());
+                item.put("nome", p.getNome());
+                lista.add(item);
+            }
+        }
+        return lista;
     }
 }

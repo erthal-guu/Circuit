@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/fornecedores")
@@ -104,13 +105,39 @@ public class FornecedorController {
     public String vincularLote(@RequestParam Long fornecedorId,
                                @RequestParam List<Long> itensIds,
                                @RequestParam String tipo,
-                               RedirectAttributes ra) {
+                               RedirectAttributes redirectAttributes) {
         try {
             fornecedorService.vincularItens(fornecedorId, itensIds, tipo);
-            ra.addFlashAttribute("mensagemSucesso", "Itens vinculados com sucesso!");
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Itens vinculados com sucesso!");
         } catch (Exception e) {
-            ra.addFlashAttribute("mensagemErro", "Erro ao processar vínculo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao processar vínculo: " + e.getMessage());
         }
         return "redirect:/fornecedores";
+    }
+    @GetMapping("/json/{id}/itens-vinculados")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getItensVinculados(
+            @PathVariable Long id,
+            @RequestParam String tipo) {
+
+        List<Map<String, Object>> itens = fornecedorService.listarItensVinculados(id, tipo);
+        return ResponseEntity.ok(itens);
+    }
+
+
+    @PostMapping("/desvincular-item")
+    @ResponseBody
+    public ResponseEntity<?> desvincularItem(@RequestBody Map<String, Object> payload, RedirectAttributes redirectAttributes) {
+        try {
+            Long fornecedorId = Long.valueOf(payload.get("fornecedorId").toString());
+            Long itemId = Long.valueOf(payload.get("itemId").toString());
+            String tipo = payload.get("tipo").toString();
+            fornecedorService.desvincularItem(fornecedorId, itemId, tipo);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Item desvinculado com sucesso!");
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao desvincular: " + e.getMessage());
+        }
     }
 }
