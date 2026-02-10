@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PedidoController {
     @GetMapping
     public String abrirPedido(Model model){
+
         return "pedidos";
     }
 }
