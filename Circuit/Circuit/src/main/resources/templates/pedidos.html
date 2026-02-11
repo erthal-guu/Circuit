@@ -107,14 +107,15 @@
                         </div>
 
                         <div class="form-group span-2">
-                            <label>Fornecedor <span class="text-danger">*</span></label>
-                            <select class="form-control" id="selectFornecedor" name="fornecedorId" required onchange="atualizarDadosFornecedor(this)">
-                                <option value="">Selecione...</option>
+                            <label>Fornecedor <span class="text-danger"></span></label>
+                            <select class="form-control text-main" id="selectFornecedor" name="fornecedorId" required onchange="atualizarDadosFornecedor(this)">
+                                <option value="" disabled selected>Selecione...</option>
                                 <option th:each="f : ${listaFornecedores}"
                                         th:value="${f.id}"
-                                        th:text="${f.nomeFantasia}"
+                                        th:text="${f.nomeFantasia + ' - ' +f.cep + ' - '+ f.estado}"
                                         th:data-cnpj="${f.cnpj}"
-                                        th:data-tipo="${f.tipoFornecimento}">
+                                        th:data-tipo="${f.tipo}"
+                                        th:data-nome="${f.nomeFantasia}">
                                 </option>
                             </select>
                         </div>
@@ -125,24 +126,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Data Emissão</label>
+                            <label>Data Pedido</label>
                             <input type="date" class="form-control" name="dataPedido" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Prev. Entrega</label>
-                            <input type="date" class="form-control" name="dataEntrega">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-control font-600 text-main" name="status">
-                                <option value="RASCUNHO">📝 Rascunho</option>
-                                <option value="ENVIADO">📨 Enviado</option>
-                                <option value="CONFIRMADO">✅ Confirmado</option>
-                                <option value="RECEBIDO">📦 Recebido</option>
-                                <option value="CANCELADO">❌ Cancelado</option>
-                            </select>
                         </div>
 
                         <div class="form-group">
@@ -152,29 +137,18 @@
                                 <option th:each="func : ${listaFuncionarios}" th:value="${func.id}" th:text="${func.nome}"></option>
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <label>Subtotal Itens</label>
-                            <div class="input-money-wrapper bg-light">
-                                <span class="currency-prefix">R$</span>
-                                <input type="text" id="inputSubtotal" class="form-control input-no-border" value="0,00" readonly>
+                        <div class="form-group span-1">
+                            <label class="text-primary font-700">Total do Pedido</label>
+                            <div>
+                                <input type="text" id="spanTotalFinal" class="input-money-wrapper   " value="0,00" readonly>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Frete / Extras</label>
-                            <div class="input-money-wrapper">
-                                <span class="currency-prefix">R$</span>
-                                <input type="text" id="inputFrete" class="money-input" value="0,00" oninput="calcularTotalFinal()">
-                            </div>
-                        </div>
-
-                        <div class="form-group span-2">
-                            <label class="text-primary font-700">TOTAL DO PEDIDO</label>
-                            <div class="input-money-wrapper border-primary bg-primary-light">
-                                <span class="currency-prefix font-700 text-primary">R$</span>
-                                <input type="text" id="spanTotalFinal" class="form-control input-no-border font-800 text-primary" style="font-size: 1.2rem;" value="0,00" readonly>
-                            </div>
+                        <div class="form-group span-3">
+                            <label>Observações para o Fornecedor</label>
+                            <textarea class="form-control"
+                                      name="observacao"
+                                      style="height: 40px; resize: none; margin-top: 1px; line-height: 1.5; "></textarea>
                         </div>
                     </div>
                 </div>
@@ -182,9 +156,9 @@
                 <div class="table-card mt-20">
                     <div class="card-header-simple">
                         <h3 class="flex-center gap-5 text-white">Itens do Pedido</h3>
-                        <button type="button" class="btn-primary flex-center gap-5" onclick="adicionarLinhaItem()">
+                        <button type="button" class="btn-primary flex-center gap-5" onclick="abrirModalAdicionarItens()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Adicionar Produto
+                            Adicionar item
                         </button>
                     </div>
 
@@ -192,7 +166,7 @@
                         <table class="data-table" id="tabelaItens">
                             <thead>
                             <tr>
-                                <th style="width: 40%">Produto</th>
+                                <th style="width: 40%">Item</th>
                                 <th>Qtd.</th>
                                 <th>Valor Unit.</th>
                                 <th>Total</th>
@@ -209,15 +183,49 @@
     </div>
 </div>
 
-<select id="cache-produtos-completo" style="display: none;">
-    <option value="">Selecione...</option>
-    <option th:each="p : ${listaProdutos}"
-            th:value="${p.id}"
-            th:text="${p.nome}"
-            th:data-preco="${p.precoCusto}"
-            th:data-tipo="${p.tipo}">
-    </option>
-</select>
+<div id="modalItemPedido" class="modal" style="display: none;">
+    <div class="modal-content-lg">
+        <div class="modal-header-erp">
+            <div>
+                <h3>Adicionar Itens ao Pedido</h3>
+                <p id="fornecedorNome">Fornecedor: </p>
+            </div>
+            <button type="button" class="btn-close-white" onclick="fecharModal()">&times;</button>
+        </div>
+
+        <div class="modal-body-scroll">
+            <table class="modal-table">
+                <thead>
+                <tr>
+                    <th class="text-center">Sel.</th>
+                    <th>Item</th>
+                    <th>Preço Unit.</th>
+                    <th>Qtd.</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyModalItens">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer-erp">
+            <div class="footer-info">
+                <div class="info-box">
+                    <span class="label">Selecionados</span>
+                    <span id="countSelecionados" class="value">0</span>
+                </div>
+                <div class="info-box">
+                    <span class="label">Subtotal Estimado</span>
+                    <span id="subtotalModal" class="value-lg">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="footer-btns">
+                <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                <button type="button" class="btn-confirm" onclick="adicionarSelecionados()">Confirmar Itens</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script th:src="@{/js/pedido.js}"></script>
 </body>

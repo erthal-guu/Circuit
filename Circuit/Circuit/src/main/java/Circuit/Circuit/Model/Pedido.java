@@ -16,21 +16,16 @@ public class Pedido {
     private String codigo;
 
     @Enumerated(EnumType.STRING)
-    private StatusPedido status = StatusPedido.RASCUNHO;
+    private StatusPedido status = StatusPedido.PENDENTE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "funcionario_id")
     private Funcionario responsavel;
-
     private LocalDate dataPedido;
-    private LocalDate dataPrevisaoEntrega;
-
-    private BigDecimal valorSubtotal = BigDecimal.ZERO;
-    private BigDecimal valorFrete = BigDecimal.ZERO;
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
     @Column(columnDefinition = "TEXT")

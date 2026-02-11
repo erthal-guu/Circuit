@@ -76,13 +76,13 @@ public class FornecedorService {
         Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
 
-        if ("pecas".equalsIgnoreCase(tipo)) {
+        if ("PECA".equalsIgnoreCase(tipo)) {
             List<Peca> pecasSelecionadas = pecaRepository.findAllById(itensIds);
 
             fornecedor.getPecas().clear();
             fornecedor.getPecas().addAll(pecasSelecionadas);
 
-        } else if ("produtos".equalsIgnoreCase(tipo)) {
+        } else if ("PRODUTO".equalsIgnoreCase(tipo)) {
             List<Produto> produtosSelecionados = produtoRepository.findAllById(itensIds);
 
             fornecedor.getProdutos().clear();
@@ -95,31 +95,34 @@ public class FornecedorService {
         Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
 
-        if ("pecas".equalsIgnoreCase(tipo)) {
+        if ("PECA".equalsIgnoreCase(tipo)) {
             fornecedor.getPecas().removeIf(p -> p.getId().equals(itemId));
-        } else if ("produtos".equalsIgnoreCase(tipo)) {
+        } else if ("PRODUTO".equalsIgnoreCase(tipo)) {
             fornecedor.getProdutos().removeIf(p -> p.getId().equals(itemId));
         }
         fornecedorRepository.save(fornecedor);
     }
 
+    @Transactional
     public List<Map<String, Object>> listarItensVinculados(Long fornecedorId, String tipo) {
         Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
         List<Map<String, Object>> lista = new ArrayList<>();
 
-        if ("pecas".equalsIgnoreCase(tipo)) {
+        if ("PECA".equalsIgnoreCase(tipo)) {
             for (Peca p : fornecedor.getPecas()) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("id", p.getId());
                 item.put("nome", p.getNome());
+                item.put("precoCompra", p.getPrecoCompra());
                 lista.add(item);
             }
-        } else if ("produtos".equalsIgnoreCase(tipo)) {
+        } else if ("PRODUTO".equalsIgnoreCase(tipo)) {
             for (Produto p : fornecedor.getProdutos()) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("id", p.getId());
                 item.put("nome", p.getNome());
+                item.put("precoCompra", p.getPrecoCompra());
                 lista.add(item);
             }
         }

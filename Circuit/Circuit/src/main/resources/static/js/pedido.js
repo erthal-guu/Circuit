@@ -1,4 +1,3 @@
-
 function gerarCodigoHex() {
     const input = document.getElementById("numeroPedido");
     const random = Math.floor(Math.random() * 65535).toString(16).toUpperCase();
@@ -9,33 +8,36 @@ function gerarCodigoHex() {
         input.style.backgroundColor = "";
     }, 300);
 }
-document.addEventListener("DOMContentLoaded", function() {
-    const input = document.getElementById("numeroPedido");
-    if (input && (input.value === "" || input.value === "AUTO-00123")) {
-        gerarCodigoHex();
-    }
-});
 
 function atualizarDadosFornecedor(select) {
-    const optionSelecionada = select.options[select.selectedIndex];
+    const option = select.options[select.selectedIndex];
+    const displayNome = document.getElementById("fornecedorNome");
     const inputCnpj = document.getElementById("inputCnpjFornecedor");
-    const cnpj = optionSelecionada.getAttribute("data-cnpj");
-    if (cnpj) {
-        inputCnpj.value = formatarCNPJ(cnpj);
-        inputCnpj.style.backgroundColor = "#fff";
-        inputCnpj.style.borderColor = "#10b981";
-    } else {
-        inputCnpj.value = "";
-        inputCnpj.style.backgroundColor = "#f1f5f9";
-        inputCnpj.style.borderColor = "#e2e8f0";
+    const nome = option.getAttribute("data-nome");
+    const cnpj = option.getAttribute("data-cnpj");
+
+    if (displayNome) {
+        displayNome.innerText = nome ? `Fornecedor: ${nome}` : "Fornecedor:";
+    }
+
+    if (inputCnpj) {
+        if (cnpj) {
+            inputCnpj.value = formatarCNPJ(cnpj);
+            inputCnpj.style.borderColor = "#10b981";
+        } else {
+            inputCnpj.value = "";
+            inputCnpj.style.borderColor = "#e2e8f0";
+        }
     }
 }
+
 function formatarCNPJ(v) {
     if(!v) return "";
     v=v.replace(/\D/g,"");
     if(v.length !== 14) return v;
     return v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
 }
+
 function switchTab(tab) {
     const viewLista = document.getElementById('view-lista');
     const viewForm = document.getElementById('view-form');
@@ -64,32 +66,178 @@ function switchTab(tab) {
         }
     }
 }
-document.addEventListener("DOMContentLoaded", function() {
-    filtrarFornecedores();
-});
 
 function filtrarFornecedores() {
     const radioSelecionado = document.querySelector('input[name="tipoPedido"]:checked');
-    if (!radioSelecionado) return; // Segurança
-    const tipoDesejado = radioSelecionado.value;
+    if (!radioSelecionado) return;
+    const tipoDesejado = radioSelecionado.value.toUpperCase();
+
     const select = document.getElementById('selectFornecedor');
     const options = select.options;
     select.value = "";
-    if(document.getElementById('inputCnpjFornecedor')) {
-        document.getElementById('inputCnpjFornecedor').value = "";
-    }
+
+    const inputCnpj = document.getElementById('inputCnpjFornecedor');
+    if(inputCnpj) inputCnpj.value = "";
+
     for (let i = 0; i < options.length; i++) {
         const opt = options[i];
         if (opt.value === "") continue;
-        const tipoFornecedor = opt.getAttribute('data-tipo');
-        const deveMostrar = (tipoFornecedor === tipoDesejado || tipoFornecedor === 'AMBOS');
+        const dadoBruto = opt.getAttribute('data-tipo');
+        const tipoFornecedor = dadoBruto ? dadoBruto.toUpperCase() : "";
+        const deveMostrar = (tipoFornecedor.includes(tipoDesejado) || tipoFornecedor === 'AMBOS');
 
-        if (deveMostrar) {
-            opt.hidden = false;
-            opt.disabled = false;
-        } else {
-            opt.hidden = true;
-            opt.disabled = true;
-        }
+        opt.hidden = !deveMostrar;
+        opt.disabled = !deveMostrar;
     }
 }
+
+function abrirModalAdicionarItens() {
+    const select = document.getElementById('selectFornecedor');
+    const fornecedorId = select.value;
+
+    if (!fornecedorId) {
+        alert("Selecione um fornecedor primeiro!");
+        return;
+    }
+
+    const option = select.options[select.selectedIndex];
+    const nome = option.getAttribute('data-nome');
+
+    const displayNomeModal = document.getElementById('fornecedorNome');
+    if (displayNomeModal) {
+        displayNomeModal.innerText = "Fornecedor: " + nome;
+    }
+
+    carregarItensDoFornecedor(fornecedorId);
+    document.getElementById('modalItemPedido').style.display = 'block';
+}
+
+function fecharModal() {
+    document.getElementById('modalItemPedido').style.display = 'none';
+}
+
+function carregarItensDoFornecedor(idFornecedor) {
+    const container = document.getElementById('tbodyModalItens');
+    const radioTipo = document.querySelector('input[name="tipoPedido"]:checked');
+
+    if (!container) return;
+
+    const tipoNorm = radioTipo.value;
+    const url = `/fornecedores/json/${idFornecedor}/itens-vinculados?tipo=${tipoNorm}`;
+
+    container.innerHTML = '<tr><td colspan="4" class="text-center">Carregando itens...</td></tr>';
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            container.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum item encontrado para este fornecedor.</td></tr>';
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-center">
+                        <input type="checkbox" class="check-item" onchange="calcularResumoModal()" 
+                            data-id="${item.id}" data-nome="${item.nome}">
+                    </td>
+                    <td>
+                        <div class="font-600">${item.nome || 'Sem Nome'}</div>
+                        <div class="small-text text-muted">REF: ${item.id}</div>
+                    </td>
+                    <td>
+                        <input type="text" class="input-modal-erp preco-modal" value="${item.precoCompra || '0.00'}" oninput="calcularResumoModal()">
+                    </td>
+                    <td>
+                        <input type="number" class="input-modal-erp qtd-modal" value="1" min="1" oninput="calcularResumoModal()">
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+            calcularResumoModal();
+        })
+        .catch(err => {
+            container.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Erro de conexão.</td></tr>';
+        });
+}
+
+function calcularResumoModal() {
+    const checks = document.querySelectorAll('.check-item:checked');
+    let subtotal = 0;
+
+    checks.forEach(check => {
+        const tr = check.closest('tr');
+        const precoInput = tr.querySelector('.preco-modal').value;
+        const preco = parseFloat(precoInput.replace(',', '.')) || 0;
+        const qtd = parseFloat(tr.querySelector('.qtd-modal').value) || 0;
+        subtotal += (preco * qtd);
+    });
+
+    const countElem = document.getElementById('countSelecionados');
+    const subtotalElem = document.getElementById('subtotalModal');
+
+    if(countElem) countElem.innerText = checks.length;
+    if(subtotalElem) subtotalElem.innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+}
+
+function adicionarSelecionados() {
+    const checks = document.querySelectorAll('.check-item:checked');
+    checks.forEach(check => {
+        const tr = check.closest('tr');
+        const id = check.getAttribute('data-id');
+        const nome = check.getAttribute('data-nome');
+        const preco = parseFloat(tr.querySelector('.preco-modal').value.replace(',', '.')) || 0;
+        const qtd = parseFloat(tr.querySelector('.qtd-modal').value) || 0;
+        const total = preco * qtd;
+
+        inserirLinhaTabelaPrincipal(id, nome, qtd, preco, total);
+    });
+
+    fecharModal();
+}
+
+function inserirLinhaTabelaPrincipal(id, nome, qtd, preco, total) {
+    const tbody = document.getElementById('tbodyItens');
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td>${nome} <input type="hidden" name="itensId" value="${id}"></td>
+        <td><input type="number" name="quantidades" class="form-control" value="${qtd}" oninput="recalcularTotalPedido() " readonly></td>
+        <td><input type="text" name="precos" class="form-control" value="${preco.toFixed(2)}" oninput="recalcularTotalPedido()" readonly></td>
+        <td class="total-linha">${total.toFixed(2)}</td>
+        <td class="text-center">
+            <button type="button" class="btn-icon remove" onclick="this.closest('tr').remove(); recalcularTotalPedido();"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
+    <polyline points="3 6 5 6 21 6"></polyline>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    <line x1="10" y1="11" x2="10" y2="17"></line>
+    <line x1="14" y1="11" x2="14" y2="17"></line>
+</svg></button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+    recalcularTotalPedido();
+}
+
+function recalcularTotalPedido() {
+    let subtotal = 0;
+    document.querySelectorAll('.total-linha').forEach(td => {
+        subtotal += parseFloat(td.innerText) || 0;
+    });
+
+    const inputSubtotal = document.getElementById('inputSubtotal');
+    const spanTotalFinal = document.getElementById('spanTotalFinal');
+
+    if(inputSubtotal) inputSubtotal.value = subtotal.toFixed(2);
+    if(spanTotalFinal) spanTotalFinal.value = subtotal.toFixed(2);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const inputNum = document.getElementById("numeroPedido");
+    if (inputNum && (inputNum.value === "" || inputNum.value === "AUTO-00123")) {
+        gerarCodigoHex();
+    }
+    filtrarFornecedores();
+});

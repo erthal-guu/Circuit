@@ -1,7 +1,7 @@
 package Circuit.Circuit.Model;
 
 public enum StatusPedido {
-    RASCUNHO("📝 Rascunho"),
+    PENDENTE("📝 Pendente"),
     CONFIRMADO("✅ Confirmado"),
     RECEBIDO("📦 Recebido"),
     CANCELADO("❌ Cancelado");
