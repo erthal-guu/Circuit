@@ -256,7 +256,7 @@
                     <div class="form-group col-6">
                         <label>Cliente</label>
                         <select id="osCliente" name="cliente.id" class="form-control" required onchange="carregarAparelhosCliente(this.value)">
-                            <option value="">Selecione o Cliente...</option>
+                            <option value="" disabled selected>Selecione o Cliente...</option>
                             <option th:each="cli : ${listaClientes}" th:value="${cli.id}" th:text="${cli.nome}"></option>
                         </select>
                     </div>
@@ -264,7 +264,7 @@
                     <div class="form-group col-6">
                         <label>Aparelho do Cliente</label>
                         <select id="osAparelho" name="aparelho.id" class="form-control" required disabled>
-                            <option value="">Selecione um Cliente primeiro...</option>
+                            <option value="" disabled selected>Selecione um Cliente primeiro...</option>
                         </select>
                     </div>
 

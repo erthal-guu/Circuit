@@ -2308,3 +2308,47 @@ body {
 .btn-inside:active {
     transform: translateY(-50%) scale(0.95);
 }
+.tab-pill-container {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+    border-radius: 50px;
+    gap: 5px;
+}
+
+.tab-pill-container input[type="radio"] {
+    display: none;
+}
+
+.tab-pill-container label {
+    padding: 8px 20px;
+    border-radius: 50px;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.tab-pill-container input[type="radio"]:checked + label {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+}
+
+.tab-pill-container label:hover {
+    color: #fff;
+}
+.btn-delete-itens {
+    padding: 7px;
+    margin-right: 20px;
+    color: red;
+}
+.btn-delete-itens:hover {
+    background: #dc2626;
+    color: white;
+    border-radius: 5px;
+}

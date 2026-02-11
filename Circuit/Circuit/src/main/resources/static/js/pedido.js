@@ -64,3 +64,32 @@ function switchTab(tab) {
         }
     }
 }
+document.addEventListener("DOMContentLoaded", function() {
+    filtrarFornecedores();
+});
+
+function filtrarFornecedores() {
+    const radioSelecionado = document.querySelector('input[name="tipoPedido"]:checked');
+    if (!radioSelecionado) return; // Segurança
+    const tipoDesejado = radioSelecionado.value;
+    const select = document.getElementById('selectFornecedor');
+    const options = select.options;
+    select.value = "";
+    if(document.getElementById('inputCnpjFornecedor')) {
+        document.getElementById('inputCnpjFornecedor').value = "";
+    }
+    for (let i = 0; i < options.length; i++) {
+        const opt = options[i];
+        if (opt.value === "") continue;
+        const tipoFornecedor = opt.getAttribute('data-tipo');
+        const deveMostrar = (tipoFornecedor === tipoDesejado || tipoFornecedor === 'AMBOS');
+
+        if (deveMostrar) {
+            opt.hidden = false;
+            opt.disabled = false;
+        } else {
+            opt.hidden = true;
+            opt.disabled = true;
+        }
+    }
+}

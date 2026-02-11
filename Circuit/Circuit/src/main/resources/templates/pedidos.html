@@ -15,10 +15,6 @@
                 <h1 class="page-title" id="main-title">Pedidos</h1>
             </div>
             <div class="header-actions">
-                <button type="submit" form="formPedido" id="btn-salvar-global" class="btn-primary btn-block justify-center" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                    Salvar Pedido
-                </button>
                 <div class="tab-container">
                     <button class="tab-btn active" onclick="switchTab('lista')" id="btn-tab-lista">
                         Meus Pedidos
@@ -27,6 +23,11 @@
                         Novo Pedido
                     </button>
                 </div>
+
+                <button type="submit" form="formPedido" id="btn-salvar-global" class="btn-primary btn-block justify-center" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Salvar Pedido
+                </button>
             </div>
         </div>
 
@@ -76,8 +77,22 @@
             <form th:action="@{/pedidos/salvar}" method="POST" id="formPedido" class="w-100">
 
                 <div class="table-card p-25">
-                    <div class="status-header">
-                        <h3>Dados Gerais e Financeiro</h3>
+                    <div class="status-header flex-between">
+                        <h3>Dados Gerais</h3>
+
+                        <div class="tab-pill-container">
+                            <input type="radio" id="tipoPeca" name="tipoPedido" value="PECA" checked onchange="filtrarFornecedores()">
+                            <label for="tipoPeca">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+                                Peças
+                            </label>
+
+                            <input type="radio" id="tipoProduto" name="tipoPedido" value="PRODUTO" onchange="filtrarFornecedores()">
+                            <label for="tipoProduto">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                                Produtos
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-grid-4">
@@ -85,7 +100,7 @@
                             <label>Número do Pedido</label>
                             <div class="input-wrapper-btn">
                                 <input type="text" id="numeroPedido" name="numeroPedido" class="form-control input-readonly" readonly>
-                                <button type="button" class="btn-inside" onclick="gerarCodigoHex()">
+                                <button type="button" class="btn-inside" onclick="gerarCodigoHex()" title="Gerar código">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.7.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/></svg>
                                 </button>
                             </div>
@@ -94,8 +109,13 @@
                         <div class="form-group span-2">
                             <label>Fornecedor <span class="text-danger">*</span></label>
                             <select class="form-control" id="selectFornecedor" name="fornecedorId" required onchange="atualizarDadosFornecedor(this)">
-                                <option value="">Selecione um fornecedor...</option>
-                                <option th:each="f : ${listaFornecedores}" th:value="${f.id}" th:text="${f.nomeFantasia}" th:data-cnpj="${f.cnpj}"></option>
+                                <option value="">Selecione...</option>
+                                <option th:each="f : ${listaFornecedores}"
+                                        th:value="${f.id}"
+                                        th:text="${f.nomeFantasia}"
+                                        th:data-cnpj="${f.cnpj}"
+                                        th:data-tipo="${f.tipoFornecimento}">
+                                </option>
                             </select>
                         </div>
 
@@ -118,42 +138,42 @@
                             <label>Status</label>
                             <select class="form-control font-600 text-main" name="status">
                                 <option value="RASCUNHO">📝 Rascunho</option>
+                                <option value="ENVIADO">📨 Enviado</option>
                                 <option value="CONFIRMADO">✅ Confirmado</option>
+                                <option value="RECEBIDO">📦 Recebido</option>
                                 <option value="CANCELADO">❌ Cancelado</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label>Responsável</label>
-                            <div>
-                                <select class="form-control" name="responsavelId" id="selectResponsavel">
-                                    <option value="">Selecione...</option>
-                                    <option th:each="func : ${listaFuncionarios}"
-                                            th:value="${func.id}"
-                                            th:text="${func.nome}">
-                                    </option>
-                                </select>
-                            </div>
+                            <select class="form-control" name="responsavelId" id="selectResponsavel">
+                                <option value="" disabled selected>Selecione...</option>
+                                <option th:each="func : ${listaFuncionarios}" th:value="${func.id}" th:text="${func.nome}"></option>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label>Subtotal Itens</label>
-                            <div>
-                                <input type="text" id="inputSubtotal" class="money-input" value="0,00" readonly>
+                            <div class="input-money-wrapper bg-light">
+                                <span class="currency-prefix">R$</span>
+                                <input type="text" id="inputSubtotal" class="form-control input-no-border" value="0,00" readonly>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Frete / Extras</label>
-                            <div>
+                            <div class="input-money-wrapper">
+                                <span class="currency-prefix">R$</span>
                                 <input type="text" id="inputFrete" class="money-input" value="0,00" oninput="calcularTotalFinal()">
                             </div>
                         </div>
 
                         <div class="form-group span-2">
-                            <label class="text-primary font-700">Total do pedido</label>
-                            <div>
-                                <input type="text" id="spanTotalFinal" class="money-input" value="0,00" readonly>
+                            <label class="text-primary font-700">TOTAL DO PEDIDO</label>
+                            <div class="input-money-wrapper border-primary bg-primary-light">
+                                <span class="currency-prefix font-700 text-primary">R$</span>
+                                <input type="text" id="spanTotalFinal" class="form-control input-no-border font-800 text-primary" style="font-size: 1.2rem;" value="0,00" readonly>
                             </div>
                         </div>
                     </div>
@@ -163,9 +183,11 @@
                     <div class="card-header-simple">
                         <h3 class="flex-center gap-5 text-white">Itens do Pedido</h3>
                         <button type="button" class="btn-primary flex-center gap-5" onclick="adicionarLinhaItem()">
-                            + Adicionar Produto
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Adicionar Produto
                         </button>
                     </div>
+
                     <div class="table-responsive">
                         <table class="data-table" id="tabelaItens">
                             <thead>
@@ -178,27 +200,6 @@
                             </tr>
                             </thead>
                             <tbody id="tbodyItens">
-                            <tr class="linha-item">
-                                <td>
-                                    <select class="form-control" name="itens[0].produtoId" onchange="atualizarPreco(this)">
-                                        <option value="">Selecione...</option>
-                                        <option th:each="p : ${listaProdutos}" th:value="${p.id}" th:text="${p.nome}" th:data-preco="${p.precoCusto}"></option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control text-center" name="itens[0].quantidade" value="1" oninput="calcularLinha(this)"></td>
-                                <td>
-                                    <div class="input-money-wrapper">
-                                        <span class="currency-prefix">R$</span>
-                                        <input type="text" class="money-input" name="itens[0].valorUnitario" value="0,00" oninput="calcularLinha(this)">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="form-control input-no-border font-700 bg-light" value="R$ 0,00" readonly></td>
-                                <td>
-                                    <button type="button" class="btn-icon-trash" onclick="removerLinha(this)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -207,6 +208,16 @@
         </div>
     </div>
 </div>
+
+<select id="cache-produtos-completo" style="display: none;">
+    <option value="">Selecione...</option>
+    <option th:each="p : ${listaProdutos}"
+            th:value="${p.id}"
+            th:text="${p.nome}"
+            th:data-preco="${p.precoCusto}"
+            th:data-tipo="${p.tipo}">
+    </option>
+</select>
 
 <script th:src="@{/js/pedido.js}"></script>
 </body>
