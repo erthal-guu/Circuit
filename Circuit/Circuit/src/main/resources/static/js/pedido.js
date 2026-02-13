@@ -205,8 +205,8 @@ function inserirLinhaTabelaPrincipal(id, nome, qtd, preco, total) {
 
     tr.innerHTML = `
         <td>${nome} <input type="hidden" name="itensId" value="${id}"></td>
-        <td><input type="number" name="quantidades" class="form-control" value="${qtd}" oninput="recalcularTotalPedido() " readonly></td>
-        <td><input type="text" name="precos" class="form-control" value="${preco.toFixed(2)}" oninput="recalcularTotalPedido()" readonly></td>
+        <td><input type="number" name="quantidadeItens" class="form-control" value="${qtd}" oninput="recalcularTotalPedido() " readonly></td>
+        <td><input type="text" name="precoItens" class="form-control" value="${preco.toFixed(2)}" oninput="recalcularTotalPedido()" readonly></td>
         <td class="total-linha">${total.toFixed(2)}</td>
         <td class="text-center">
             <button type="button" class="btn-icon remove" onclick="this.closest('tr').remove(); recalcularTotalPedido();"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
@@ -241,3 +241,61 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     filtrarFornecedores();
 });
+function abrirModalStatus(id, statusAtual) {
+    document.getElementById('statusPedidoId').value = id;
+    const badge = document.getElementById('badgeStatusAtual');
+
+    badge.innerText = statusAtual;
+    badge.className = 'badge';
+    if (statusAtual === 'PENDENTE') badge.classList.add('badge-info');
+    else if (statusAtual === 'CONFIRMADO') badge.classList.add('badge-active');
+    else if (statusAtual === 'RECEBIDO') badge.classList.add('badge-success');
+    else if (statusAtual === 'CANCELADO') badge.classList.add('badge-inactive');
+
+    document.getElementById('modalStatus').style.display = 'flex';
+}
+
+function fecharModalStatus() {
+    document.getElementById('modalStatus').style.display = 'none';
+}
+
+function selecionarStatus(status) {
+    document.getElementById('novoStatusInput').value = status;
+    document.getElementById('formStatus').submit();
+}
+function verDetalhes(btn) {
+    const codigo = btn.getAttribute('data-codigo');
+    const fornecedor = btn.getAttribute('data-fornecedor');
+    const data = btn.getAttribute('data-data');
+    const responsavel = btn.getAttribute('data-responsavel');
+    const total = btn.getAttribute('data-total');
+    const status = btn.getAttribute('data-status');
+    const obs = btn.getAttribute('data-obs');
+    const tipo = btn.getAttribute('data-tipo');
+    document.getElementById('det-codigo').innerText = `Pedido ${codigo}`;
+    document.getElementById('det-fornecedor').innerText = fornecedor;
+    document.getElementById('det-data').innerText = data;
+    document.getElementById('det-responsavel').innerText = responsavel;
+    document.getElementById('det-total').innerText = total;
+    document.getElementById('det-obs').innerText = (obs && obs !== 'null') ? obs : "Nenhuma observação informada.";
+    document.getElementById('det-tipo').innerText = (tipo === "PECA") ? "Peças" : "Produtos";
+    const badgeDiv = document.getElementById('det-status-badge');
+    let classeBadge = "";
+    if (status === 'PENDENTE') {
+        classeBadge = 'badge-info';
+    } else if (status === 'CONFIRMADO') {
+        classeBadge = 'badge-active';
+    } else if (status === 'RECEBIDO') {
+        classeBadge = 'badge-success';
+    } else if (status === 'CANCELADO') {
+        classeBadge = 'badge-inactive';
+    } else {
+        classeBadge = 'badge-analysis';
+    }
+    badgeDiv.innerHTML = `<span class="badge ${classeBadge}">${status}</span>`;
+    document.getElementById('modalDetalhes').style.display = 'flex';
+}
+
+function fecharModalDetalhes() {
+    document.getElementById('modalDetalhes').style.display = 'none';
+}

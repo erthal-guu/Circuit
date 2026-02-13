@@ -1,11 +1,17 @@
 package Circuit.Circuit.Model;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
-@Table(name = "pedidos_compra")
+@Getter
+@Setter
+@Table(name = "pedidos")
 public class Pedido {
 
     @Id
@@ -16,7 +22,7 @@ public class Pedido {
     private String codigo;
 
     @Enumerated(EnumType.STRING)
-    private StatusPedido status = StatusPedido.PENDENTE;
+    private StatusPedido status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fornecedor_id", nullable = false)
@@ -30,4 +36,10 @@ public class Pedido {
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
+
+    @Column(name = "tipo_pedido", length = 50)
+    private String tipoPedido;
+
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
+    private List<ItemPedido> itens;
 }

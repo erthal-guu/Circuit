@@ -1000,6 +1000,7 @@ body {
 .modal-body-scroll {
     flex: 1;
     overflow-y: auto;
+    position: relative;
     padding: 0;
     width: 100%;
 }
@@ -2366,7 +2367,7 @@ textarea.form-control:focus {
     background-color: rgba(0,0,0,0.5);
     backdrop-filter: blur(3px);
 }
-.modal-content {
+.modal-content-lg{
     background-color: #fff;
     margin: 5% auto;
     padding: 20px;
@@ -2374,7 +2375,7 @@ textarea.form-control:focus {
     width: 60%;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
-.modal-content {
+.modal-content-lg {
     padding: 0;
     overflow: hidden;
     border: none;
@@ -2404,10 +2405,6 @@ textarea.form-control:focus {
     font-weight: 800;
     letter-spacing: 0.3px;
     display: block;
-}
-
-.modal-body {
-    padding: 25px;
 }
 
 .close-btn {
@@ -2500,4 +2497,32 @@ textarea.form-control:focus {
 
 .btn-confirm { background: var(--primary-color); color: #fff; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; }
 .btn-cancel { background: #e2e8f0; color: #475569; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: 10px; }
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 6px;
+    color: #cbd5e1;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    line-height: 1;
+    padding-bottom: 2px;
+}
+
+.close-btn:hover {
+    background-color: #ef4444;
+    color: white;
+    transform: scale(1.05);
+}
+
+.close-btn:active {
+    transform: scale(0.95);
+}
 

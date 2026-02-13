@@ -226,7 +226,7 @@
     <div class="modal-content" style="max-width: 800px;">
         <div class="modal-header">
             <h2 id="modalTitle">Cadastrar Peça</h2>
-            <button class="btn-close" onclick="closeModal()">&times;</button>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
         </div>
 
         <form id="estoqueForm" th:action="@{/estoquePecas/cadastrar}" method="POST">
@@ -305,7 +305,7 @@
                     <h2>Movimentação de Peças em Lote</h2>
                     <p class="modal-subtitle">Selecione as peças para dar entrada ou saída em massa.</p>
                 </div>
-                <button type="button" class="btn-close" onclick="fecharModalMovimentacoes(this)">&times;</button>
+                <button type="button" class="close-btn" onclick="fecharModalMovimentacoes(this)">&times;</button>
             </div>
 
             <div class="search-box mov" style="margin: 15px;">

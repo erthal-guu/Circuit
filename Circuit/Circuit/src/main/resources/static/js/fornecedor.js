@@ -147,7 +147,7 @@ function carregarItensPorTipoFornecedor(selectElement) {
     const campoTipoHidden = document.getElementById('tipoVinculoAtual');
 
     const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const tipoOriginal = selectedOption.getAttribute('data-tipo');
+    const tipoOriginal = selectedOption.getAttribute('data-tipo') || "";
 
     listaContainer.innerHTML = '';
     containerArea.style.display = 'none';
@@ -158,29 +158,34 @@ function carregarItensPorTipoFornecedor(selectElement) {
         campoTipoHidden.value = '';
         return;
     }
+    let tipoNormalizado = "";
+    const t = tipoOriginal.toUpperCase();
 
-    campoTipoHidden.value = tipoOriginal;
+    if (t.includes("PECA")) {
+        tipoNormalizado = "PECA";
+    } else if (t.includes("PRODUTO")) {
+        tipoNormalizado = "PRODUTO";
+    }
 
-    const tipoNormalizado = tipoOriginal.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    campoTipoHidden.value = tipoNormalizado;
 
     let urlFetch = '';
-    if (tipoNormalizado === 'pecas') {
+    if (tipoNormalizado === 'PECA') {
         urlFetch = '/estoquePecas/todas-disponiveis';
         tituloLabel.innerText = 'Selecione as Peças que ele fornece:';
-    } else if (tipoNormalizado === 'produtos') {
+    } else if (tipoNormalizado === 'PRODUTO') {
         urlFetch = '/estoque/todos-disponiveis';
         tituloLabel.innerText = 'Selecione os Produtos que ele fornece:';
-    } else {
-        campoTipoHidden.value = '';
-        return;
     }
+
+    if (!urlFetch) return;
 
     containerArea.style.display = 'block';
     loading.style.display = 'flex';
 
     fetch(urlFetch)
         .then(response => {
-            if (!response.ok) throw new Error();
+            if (!response.ok) throw new Error("Erro na rede");
             return response.json();
         })
         .then(data => {
@@ -202,7 +207,7 @@ function carregarItensPorTipoFornecedor(selectElement) {
 
                 checkbox.addEventListener('change', function() {
                     labelCard.classList.toggle('selected', this.checked);
-                    const algumMarcado = listaContainer.querySelectorAll('input[type="checkbox"]:checked').length > 0;
+                    const algumMarcado = listaContainer.querySelectorAll('input[name="itensIds"]:checked').length > 0;
                     btnSalvar.disabled = !algumMarcado;
                 });
 
@@ -214,7 +219,7 @@ function carregarItensPorTipoFornecedor(selectElement) {
                 listaContainer.appendChild(labelCard);
             });
         })
-        .catch(() => {
+        .catch(err => {
             loading.style.display = 'none';
             msgNenhum.innerText = 'Erro ao carregar dados do servidor.';
             msgNenhum.style.display = 'block';
@@ -240,24 +245,20 @@ function carregarItensVinculados(idFornecedor) {
     const list = document.getElementById('listaItensVinculados');
     const msgEmpty = document.getElementById('msgNenhumVinculado');
 
-    // Pega o tipo do select selecionado
     const select = document.getElementById('selectFornecedorVinculados');
     const selectedOption = select.options[select.selectedIndex];
     const tipoOriginal = selectedOption.getAttribute('data-tipo');
 
-    // Reseta visual
     area.style.display = 'none';
     list.innerHTML = '';
     msgEmpty.style.display = 'none';
 
     if (!idFornecedor || !tipoOriginal) return;
 
-    const tipoNorm = tipoOriginal.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    const tipoNorm = tipoOriginal.toUpperCase().includes("PECA") ? "PECA" : "PRODUTO";
 
     area.style.display = 'block';
     loading.style.display = 'flex';
-
-    // Chama Endpoint Java
     const url = `/fornecedores/json/${idFornecedor}/itens-vinculados?tipo=${tipoNorm}`;
 
     fetch(url)
