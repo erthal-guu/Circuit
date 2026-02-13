@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,6 +41,6 @@ public class Pedido {
     @Column(name = "tipo_pedido", length = 50)
     private String tipoPedido;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
-    private List<ItemPedido> itens;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<ItemPedido> itens = new ArrayList<>();
 }

@@ -4,7 +4,7 @@ import Circuit.Circuit.Model.Peca;
 import Circuit.Circuit.Model.Produto;
 import Circuit.Circuit.Model.viaCep;
 import Circuit.Circuit.Model.Fornecedor;
-import Circuit.Circuit.Service.CepService;
+import Circuit.Circuit.Service.Api.CepService;
 import Circuit.Circuit.Service.FornecedorService;
 import Circuit.Circuit.Service.PecaService;
 import Circuit.Circuit.Service.ProdutoService;

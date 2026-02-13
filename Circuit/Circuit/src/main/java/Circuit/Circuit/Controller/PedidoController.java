@@ -50,40 +50,44 @@ public class PedidoController {
 
         return "pedidos";
     }
-        @PostMapping("/salvar")
-        public String salvar(@RequestParam Long fornecedorId,
-                             @RequestParam Long responsavelId,
-                             @RequestParam String numeroPedido,
-                             @RequestParam BigDecimal valorTotal,
-                             @RequestParam(required = false) String observacao,
-                             @RequestParam String tipoPedido,
-                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataPedido,
-                             @RequestParam(required = false) List<Long> itensId,
-                             @RequestParam(required = false) List<Integer> quantidadeItens,
-                             @RequestParam(required = false) List<BigDecimal> precoItens,
-                             RedirectAttributes redirectAttributes) {
-            if (itensId == null || itensId.isEmpty()) {
-                redirectAttributes.addFlashAttribute("mensagemErro", "Adicione pelo menos um item ao pedido!");
-                return "redirect:/pedidos";
-            }
-            try {
-                pedidoService.salvarPedido(fornecedorId, responsavelId, numeroPedido,
-                        observacao, tipoPedido, dataPedido,valorTotal,
-                        itensId, quantidadeItens, precoItens);
+    @PostMapping("/salvar")
+    public String salvar(@RequestParam Long fornecedorId,
+                         @RequestParam Long responsavelId,
+                         @RequestParam String numeroPedido,
+                         @RequestParam BigDecimal valorTotal,
+                         @RequestParam(required = false) String observacao,
+                         @RequestParam String tipoPedido,
+                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataPedido,
+                         @RequestParam(required = false) List<Long> itensId,
+                         @RequestParam(required = false) List<Integer> quantidadeItens,
+                         @RequestParam(required = false) List<BigDecimal> precoItens,
+                         @RequestParam(required = false, defaultValue = "false") Boolean notificarFornecedor,
+                         RedirectAttributes redirectAttributes) {
 
-                redirectAttributes.addFlashAttribute("mensagemSucesso", "Pedido salvo com sucesso!");
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar pedido: " + e.getMessage());
-            }
-
+        if (itensId == null || itensId.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Adicione pelo menos um item ao pedido!");
             return "redirect:/pedidos";
         }
+
+        try {
+            pedidoService.salvarPedido(fornecedorId, responsavelId, numeroPedido,
+                    observacao, tipoPedido, dataPedido, valorTotal,
+                    itensId, quantidadeItens, precoItens, notificarFornecedor);
+
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Pedido salvo com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar pedido: " + e.getMessage());
+        }
+
+        return "redirect:/pedidos";
+    }
     @PostMapping("/atualizar-status")
     public String atualizarStatus(@RequestParam Long pedidoId,
                                   @RequestParam StatusPedido novoStatus,
+                                  @RequestParam(required = false, defaultValue = "false") Boolean notificarFornecedor,
                                   RedirectAttributes ra) {
         try {
-            pedidoService.atualizarStatus(pedidoId, novoStatus);
+            pedidoService.atualizarStatus(pedidoId, novoStatus,notificarFornecedor);
             ra.addFlashAttribute("mensagemSucesso", "Status do pedido atualizado com sucesso!");
         } catch (Exception e) {
             ra.addFlashAttribute("mensagemErro", "Erro ao atualizar status: " + e.getMessage());

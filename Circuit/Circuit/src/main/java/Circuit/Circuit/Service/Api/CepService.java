@@ -1,4 +1,4 @@
-package Circuit.Circuit.Service;
+package Circuit.Circuit.Service.Api;
 
 import Circuit.Circuit.Model.viaCep;
 import org.springframework.stereotype.Service;

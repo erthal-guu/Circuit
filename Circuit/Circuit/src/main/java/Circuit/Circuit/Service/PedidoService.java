@@ -2,12 +2,15 @@ package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.*;
 import Circuit.Circuit.Repository.*;
+import Circuit.Circuit.Service.Email.EmailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -25,15 +28,22 @@ public class PedidoService {
     private FuncionarioRepository funcionarioRepository;
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
+    @Autowired
+    private EmailService emailService;
 
     public List<Pedido> listarPedidos() {
-        return pedidoRepository.findAll();
+        List<StatusPedido> statusPedidos = Arrays.asList(
+                StatusPedido.RECEBIDO,
+                StatusPedido.PENDENTE,
+                StatusPedido.CONFIRMADO);
+        return pedidoRepository.findByStatusIn(statusPedidos);
     }
 
     @Transactional
     public void salvarPedido(Long fornecedorId, Long responsavelId, String codigoPedido,
                              String observacao, String tipoPedido, LocalDate dataPedido, BigDecimal valorTotal,
-                             List<Long> itensId, List<Integer> quantidadeItens, List<BigDecimal> precoItens) {
+                             List<Long> itensId, List<Integer> quantidadeItens, List<BigDecimal> precoItens,
+                             Boolean notificarFornecedor) {
 
         Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
@@ -51,6 +61,7 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.PENDENTE);
         pedido.setValorTotal(valorTotal);
 
+        pedido.setItens(new ArrayList<>());
         pedidoRepository.save(pedido);
 
         if (itensId != null) {
@@ -75,12 +86,19 @@ public class PedidoService {
                 }
 
                 itemPedidoRepository.save(item);
+                pedido.getItens().add(item);
             }
         }
+        if (Boolean.TRUE.equals(notificarFornecedor)) {
+            emailService.enviarEmailPedidoPersonalizado(pedido);
+        }
     }
-    public void atualizarStatus(Long id, StatusPedido novoStatus){
+    public void atualizarStatus(Long id, StatusPedido novoStatus,Boolean deveNotificar){
         Pedido pedido = pedidoRepository.findById(id).get();
         pedido.setStatus(novoStatus);
         pedidoRepository.save(pedido);
+        if (Boolean.TRUE.equals(deveNotificar)) {
+            emailService.enviarEmailPedidoPersonalizado(pedido);
+        }
     }
 }

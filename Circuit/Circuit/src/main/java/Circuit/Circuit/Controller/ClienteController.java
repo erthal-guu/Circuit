@@ -2,7 +2,7 @@ package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.Model.viaCep;
 import Circuit.Circuit.Model.Cliente;
-import Circuit.Circuit.Service.CepService;
+import Circuit.Circuit.Service.Api.CepService;
 import Circuit.Circuit.Service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

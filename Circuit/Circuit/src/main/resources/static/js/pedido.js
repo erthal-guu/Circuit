@@ -45,7 +45,10 @@ function switchTab(tab) {
     const btnForm = document.getElementById('btn-tab-form');
     const btnSalvar = document.getElementById('btn-salvar-global');
     const mainTitle = document.getElementById('main-title');
-
+    if (tab !== 'lista') {
+        const check = document.getElementById('notificarFornecedor');
+        if(check) check.checked = false;
+    }
     if (tab === 'lista') {
         viewLista.style.display = 'block';
         viewForm.style.display = 'none';
