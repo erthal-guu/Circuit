@@ -1,29 +1,31 @@
 package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.Model.*;
+import Circuit.Circuit.Repository.PedidoRepository;
 import Circuit.Circuit.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/pedidos")
 public class PedidoController {
-    @Autowired
-     private FornecedorService fornecedorService;
 
     @Autowired
-     private FuncionarioService funcionarioService;
+    private FornecedorService fornecedorService;
+
+    @Autowired
+    private FuncionarioService funcionarioService;
 
     @Autowired
     private PedidoService pedidoService;
@@ -33,6 +35,9 @@ public class PedidoController {
 
     @Autowired
     private PecaService pecaService;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     @GetMapping
     public String abrirPedido(Model model){
@@ -50,8 +55,10 @@ public class PedidoController {
 
         return "pedidos";
     }
+
     @PostMapping("/salvar")
-    public String salvar(@RequestParam Long fornecedorId,
+    public String salvar(@RequestParam(required = false) Long id,
+                         @RequestParam Long fornecedorId,
                          @RequestParam Long responsavelId,
                          @RequestParam String numeroPedido,
                          @RequestParam BigDecimal valorTotal,
@@ -70,17 +77,23 @@ public class PedidoController {
         }
 
         try {
-            pedidoService.salvarPedido(fornecedorId, responsavelId, numeroPedido,
+            pedidoService.salvarPedido(id, fornecedorId, responsavelId, numeroPedido,
                     observacao, tipoPedido, dataPedido, valorTotal,
                     itensId, quantidadeItens, precoItens, notificarFornecedor);
 
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Pedido salvo com sucesso!");
+            if (id != null) {
+                redirectAttributes.addFlashAttribute("mensagemSucesso", "Pedido atualizado com sucesso.");
+            } else {
+                redirectAttributes.addFlashAttribute("mensagemSucesso", "Pedido criado com sucesso.");
+            }
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar pedido: " + e.getMessage());
         }
 
         return "redirect:/pedidos";
     }
+
     @PostMapping("/atualizar-status")
     public String atualizarStatus(@RequestParam Long pedidoId,
                                   @RequestParam StatusPedido novoStatus,
@@ -94,4 +107,32 @@ public class PedidoController {
         }
         return "redirect:/pedidos";
     }
+
+    @GetMapping("/{id}/itens-json")
+    @ResponseBody
+    public List<Map<String, Object>> buscarItensPedido(@PathVariable Long id) {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow();
+        List<Map<String, Object>> response = new ArrayList<>();
+
+        for (ItemPedido item : pedido.getItens()) {
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("quantidade", item.getQuantidade());
+            dto.put("precoUnitario", item.getPrecoUnitario());
+
+            if (item.getProduto() != null) {
+                dto.put("id", item.getProduto().getId());
+                dto.put("nome", item.getProduto().getNome());
+            } else if (item.getPeca() != null) {
+                dto.put("id", item.getPeca().getId());
+                dto.put("nome", item.getPeca().getNome());
+            } else {
+                dto.put("id", item.getItemId());
+                dto.put("nome", "Item Desconhecido");
+            }
+
+            response.add(dto);
+        }
+
+        return response;
     }
+}

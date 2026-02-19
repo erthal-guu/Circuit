@@ -54,6 +54,11 @@
                 </tbody>
             </table>
 
+            <div th:if="${pedido.observacoes != null and pedido.observacoes != ''}" style="margin-bottom: 30px; padding: 20px; background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px;">
+                <span style="font-size: 11px; color: #d97706; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 8px;">Observações do Pedido</span>
+                <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;" th:text="${pedido.observacoes}"></p>
+            </div>
+
             <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #001d3d; border-radius: 12px; border-bottom: 4px solid #ea580c;">
                 <tr>
                     <td bgcolor="#001d3d" style="padding: 25px; border-radius: 12px;">
