@@ -267,3 +267,44 @@ function exportarParaPDF() {
     };
     html2pdf().set(opt).from(container).save();
 }
+function abrirModalNotificacoes() {
+    const modal = document.getElementById('modalNotificacoes');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function fecharModalNotificacoes() {
+    const modal = document.getElementById('modalNotificacoes');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('modalNotificacoes');
+    if (modal && event.target === modal) {
+        fecharModalNotificacoes();
+    }
+});
+
+function abrirModalNotificacoes() {
+    const modal = document.getElementById('modalNotificacoes');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function fecharModalNotificacoes() {
+    const modal = document.getElementById('modalNotificacoes');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('modalNotificacoes');
+    if (modal && event.target === modal) {
+        fecharModalNotificacoes();
+    }
+});

@@ -1,7 +1,7 @@
 
 const user = JSON.parse(localStorage.getItem('user'));
 if (!user) {
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 } else {
     document.addEventListener('DOMContentLoaded', () => {
         const nomeSidebar = document.getElementById('nomeUsuarioExibicao');
@@ -18,7 +18,7 @@ if (!user) {
         }
         document.getElementById('btnLogout').addEventListener('click', () => {
             localStorage.removeItem('user');
-            window.location.href = '/login.html';
+            window.location.href = '/login';
         });
     });
 }

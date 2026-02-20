@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/head.html :: head(titulo = 'Home')}">
 </head>
 <body>
@@ -9,7 +9,7 @@
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="welcome-section">
-            <h1 class="welcome-title">Bem-vindo de volta, <span id="nomeBoasVindas"></span>!</h1>
+            <h1 class="welcome-title">Bem-vindo de volta, <span sec:authentication="name"></span></h1>
         </div>
 
         <div class="dashboard-grid">
@@ -114,6 +114,6 @@
         </div>
     </main>
 </div>
-    <script th:src="@{/js/home.js}"></script>
+<script th:src="@{/js/home.js}"></script>
 </body>
 </html>

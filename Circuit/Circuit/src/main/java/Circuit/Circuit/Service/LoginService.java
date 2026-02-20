@@ -3,26 +3,41 @@ package Circuit.Circuit.Service;
 import Circuit.Circuit.Model.User;
 import Circuit.Circuit.Repository.LoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
-public class LoginService {
-    @Autowired
-    private LoginRepository Repository;
+import java.util.Collections;
 
-    public User login(String cpf, String senha) {
-        User user = Repository.findByCpf(cpf);
+@Service
+public class LoginService implements UserDetailsService {
+
+    @Autowired
+    private LoginRepository loginRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String cpf) throws UsernameNotFoundException {
+        User user = loginRepository.findByCpf(cpf);
 
         if (user == null) {
-            throw new RuntimeException("CPF ou Senha inválidos");
-        }
-        if (!user.getSenha().equals(senha)) {
-            throw new RuntimeException("CPF ou Senha inválidos");
-        }
-        if (!user.getAtivo()) {
-            throw new RuntimeException("Acesso negado: Usuário inativo. Fale com o suporte.");
+            throw new UsernameNotFoundException("CPF ou Senha inválidos");
         }
 
-        return user;
+        if (!user.getAtivo()) {
+            throw new DisabledException("Acesso negado: Usuário inativo. Fale com o suporte.");
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getCpf(),
+                user.getSenha(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
     }
 }
