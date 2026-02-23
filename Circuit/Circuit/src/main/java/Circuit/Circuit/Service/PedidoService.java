@@ -32,6 +32,8 @@ public class PedidoService {
     private ItemPedidoRepository itemPedidoRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private NotificacaoService notificacaoService;
 
     public List<Pedido> listarPedidos() {
         List<StatusPedido> statusPedidos = Arrays.asList(
@@ -111,6 +113,11 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(id).orElseThrow();
         pedido.setStatus(novoStatus);
         pedidoRepository.save(pedido);
+
+        if (novoStatus == StatusPedido.RECEBIDO) {
+            notificacaoService.criarNotificacao(pedido);
+        }
+
         if (Boolean.TRUE.equals(deveNotificar)) {
             emailService.enviarEmailPedidoPersonalizado(pedido);
         }

@@ -10,6 +10,16 @@
     <main class="main-content">
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
         <div class="content">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 15px; margin-top: -10px;">
+                <div class="notification-wrapper" style="position: relative; cursor: pointer; margin-right: 10px; display: flex; align-items: center; background: white; padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="abrirModalNotificacoes()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span style="margin-left: 8px; font-size: 13px; font-weight: 600; color: #475569;">Notificações</span>
+                    <span id="badge-notificacao" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; display: none; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">0</span>
+                </div>
+            </div>
             <div class="context-nav">
                 <a th:href="@{/estoque}"
                    class="context-btn"
@@ -371,6 +381,23 @@
             </div>
         </div>
     </form>
+</div>
+<div id="modalNotificacoes" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); z-index: 9999; justify-content: flex-end; align-items: flex-start;">
+    <div style="background: white; width: 100%; max-width: 380px; margin-top: 60px; margin-right: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; animation: slideIn 0.2s ease-out;">
+
+        <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <h3 style="margin: 0; font-size: 15px; color: #0f172a; font-weight: 600;">Notificações</h3>
+            <button onclick="fecharModalNotificacoes()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8;">&times;</button>
+        </div>
+
+        <div id="lista-notificacoes" style="padding: 0; max-height: 400px; overflow-y: auto;">
+            <!-- Preenchido dinamicamente pelo JS -->
+        </div>
+
+        <div style="padding: 12px 20px; background: #f8fafc; text-align: center; border-top: 1px solid #e2e8f0;">
+            <a href="#" style="color: #2563eb; font-size: 12px; text-decoration: none; font-weight: 600;">Ver todas as notificações</a>
+        </div>
+    </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script th:src="@{/js/estoque.js}"></script>

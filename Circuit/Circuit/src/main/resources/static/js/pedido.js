@@ -419,6 +419,7 @@ function verDetalhes(btn) {
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
+                    <td class="font-600">${item.nome || '-'}</td>
                     <td class="text-center">${parsed.qtd}</td>
                     <td>R$ ${parsed.preco.toFixed(2)}</td>
                     <td class="font-600">R$ ${subtotal.toFixed(2)}</td>

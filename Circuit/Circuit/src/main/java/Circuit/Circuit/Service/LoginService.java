@@ -40,4 +40,13 @@ public class LoginService implements UserDetailsService {
         );
 
     }
+    @Bean
+    public CommandLineRunner gerarSenhaCriptografada() {
+        return args -> {
+            String hash = new BCryptPasswordEncoder().encode("1234567");
+            System.out.println("========================================");
+            System.out.println("HASH PARA 1234567: " + hash);
+            System.out.println("========================================");
+        };
+    }
 }

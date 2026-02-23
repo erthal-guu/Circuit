@@ -20,7 +20,7 @@
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                     </svg>
                     <span style="margin-left: 8px; font-size: 13px; font-weight: 600; color: #475569;">Notificações</span>
-                    <span class="notification-badge" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">1</span>
+                    <span id="badge-notificacao" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; display: none; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">0</span>
                 </div>
             </div>
 
@@ -232,6 +232,7 @@
     </main>
 </div>
 
+<!-- Modais de cadastro/edição/movimentação (sem alteração) -->
 <div class="modal" id="estoqueModal">
     <div class="modal-content" style="max-width: 800px;">
         <div class="modal-header">
@@ -329,6 +330,7 @@
         </form>
     </div>
 </div>
+
 <div class="modal" id="modalRetirar">
     <div class="modal-content" style="max-width: 450px;">
         <div class="modal-header">
@@ -356,11 +358,10 @@
         </form>
     </div>
 </div>
+
 <div class="modal" id="modalMovimentacoes">
     <form method="POST" id="formMovimentacao">
-
         <div class="modal-content modal-content-movimentacao">
-
             <div class="modal-header modal-header-border">
                 <div>
                     <h2>Movimentação em Lote</h2>
@@ -369,10 +370,11 @@
                 <button type="button" class="close-btn" onclick="fecharModalMovimentacoes()">&times;</button>
             </div>
 
-            <div class="search-box mov" style="margin: 15px;"> <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            <div class="search-box mov" style="margin: 15px;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
                 <input type="text" id="searchMovimentacao" class="form-control"
                        placeholder="Buscar produto..." onkeyup="filtrarTabelaMovimentacao()">
             </div>
@@ -413,73 +415,28 @@
                 <div class="bulk-left">
                     Selecionados: <span id="contadorSelecionados" class="text-highlight">0</span>
                 </div>
-
                 <div class="bulk-right">
                     <div class="qty-group">
                         <label>Quantidade:</label>
                         <input type="number" name="quantidade" id="inputQtdMassa" class="form-control input-qty-center" value="1" min="1" required>
                     </div>
-
-                    <button type="submit" formaction="/estoque/movimentacao/entrada" class="btn-submit btn-entry">
-                        Entrada
-                    </button>
-
-                    <button type="submit" formaction="/estoque/movimentacao/saida" class="btn-submit btn-exit">
-                        Saída
-                    </button>
+                    <button type="submit" formaction="/estoque/movimentacao/entrada" class="btn-submit btn-entry">Entrada</button>
+                    <button type="submit" formaction="/estoque/movimentacao/saida" class="btn-submit btn-exit">Saída</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
 <div id="modalNotificacoes" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); z-index: 9999; justify-content: flex-end; align-items: flex-start;">
-
     <div style="background: white; width: 100%; max-width: 380px; margin-top: 60px; margin-right: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; animation: slideIn 0.2s ease-out;">
 
         <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
             <h3 style="margin: 0; font-size: 15px; color: #0f172a; font-weight: 600;">Notificações</h3>
-            <button onclick="fecharModalNotificacoes()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; justify-content: center;">&times;</button>
+            <button onclick="fecharModalNotificacoes()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8;">&times;</button>
         </div>
 
-        <div style="padding: 0; max-height: 400px; overflow-y: auto;">
-
-            <div style="padding: 16px 20px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 12px; align-items: flex-start; background: #fffbeb; transition: background 0.2s;" onmouseover="this.style.background='#fef3c7'" onmouseout="this.style.background='#fffbeb'">
-                <div style="background: #f59e0b; color: white; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                </div>
-                <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <h4 style="margin: 0 0 4px 0; font-size: 13px; color: #1e293b; font-weight: 600;">Entrada Pendente</h4>
-                        <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">Há 10 min</span>
-                    </div>
-                    <p style="margin: 0 0 12px 0; font-size: 12px; color: #475569; line-height: 1.4;">O pedido <strong style="color: #0f172a;">PO-4637</strong> foi recebido. Efetive para atualizar o saldo.</p>
-
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="aprovarEntradaEstoque(event, 1)" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Efetivar Entrada
-                        </button>
-                        <button onclick="event.stopPropagation()" style="background: white; color: #475569; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
-                            Revisar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div style="padding: 16px 20px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 12px; align-items: flex-start; background: white; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
-                <div style="background: #e2e8f0; color: #64748b; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-                <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <h4 style="margin: 0 0 4px 0; font-size: 13px; color: #1e293b; font-weight: 600;">Pedido Confirmado</h4>
-                        <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">Ontem</span>
-                    </div>
-                    <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.4;">O fornecedor confirmou o pedido <strong style="color: #0f172a;">PO-4636</strong>.</p>
-                </div>
-            </div>
-
+        <div id="lista-notificacoes" style="padding: 0; max-height: 400px; overflow-y: auto;">
+            <!-- Preenchido dinamicamente pelo JS -->
         </div>
 
         <div style="padding: 12px 20px; background: #f8fafc; text-align: center; border-top: 1px solid #e2e8f0;">
@@ -487,6 +444,7 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script th:src="@{/js/estoque.js}"></script>
 
