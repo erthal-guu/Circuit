@@ -207,7 +207,7 @@ function exportarParaPDF() {
     html2pdf().set(opt).from(container).save();
 }
 
-const TIPO_ESTOQUE = 'PRODUTO';
+const TIPO_ESTOQUE = obterTipoEstoque();
 
 function abrirModalNotificacoes() {
     const modalNotif = document.getElementById('modalNotificacoes');
