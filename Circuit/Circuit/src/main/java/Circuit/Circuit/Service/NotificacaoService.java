@@ -14,24 +14,17 @@ public class NotificacaoService {
     @Autowired
     private NotificacaoRepository notificacaoRepository;
 
+
     @Autowired
     private PecaRepository pecaRepository;
 
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    public void criarNotificacao(Pedido pedido) {
-        Notificacao notificacao = new Notificacao();
-        notificacao.setPedido(pedido);
-        notificacao.setTipo(pedido.getTipoPedido().toUpperCase());
-        notificacao.setLida(false);
-        notificacao.setMensagem("O pedido " + pedido.getCodigo() + " foi recebido. Efetive para atualizar o saldo.");
-        notificacaoRepository.save(notificacao);
-    }
-
     public List<Notificacao> listarPendentes(String tipo) {
         return notificacaoRepository.findPendentesByTipo(tipo.toUpperCase());
     }
+
 
     @Transactional
     public void efetivarEntrada(Long notificacaoId) {
@@ -57,6 +50,17 @@ public class NotificacaoService {
 
         notificacao.setLida(true);
         notificacaoRepository.save(notificacao);
+    }
+    public void criarNotificacaoUnica(Pedido pedido) {
+        boolean jaExiste = notificacaoRepository.existsByPedidoAndLidaFalse(pedido);
+        if (!jaExiste) {
+            Notificacao notificacao = new Notificacao();
+            notificacao.setPedido(pedido);
+            notificacao.setTipo(pedido.getTipoPedido().toUpperCase());
+            notificacao.setLida(false);
+            notificacao.setMensagem("O pedido " + pedido.getCodigo() + " foi recebido. Efetive para atualizar o saldo.");
+            notificacaoRepository.save(notificacao);
+        }
     }
 
 }

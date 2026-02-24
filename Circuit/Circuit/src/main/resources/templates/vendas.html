@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Gestão de Vendas')}">
+</head>
+<body>
+
+<div th:replace="~{fragments/menu :: sidebar('vendas')}"></div>
+
+<div class="main-content">
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="content">
+        <div th:if="${mensagemSucesso}" class="auto-close" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+            <span>✅</span>
+            <span th:text="${mensagemSucesso}"></span>
+        </div>
+
+        <div th:if="${mensagemErro}" class="alert alert-danger" style="padding: 15px; background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; border-radius: 8px; margin-bottom: 20px;">
+            <span th:text="${mensagemErro}"></span>
+        </div>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" id="main-title">Vendas</h1>
+            </div>
+            <div class="header-actions">
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="switchTab('lista')" id="btn-tab-lista">
+                        Minhas Vendas
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('form')" id="btn-tab-form">
+                        Nova Venda
+                    </button>
+                </div>
+
+                <button type="submit" form="formVenda" id="btn-salvar-global" class="btn-primary btn-block justify-center" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Finalizar Venda
+                </button>
+            </div>
+        </div>
+
+        <div id="view-lista" class="tab-view">
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>Histórico de Vendas</h3>
+                    <div class="search-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="searchInput" placeholder="Pesquisar vendas...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>CÓDIGO</th>
+                            <th>CLIENTE</th>
+                            <th>DATA</th>
+                            <th>TOTAL</th>
+                            <th>STATUS</th>
+                            <th class="text-center">AÇÕES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="venda : ${listaVendas}">
+                            <td th:text="${venda.codigo}" class="font-700"></td>
+                            <td th:text="${venda.cliente.nome}"></td>
+                            <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${#numbers.formatCurrency(venda.valorTotal)}"></td>
+                            <td>
+                                <span class="badge"
+                                      th:classappend="${
+                                          venda.status.name() == 'PENDENTE' ? 'badge-warning' :
+                                          (venda.status.name() == 'CONCLUIDA' ? 'badge-success' : 'badge-danger')
+                                      }"
+                                      th:text="${venda.status}">PENDENTE</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    <button class="btn-action" type="button" title="Atualizar Status" th:onclick="|abrirModalStatus('${venda.id}', '${venda.status}')|">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path>
+                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Detalhes" style="background: #e0f2fe; color: #0369a1;" th:onclick="|verDetalhesVenda(this)|"
+                                            th:data-venda="${venda.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                                            <path d="M3 6h.01M3 12h.01M3 18h.01"></path>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="btn-action btn-edit" th:onclick="|abrirEdicaoVenda(this)|">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-form" class="tab-view" style="display: none;">
+            <form th:action="@{/vendas/salvar}" method="POST" id="formVenda" class="w-100">
+                <div class="table-card p-25">
+                    <div class="status-header flex-between">
+                        <h3>Dados da Venda</h3>
+                    </div>
+
+                    <div class="form-grid-4">
+                        <div class="form-group">
+                            <label>Código da Venda</label>
+                            <div class="input-wrapper-btn">
+                                <input type="text" id="codigoVenda" name="codigo" class="form-control input-readonly" readonly placeholder="VN-XXXX">
+                                <button type="button" class="btn-inside" onclick="gerarCodigoVenda()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group span-2">
+                            <label>Cliente</label>
+                            <select class="form-control" id="selectCliente" name="clienteId" required>
+                                <option value="" disabled selected>Selecione o cliente...</option>
+                                <option th:each="c : ${listaClientes}" th:value="${c.id}" th:text="${c.nome}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Data da Venda</label>
+                            <input type="date" class="form-control" name="dataVenda" id="dataVenda" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Vendedor Responsável</label>
+                            <select class="form-control" name="vendedorId" id="selectVendedor">
+                                <option th:each="v : ${listaVendedores}" th:value="${v.id}" th:text="${v.nome}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group span-2">
+                            <label>Forma de Pagamento</label>
+                            <select class="form-control" name="formaPagamento">
+                                <option value="PIX">PIX</option>
+                                <option value="CREDITO">Cartão de Crédito</option>
+                                <option value="DEBITO">Cartão de Débito</option>
+                                <option value="DINHEIRO">Dinheiro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-primary font-700">Total Bruto</label>
+                            <input type="text" id="inputTotalVenda" name="valorTotal" class="input-money-wrapper" value="0,00" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-card mt-20">
+                    <div class="card-header-simple">
+                        <h3 class="flex-center gap-5 text-white">Itens da Venda</h3>
+                        <button type="button" class="btn-primary flex-center gap-5" onclick="abrirModalItensVenda()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Adicionar Produto
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabelaItensVenda">
+                            <thead>
+                            <tr>
+                                <th style="width: 45%">Produto / Peça</th>
+                                <th>Qtd.</th>
+                                <th>Preço Unit.</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyItensVenda">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modalStatusVenda" class="modal">
+    <div class="modal-content" style="max-width: 500px; padding: 0;">
+        <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #eee;">
+            <h2>Alterar Status da Venda</h2>
+            <button class="close-btn" onclick="fecharModalStatus()">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 20px;">
+            <div class="status-grid">
+                <div class="status-card" onclick="setVendaStatus('PENDENTE')">
+                    <div class="icon-circle info">P</div>
+                    <span>Pendente</span>
+                </div>
+                <div class="status-card" onclick="setVendaStatus('CONCLUIDA')">
+                    <div class="icon-circle success">C</div>
+                    <span>Concluída</span>
+                </div>
+                <div class="status-card danger-card" onclick="setVendaStatus('CANCELADA')">
+                    <div class="icon-circle danger">X</div>
+                    <span>Cancelar</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/venda.js}"></script>
+</body>
+</html>

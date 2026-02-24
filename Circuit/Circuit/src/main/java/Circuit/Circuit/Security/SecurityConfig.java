@@ -17,12 +17,12 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable());
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/img/**", "/login").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/pedidos", true)
+                        .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
                 .logout(logout -> logout

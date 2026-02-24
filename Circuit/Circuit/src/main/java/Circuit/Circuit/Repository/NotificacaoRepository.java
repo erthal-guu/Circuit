@@ -1,6 +1,7 @@
 package Circuit.Circuit.Repository;
 
 import Circuit.Circuit.Model.Notificacao;
+import Circuit.Circuit.Model.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,4 +13,5 @@ import java.util.List;
 public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> {
     @Query("SELECT n FROM Notificacao n JOIN FETCH n.pedido WHERE n.tipo = :tipo AND n.lida = false ORDER BY n.dataCriacao DESC")
     List<Notificacao> findPendentesByTipo(@Param("tipo") String tipo);
+    boolean existsByPedidoAndLidaFalse(Pedido pedido);
 }

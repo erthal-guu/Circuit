@@ -115,7 +115,7 @@ public class PedidoService {
         pedidoRepository.save(pedido);
 
         if (novoStatus == StatusPedido.RECEBIDO) {
-            notificacaoService.criarNotificacao(pedido);
+            notificacaoService.criarNotificacaoUnica(pedido);
         }
 
         if (Boolean.TRUE.equals(deveNotificar)) {
