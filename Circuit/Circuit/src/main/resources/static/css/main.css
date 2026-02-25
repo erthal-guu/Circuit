@@ -534,6 +534,7 @@ body {
 .badge-active { background: #d4edda; color: #155724; }
 .badge-inactive { background: #f8d7da; color: #721c24; }
 .badge-info { background: #fff3cd; color: #856404; }
+.badge-warning { background: #fff7ed; color: #c2410c; }
 .badge-repair { background: #e2d9f3; color: #6f42c1; }
 .badge-analysis { background: #d1ecf1; color: #0c5460; }
 .badge-wait { background: #ffe5d0; color: #c84200; }
@@ -1547,6 +1548,22 @@ body {
     margin-bottom: 20px;
 }
 
+.financial-summary {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.fin-item.total {
+    background: white;
+    border: 1px solid #cbd5e1;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
 .title-atualizar{
     margin: 0; font-size: 1.25rem; color: white;
 }
@@ -1669,6 +1686,55 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.itens-venda-list {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.item-venda-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.item-venda-item:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.item-venda-info input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.item-venda-info input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.1);
+}
+
+.item-venda-info > div {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.item-venda-info input[type="number"] {
+    width: 70px;
+    padding: 6px 10px;
 }
 .modal-body .tab-btn.vincular{
     display: flex;
