@@ -261,13 +261,13 @@
 
                         <div class="form-group col-12">
                             <label>Itens da Venda</label>
-                            <div id="listaItensVenda" class="itens-venda-list"></div>
-                            <button type="button" class="btn-secondary" onclick="abrirModalAdicionarItens()" style="margin-top: 10px; width: 100%;">
+                            <div id="listaItensVenda" class="itens-venda-list" style="display: none;"></div>
+                            <button type="button" class="btn-secondary" onclick="abrirModalAdicionarItens()" style="background: linear-gradient(135deg, #001d3d 0%, #003366 100%); margin-top: 10px; width: 100%; color: white; border: none; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0, 29, 62, 0.1);" onmouseover="this.style.background='linear-gradient(135deg, #003366 0%, #0056b3 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0, 29, 62, 0.2)';" onmouseout="this.style.background='linear-gradient(135deg, #001d3d 0%, #003366 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0, 29, 62, 0.1)';">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 5px;">
                                     <line x1="12" y1="5" x2="12" y2="19"></line>
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                 </svg>
-                                Adicionar Itens
+                                Adicionar produtos
                             </button>
                         </div>
 
@@ -280,7 +280,7 @@
                             <div class="fin-item total">
                                 <label><span>Valor Total (R$)</span></label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
-                                    <input type="number" id="valorLiquidoInput" class="form-control" step="0.01" readonly>
+                                    <input type="number" id="valorLiquido" class="form-control" step="0.01" readonly>
                                     <button type="button" class="btn-discount" onclick="abrirModalDesconto()" title="Aplicar Desconto">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <line x1="19" y1="5" x2="5" y2="19"></line>
@@ -391,7 +391,7 @@
                 <button type="button" class="close-btn" onclick="fecharModalAdicionarItens()">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="tbodyModalItensVenda" class="itens-venda-list" style="max-height: 400px; overflow-y: auto;">
+                <div id="tbodyModalItensVenda" class="checkbox-grid-container" style="max-height: 400px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px;">
                     <div style="text-align: center; padding: 20px;">Carregando produtos...</div>
                 </div>
                 <div style="margin-top: 15px; padding: 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">

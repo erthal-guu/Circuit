@@ -38,8 +38,25 @@ function switchTab(tabName, event) {
 
 function calcularTotalVenda() {
     if (!elValorBruto || !elValorLiquido || !elPorcentagemHidden) return;
+    const container = document.getElementById('listaItensVenda');
+    if (!container) return;
+    const itens = container.querySelectorAll('.item-venda-item');
+    let valorBruto = 0;
+    
+    itens.forEach(item => {
+        const precoInput = item.querySelector('input[placeholder="Preço (R$)"]');
+        const qtdInput = item.querySelector('input[placeholder="Qtd"]');
+        if (precoInput && qtdInput) {
+            const preco = parseFloat(precoInput.value) || 0;
+            const qtd = parseFloat(qtdInput.value) || 0;
+            valorBruto += (preco * qtd);
+        }
+    });
 
-    const valorBruto = parseFloat(elValorBruto.value) || 0;
+    elValorBruto.value = valorBruto.toFixed(2);
+    const valorBrutoInput = document.getElementById('valorBrutoInput');
+    if (valorBrutoInput) valorBrutoInput.value = valorBruto.toFixed(2);
+
     const porcentagem = parseFloat(elPorcentagemHidden.value) || 0;
     const valorDesconto = valorBruto * (porcentagem / 100);
     const valorLiquido = valorBruto - valorDesconto;
@@ -72,6 +89,7 @@ function abrirModalNovaVenda() {
     if (statusInput) statusInput.value = 'PENDENTE';
 
     document.getElementById('modalTitle').innerText = 'Nova Venda';
+    atualizarVisibilidadeItensVenda();
     calcularTotalVenda();
 
     document.getElementById('modalNovaVenda').style.display = 'flex';
@@ -96,7 +114,7 @@ function abrirModalEdicao(btn) {
     if (statusInput) statusInput.value = 'PENDENTE';
 
     document.getElementById('valorBrutoInput').value = valorBruto.toFixed(2);
-    document.getElementById('valorLiquidoInput').value = valorLiquido.toFixed(2);
+    document.getElementById('valorLiquido').value = valorLiquido.toFixed(2);
 
     const infoDiv = document.getElementById('infoFinanceira');
     const resumoTxt = document.getElementById('resumoValores');
@@ -105,6 +123,7 @@ function abrirModalEdicao(btn) {
         infoDiv.style.display = 'block';
     }
 
+    atualizarVisibilidadeItensVenda();
     calcularTotalVenda();
     document.getElementById('modalNovaVenda').style.display = 'flex';
 }
@@ -170,10 +189,11 @@ function fecharModalStatus() { document.getElementById('modalStatus').style.disp
 
 function abrirModalAdicionarItens() {
     const container = document.getElementById('tbodyModalItensVenda');
-    container.innerHTML = '<div style="text-align: center; padding: 20px;">Selecione uma categoria para carregar os produtos.</div>';
+    container.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando produtos...</div>';
     document.getElementById('countSelecionadosVenda').innerText = '0';
     document.getElementById('subtotalModalVenda').innerText = 'R$ 0,00';
     document.getElementById('modalAdicionarItensVenda').style.display = 'flex';
+    carregarProdutosVenda();
 }
 
 function fecharModalAdicionarItens() { document.getElementById('modalAdicionarItensVenda').style.display = 'none'; }
@@ -183,7 +203,7 @@ function carregarProdutosVenda() {
 
     container.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando produtos...</div>';
 
-    fetch('/produtos/json')
+    fetch('/estoque/todos-disponiveis')
         .then(res => res.json())
         .then(data => {
             container.innerHTML = '';
@@ -192,20 +212,32 @@ function carregarProdutosVenda() {
                 return;
             }
             data.forEach(produto => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="text-center">
-                        <input type="checkbox" class="check-item-venda" onchange="calcularResumoModalVenda()" 
-                            data-id="${produto.id}" data-nome="${produto.nome}" data-preco="${produto.preco}">
-                    </td>
-                    <td>
-                        <div class="font-600">${produto.nome}</div>
-                        <div class="small-text text-muted">REF: ${produto.id}</div>
-                    </td>
-                    <td><input type="text" class="input-modal-erp preco-modal-venda" value="${produto.preco.toFixed(2)}" oninput="calcularResumoModalVenda()"></td>
-                    <td><input type="number" class="input-modal-erp qtd-modal-venda" value="1" min="1" oninput="calcularResumoModalVenda()"></td>
+                const card = document.createElement('div');
+                card.className = 'checkbox-item-card';
+                card.innerHTML = `
+                    <input type="checkbox" class="check-item-venda" onchange="calcularResumoModalVenda(); toggleCardSelection(this)" 
+                        data-id="${produto.id}" data-nome="${produto.nome}" data-preco="${produto.preco}">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; font-size: 0.9rem; color: #334155;">${produto.nome}</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">REF: ${produto.id}</div>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <input type="text" class="input-modal-erp preco-modal-venda" value="${produto.preco.toFixed(2)}" oninput="calcularResumoModalVenda()" 
+                                style="width: 80px; padding: 4px 8px; font-size: 0.85rem;" placeholder="Preço">
+                            <input type="number" class="input-modal-erp qtd-modal-venda" value="1" min="1" oninput="calcularResumoModalVenda()" 
+                                style="width: 60px; padding: 4px 8px; font-size: 0.85rem;" placeholder="Qtd">
+                        </div>
+                    </div>
                 `;
-                container.appendChild(tr);
+                card.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        const checkbox = card.querySelector('.check-item-venda');
+                        checkbox.checked = !checkbox.checked;
+                        calcularResumoModalVenda();
+                        toggleCardSelection(checkbox);
+                        calcularTotalVenda();
+                    }
+                });
+                container.appendChild(card);
             });
             calcularResumoModalVenda();
         })
@@ -214,13 +246,22 @@ function carregarProdutosVenda() {
         });
 }
 
+function toggleCardSelection(checkbox) {
+    const card = checkbox.closest('.checkbox-item-card');
+    if (checkbox.checked) {
+        card.classList.add('selected');
+    } else {
+        card.classList.remove('selected');
+    }
+}
+
 function calcularResumoModalVenda() {
     const checks = document.querySelectorAll('.check-item-venda:checked');
     let subtotal = 0;
     checks.forEach(check => {
-        const tr = check.closest('tr');
-        const preco = parseFloat(tr.querySelector('.preco-modal-venda').value.replace(',', '.')) || 0;
-        const qtd = parseFloat(tr.querySelector('.qtd-modal-venda').value) || 0;
+        const card = check.closest('.checkbox-item-card');
+        const preco = parseFloat(card.querySelector('.preco-modal-venda').value.replace(',', '.')) || 0;
+        const qtd = parseFloat(card.querySelector('.qtd-modal-venda').value) || 0;
         subtotal += (preco * qtd);
     });
     const countEl = document.getElementById('countSelecionadosVenda');
@@ -231,13 +272,14 @@ function calcularResumoModalVenda() {
 
 function adicionarItensSelecionados() {
     document.querySelectorAll('.check-item-venda:checked').forEach(check => {
-        const tr = check.closest('tr');
+        const card = check.closest('.checkbox-item-card');
         const id = check.getAttribute('data-id');
         const nome = check.getAttribute('data-nome');
-        const preco = parseFloat(tr.querySelector('.preco-modal-venda').value.replace(',', '.')) || 0;
-        const qtd = parseFloat(tr.querySelector('.qtd-modal-venda').value) || 0;
+        const preco = parseFloat(card.querySelector('.preco-modal-venda').value.replace(',', '.')) || 0;
+        const qtd = parseFloat(card.querySelector('.qtd-modal-venda').value) || 0;
         inserirLinhaItensVenda(id, nome, qtd, preco, (preco * qtd));
     });
+    calcularTotalVenda();
     fecharModalAdicionarItens();
 }
 
@@ -245,6 +287,7 @@ function inserirLinhaItensVenda(id, nome, qtd, preco, total) {
     const container = document.getElementById('listaItensVenda');
     const itemDiv = document.createElement('div');
     itemDiv.className = 'item-venda-item';
+    itemDiv.dataset.id = id;
     itemDiv.innerHTML = `
         <div class="item-venda-info">
             <input type="text" placeholder="Nome do Produto" value="${nome}" 
@@ -252,12 +295,12 @@ function inserirLinhaItensVenda(id, nome, qtd, preco, total) {
                    style="width: 200px; margin-bottom: 5px;">
             <div style="display: flex; gap: 10px; align-items: center;">
                 <input type="number" placeholder="Qtd" value="${qtd}" min="1"
-                       onchange="atualizarItemVenda(${id}, 'quantidade', this.value)"
+                       oninput="atualizarItemVenda(${id}, 'quantidade', this.value)"
                        style="width: 60px;">
                 <input type="number" placeholder="Preço (R$)" value="${preco}" step="0.01"
-                       onchange="atualizarItemVenda(${id}, 'preco', this.value)"
+                       oninput="atualizarItemVenda(${id}, 'preco', this.value)"
                        style="width: 100px;">
-                <button type="button" class="btn-remove" onclick="removerItemVenda(${id})">
+                <button type="button" class="close-btn" onclick="removerItemVenda(${id})">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -267,5 +310,45 @@ function inserirLinhaItensVenda(id, nome, qtd, preco, total) {
         </div>
     `;
     container.appendChild(itemDiv);
+    atualizarVisibilidadeItensVenda();
+    calcularTotalVenda();
+}
+
+function atualizarVisibilidadeItensVenda() {
+    const container = document.getElementById('listaItensVenda');
+    const itens = container.querySelectorAll('.item-venda-item');
+    
+    if (itens.length > 0) {
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+    }
+}
+
+function removerItemVenda(id) {
+    const container = document.getElementById('listaItensVenda');
+    const itemDiv = container.querySelector(`.item-venda-item[data-id="${id}"]`);
+    if (itemDiv) {
+        itemDiv.remove();
+        atualizarVisibilidadeItensVenda();
+        calcularTotalVenda();
+    }
+}
+
+function atualizarItemVenda(id, campo, valor) {
+    const itemDiv = document.querySelector(`.item-venda-item[data-id="${id}"]`);
+    if (!itemDiv) return;
+    
+    if (campo === 'nome') {
+        const inputNome = itemDiv.querySelector('input[placeholder="Nome do Produto"]');
+        if (inputNome) inputNome.value = valor;
+    } else if (campo === 'quantidade') {
+        const inputQtd = itemDiv.querySelector('input[placeholder="Qtd"]');
+        if (inputQtd) inputQtd.value = valor;
+    } else if (campo === 'preco') {
+        const inputPreco = itemDiv.querySelector('input[placeholder="Preço (R$)"]');
+        if (inputPreco) inputPreco.value = valor;
+    }
+    
     calcularTotalVenda();
 }

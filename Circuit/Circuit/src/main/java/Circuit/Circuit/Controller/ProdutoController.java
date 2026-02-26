@@ -101,7 +101,8 @@ public class ProdutoController {
                 .map(produto -> Map.<String, Object>of(
                         "id", produto.getId(),
                         "nome", produto.getNome(),
-                        "quantidade", produto.getQuantidade()
+                        "quantidade", produto.getQuantidade(),
+                        "preco", produto.getPrecoVenda()
                 ))
                 .collect(Collectors.toList());
     }
