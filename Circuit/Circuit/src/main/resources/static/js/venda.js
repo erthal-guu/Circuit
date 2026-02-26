@@ -1,4 +1,4 @@
-let elValorBruto, elValorLiquido, elPorcentagemHidden, elMotivoHidden, formVenda;
+    let elValorBruto, elValorLiquido, elPorcentagemHidden, elMotivoHidden, formVenda;
 let listaItens = [];
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -349,6 +349,6 @@ function atualizarItemVenda(id, campo, valor) {
         const inputPreco = itemDiv.querySelector('input[placeholder="Preço (R$)"]');
         if (inputPreco) inputPreco.value = valor;
     }
-    
+
     calcularTotalVenda();
 }

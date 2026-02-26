@@ -27,6 +27,9 @@ public class FuncionarioService {
     public List<Funcionario> ListarFuncionariosInativos() {
         return funcionarioRepository.findByAtivoFalseOrderById();
     }
+    public List<Funcionario> listarApenasVendedores(){
+        return funcionarioRepository.findByAtivoAndCargoOrderById(true, Cargo.VENDEDOR);
+    }
     public List<Funcionario> listarApenasTecnicos() {
         return funcionarioRepository.findByAtivoAndCargoOrderById(true, Cargo.TECNICO);
     }
@@ -60,5 +63,7 @@ public class FuncionarioService {
         funcionario.setAtivo(true);
         return funcionarioRepository.save(funcionario);
     }
+
+
 
 }

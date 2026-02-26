@@ -79,9 +79,9 @@
                             <td th:text="${venda.itens?.size() ?: 0}"></td>
                             <td th:text="${venda.funcionario?.nome}"></td>
                             <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
-                            <td th:text="'R$ ' + #numbers.formatDecimal(venda.valorTotal, 1, 'POINT', 2, 'COMMA')"></td>
+                            <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
                             <td th:text="${venda.porcentagemDesconto > 0 ? '-' + venda.porcentagemDesconto + '%' : 'R$ 0,00'}"></td>
-                            <td th:text="'R$ ' + #numbers.formatDecimal(venda.valorLiquido, 1, 'POINT', 2, 'COMMA')"></td>
+                            <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorLiquido, 1, 2)}"></td>
                             <td>
                                 <div class="action-buttons">
                                     <button class="btn-action btn-edit" type="button"
@@ -148,9 +148,9 @@
                             <td th:text="${venda.itens?.size() ?: 0}"></td>
                             <td th:text="${venda.funcionario?.nome}"></td>
                             <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
-                            <td th:text="'R$ ' + #numbers.formatDecimal(venda.valorTotal, 1, 'POINT', 2, 'COMMA')"></td>
+                            <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
                             <td th:text="${venda.porcentagemDesconto > 0 ? '-' + venda.porcentagemDesconto + '%' : 'R$ 0,00'}"></td>
-                            <td th:text="'R$ ' + #numbers.formatDecimal(venda.valorLiquido, 1, 'POINT', 2, 'COMMA')"></td>
+                            <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorLiquido, 1, 2)}"></td>
                             <td>
                                 <div class="action-buttons">
                                     <button class="btn-action btn-edit" type="button"
@@ -214,9 +214,9 @@
                             <td th:text="${venda.itens?.size() ?: 0}"></td>
                             <td th:text="${venda.funcionario?.nome}"></td>
                             <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
-                            <td th:text="'R$ ' + #numbers.formatDecimal(venda.valorTotal, 1, 'POINT', 2, 'COMMA')"></td>
+                            <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
                             <td th:text="${venda.porcentagemDesconto > 0 ? '-' + venda.porcentagemDesconto + '%' : 'R$ 0,00'}"></td>
-                            <td th:text="'R$ ' + #numbers.formatDecimal(venda.valorLiquido, 1, 'POINT', 2, 'COMMA')"></td>
+                            <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorLiquido, 1, 2)}"></td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(listaVendasConcluidas)}"><td colspan="9" style="text-align: center; padding: 20px;">Nenhuma venda concluída.</td></tr>
                         </tbody>
@@ -224,7 +224,8 @@
                 </div>
             </div>
 
-        </div> </main>
+        </div>
+        </div>
     </div>
 
     <div class="modal" id="modalNovaVenda">
@@ -247,7 +248,7 @@
                             <label>Cliente</label>
                             <select id="vendaCliente" name="cliente.id" class="form-control" required>
                                 <option value="" disabled selected>Selecione o Cliente...</option>
-                                <option th:each="cli : ${listaClientes}" th:value="${cli.id}" th:text="${cli.nome}"></option>
+                                <option th:each="cli : ${listaClietes}" th:value="${cli.id}" th:text="${cli.nome}"></option>
                             </select>
                         </div>
 
@@ -270,7 +271,7 @@
                                 Adicionar produtos
                             </button>
                         </div>
-
+                        
                         <div class="financial-summary col-12">
                             <div class="fin-item">
                                 <label><span>Valor Bruto (R$)</span></label>
@@ -292,9 +293,6 @@
                             </div>
                         </div>
 
-                        <div id="infoFinanceira" style="display: none; font-size: 0.8em; color: #475569; margin-top: 4px; padding: 4px; background: #f8fafc; border-radius: 4px; border: 1px dashed #cbd5e1;">
-                            <span id="resumoValores"></span>
-                        </div>
                     </div>
                 </div>
 
@@ -409,5 +407,6 @@
     </div>
 
     <script th:src="@{/js/venda.js}"></script>
+    </main>
 </body>
 </html>
