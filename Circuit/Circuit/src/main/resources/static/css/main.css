@@ -739,6 +739,7 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+/* Tab Container para Vendas */
 .tab-container {
     background: #f1f3f5;
     padding: 4px;
@@ -747,6 +748,7 @@ body {
     gap: 4px;
 }
 
+/* Tab Buttons para Vendas */
 .tab-btn {
     border: none;
     padding: 8px 14px;
@@ -759,6 +761,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 .tab-btn.active {
     background: white;
     color: var(--primary-color);
@@ -766,6 +769,7 @@ body {
     transform: translateY(-2px);
 }
 
+/* Tab Content para Vendas */
 .tab-content {
     display: none;
     opacity: 0;
@@ -777,6 +781,35 @@ body {
     display: block;
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Tab Buttons Vincular - Modal */
+.modal-body .tab-btn.vincular {
+    display: flex;
+    justify-content: center;
+}
+
+.tab-btn-vincular {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--text-muted);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tab-btn-vincular.active {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Tab Content Vincular - Modal */
+.tab-content {
+    display: none;
 }
 
 .modal {
@@ -2290,7 +2323,6 @@ body {
     border-radius: 50px;
     gap: 5px;
 }
-
 .tab-pill-container input[type="radio"] {
     display: none;
 }
@@ -2298,7 +2330,6 @@ body {
 .tab-pill-container label {
     padding: 8px 20px;
     border-radius: 50px;
-    color: #cbd5e1;
     cursor: pointer;
     font-weight: 600;
     font-size: 0.9rem;
@@ -2310,13 +2341,22 @@ body {
 
 .tab-pill-container input[type="radio"]:checked + label {
     background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-    color: #fff;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+}
+
+.tab-pill-container label {
+    color: gray !important;
+}
+
+.tab-pill-container input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+    color: #fff !important;
     box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
 }
 
 .tab-pill-container label:hover {
     color: #fff;
-
 }
 .btn-delete-itens {
     padding: 7px;

@@ -1,9 +1,9 @@
-    let elValorBruto, elValorLiquido, elPorcentagemHidden, elMotivoHidden, formVenda;
+    let elValorBruto, elValorTotal, elPorcentagemHidden, elMotivoHidden, formVenda;
 let listaItens = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     elValorBruto = document.getElementById('valorBruto');
-    elValorLiquido = document.getElementById('valorLiquido');
+    elValorTotal = document.getElementById('valorTotal');
     elPorcentagemHidden = document.getElementById('porcentagemDesconto');
     elMotivoHidden = document.getElementById('motivoDesconto');
     formVenda = document.getElementById('formVenda');
@@ -11,13 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     configurarPesquisaLocal('searchTodas', 'tabelaTodas');
     configurarPesquisaLocal('searchPendentes', 'tabelaPendentes');
     configurarPesquisaLocal('searchConcluidas', 'tabelaConcluidas');
-
-    document.querySelectorAll('.auto-close').forEach(alerta => {
-        setTimeout(() => {
-            alerta.style.opacity = '0';
-            setTimeout(() => { alerta.remove(); }, 500);
-        }, 3000);
-    });
 });
 
 function switchTab(tabName, event) {
@@ -37,7 +30,7 @@ function switchTab(tabName, event) {
 }
 
 function calcularTotalVenda() {
-    if (!elValorBruto || !elValorLiquido || !elPorcentagemHidden) return;
+    if (!elValorBruto || !elValorTotal || !elPorcentagemHidden) return;
     const container = document.getElementById('listaItensVenda');
     if (!container) return;
     const itens = container.querySelectorAll('.item-venda-item');
@@ -59,9 +52,9 @@ function calcularTotalVenda() {
 
     const porcentagem = parseFloat(elPorcentagemHidden.value) || 0;
     const valorDesconto = valorBruto * (porcentagem / 100);
-    const valorLiquido = valorBruto - valorDesconto;
+    const valorTotal = valorBruto - valorDesconto;
 
-    elValorLiquido.value = Math.max(0, valorLiquido).toFixed(2);
+    elValorTotal.value = Math.max(0, valorTotal).toFixed(2);
 
     const infoDiv = document.getElementById('infoFinanceira');
     const resumoTxt = document.getElementById('resumoValores');
@@ -76,6 +69,11 @@ function calcularTotalVenda() {
     }
 }
 
+function gerarCodigoVenda() {
+    const random = Math.floor(Math.random() * 65535).toString(16).toUpperCase();
+    return `VD-${random.padStart(4, '0')}`;
+}
+
 function abrirModalNovaVenda() {
     formVenda.reset();
     formVenda.action = "/vendas/cadastrar";
@@ -88,13 +86,32 @@ function abrirModalNovaVenda() {
     const statusInput = document.querySelector('input[name="status"]');
     if (statusInput) statusInput.value = 'PENDENTE';
 
+    const dataVendaInput = document.getElementById('dataVenda');
+    if (dataVendaInput) {
+        const hoje = new Date();
+        const dataFormatada = hoje.toISOString().split('T')[0];
+        dataVendaInput.value = dataFormatada;
+    }
+    const codigoInput = document.getElementById('codigo');
+    if (codigoInput) {
+        codigoInput.value = gerarCodigoVenda();
+    }
+
     document.getElementById('modalTitle').innerText = 'Nova Venda';
     atualizarVisibilidadeItensVenda();
     calcularTotalVenda();
 
     const condicaoPagamentoContainer = document.getElementById('condicaoPagamentoContainer');
     const parcelasContainer = document.getElementById('parcelasContainer');
-    if (condicaoPagamentoContainer) condicaoPagamentoContainer.style.display = 'none';
+    if (condicaoPagamentoContainer) {
+        condicaoPagamentoContainer.style.display = 'none';
+        condicaoPagamentoContainer.style.opacity = '0';
+        condicaoPagamentoContainer.style.transform = 'translateY(-20px)';
+        const condicaoAVistaRadio = document.getElementById('condicaoAVista');
+        if (condicaoAVistaRadio) {
+            condicaoAVistaRadio.checked = true;
+        }
+    }
     if (parcelasContainer) parcelasContainer.style.display = 'none';
 
     document.getElementById('modalNovaVenda').style.display = 'flex';
@@ -108,7 +125,7 @@ function abrirModalEdicao(btn) {
     const valorBruto = parseFloat(btn.getAttribute('data-valor-bruto')) || 0;
     const porcentagem = parseFloat(btn.getAttribute('data-porcentagem')) || 0;
     const motivo = btn.getAttribute('data-motivo') || '';
-    const valorLiquido = parseFloat(btn.getAttribute('data-valor-liquido')) || 0;
+    const valorTotal = parseFloat(btn.getAttribute('data-valor-liquido')) || 0;
 
     document.getElementById('vendaId').value = id;
     document.getElementById('valorBruto').value = valorBruto.toFixed(2);
@@ -119,13 +136,28 @@ function abrirModalEdicao(btn) {
     if (statusInput) statusInput.value = 'PENDENTE';
 
     document.getElementById('valorBrutoInput').value = valorBruto.toFixed(2);
-    document.getElementById('valorLiquido').value = valorLiquido.toFixed(2);
+    document.getElementById('valorTotal').value = valorTotal.toFixed(2);
+
+    const dataVendaInput = document.getElementById('dataVenda');
+    if (dataVendaInput) {
+        const hoje = new Date();
+        const dataFormatada = hoje.toISOString().split('T')[0];
+        dataVendaInput.value = dataFormatada;
+    }
+    const codigoInput = document.getElementById('codigo');
+    if (codigoInput) {
+        codigoInput.value = gerarCodigoVenda();
+    }
 
     const infoDiv = document.getElementById('infoFinanceira');
     const resumoTxt = document.getElementById('resumoValores');
     if (infoDiv && resumoTxt) {
-        resumoTxt.innerText = `Valor Total salvo: R$ ${valorLiquido.toFixed(2)}`;
+        resumoTxt.innerText = `Valor Total salvo: R$ ${valorTotal.toFixed(2)}`;
         infoDiv.style.display = 'block';
+    }
+    const condicaoAVistaRadio = document.getElementById('condicaoAVista');
+    if (condicaoAVistaRadio) {
+        condicaoAVistaRadio.checked = true;
     }
 
     atualizarVisibilidadeItensVenda();
@@ -291,6 +323,7 @@ function adicionarItensSelecionados() {
         inserirLinhaItensVenda(id, nome, qtd, preco, (preco * qtd));
     });
     calcularTotalVenda();
+    atualizarCamposItens();
     fecharModalAdicionarItens();
 }
 
@@ -301,7 +334,7 @@ function inserirLinhaItensVenda(id, nome, qtd, preco, total) {
     itemDiv.dataset.id = id;
     itemDiv.innerHTML = `
         <div class="item-venda-info">
-            <input type="text" placeholder="Nome do Produto" value="${nome}" 
+            <input type="text" placeholder="Nome do Produto" value="${nome}"
                    onchange="atualizarItemVenda(${id}, 'nome', this.value)"
                    style="width: 200px; margin-bottom: 5px;">
             <div style="display: flex; gap: 10px; align-items: center;">
@@ -323,6 +356,31 @@ function inserirLinhaItensVenda(id, nome, qtd, preco, total) {
     container.appendChild(itemDiv);
     atualizarVisibilidadeItensVenda();
     calcularTotalVenda();
+    atualizarCamposItens();
+}
+
+function atualizarCamposItens() {
+    const container = document.getElementById('listaItensVenda');
+    const itens = container.querySelectorAll('.item-venda-item');
+    const itensIdInput = document.getElementById('itensId');
+    const quantidadeItensInput = document.getElementById('quantidadeItens');
+    
+    if (!itensIdInput || !quantidadeItensInput) return;
+    
+    const itensId = [];
+    const quantidadeItens = [];
+    
+    itens.forEach(item => {
+        const id = item.dataset.id;
+        const qtdInput = item.querySelector('input[placeholder="Qtd"]');
+        if (id && qtdInput) {
+            itensId.push(id);
+            quantidadeItens.push(qtdInput.value);
+        }
+    });
+    
+    itensIdInput.value = itensId.join(',');
+    quantidadeItensInput.value = quantidadeItens.join(',');
 }
 
 function atualizarVisibilidadeItensVenda() {
@@ -343,6 +401,7 @@ function removerItemVenda(id) {
         itemDiv.remove();
         atualizarVisibilidadeItensVenda();
         calcularTotalVenda();
+        atualizarCamposItens();
     }
 }
 
@@ -375,11 +434,16 @@ function handleFormaPagamentoChange() {
 
     if (selectedValue === 'CARTAO_CREDITO') {
         condicaoPagamentoContainer.style.display = 'block';
+        condicaoPagamentoContainer.style.opacity = '1';
+        condicaoPagamentoContainer.style.transform = 'translateY(0)';
         setTimeout(() => {
             condicaoPagamentoContainer.classList.add('modal-animate-show');
         }, 10);
         handleCondicaoPagamentoChange();
     } else {
+        condicaoPagamentoContainer.style.display = 'none';
+        condicaoPagamentoContainer.style.opacity = '0';
+        condicaoPagamentoContainer.style.transform = 'translateY(-20px)';
         condicaoPagamentoContainer.classList.remove('modal-animate-show');
         condicaoPagamentoContainer.classList.add('modal-animate');
     }
@@ -397,17 +461,6 @@ function handleCondicaoPagamentoChange() {
         parcelasContainer.style.display = 'block';
     } else {
         parcelasContainer.style.display = 'none';
-    }
-
-    if (condicaoPagamento.value === 'AVISTA') {
-        labelAVista.style.color = '#fff';
-        labelParcelado.style.color = '#64748b';
-    } else if (condicaoPagamento.value === 'PARCELADO') {
-        labelParcelado.style.color = '#fff';
-        labelAVista.style.color = '#64748b';
-    } else {
-        labelAVista.style.color = '#64748b';
-        labelParcelado.style.color = '#64748b';
     }
 }
 

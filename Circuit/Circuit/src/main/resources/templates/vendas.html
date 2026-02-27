@@ -71,15 +71,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="venda : ${listaVendas}">
+                            <tr th:each="venda : ${listaTodasVendas}">
                                 <td><strong th:text="'#' + ${venda.id}"></strong></td>
                                 <td th:text="${venda.cliente?.nome}"></td>
                                 <td th:text="${venda.itens?.size() ?: 0}"></td>
                                 <td th:text="${venda.funcionario?.nome}"></td>
                                 <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
                                 <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
-                                <td th:text="${venda.porcentagemDesconto > 0 ? '-' + venda.porcentagemDesconto + '%' : 'R$ 0,00'}"></td>
-                                <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorLiquido, 1, 2)}"></td>
                                 <td>
                                     <div class="action-buttons">
                                         <button class="btn-action btn-edit" type="button"
@@ -88,7 +86,7 @@
                                                 th:data-valor-bruto="${venda.valorTotal}"
                                                 th:data-porcentagem="${venda.porcentagemDesconto}"
                                                 th:data-motivo="${venda.motivoDesconto}"
-                                                th:data-valor-liquido="${venda.valorLiquido}"
+                                                th:data-valor-liquido="${venda.valorTotal}"
                                                 onclick="abrirModalEdicao(this)">
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -108,7 +106,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(listaVendas)}">
+                            <tr th:if="${#lists.isEmpty(listaTodasVendas)}">
                                 <td colspan="9" style="text-align: center; padding: 20px;">Nenhuma venda encontrada.</td>
                             </tr>
                             </tbody>
@@ -146,7 +144,7 @@
                                 <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
                                 <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
                                 <td th:text="${venda.porcentagemDesconto > 0 ? '-' + venda.porcentagemDesconto + '%' : 'R$ 0,00'}"></td>
-                                <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorLiquido, 1, 2)}"></td>
+                                <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
                                 <td>
                                     <div class="action-buttons">
                                         <button class="btn-action btn-edit" type="button"
@@ -234,8 +232,12 @@
                     <input type="hidden" id="vendaId" name="id">
                     <input type="hidden" name="status" value="PENDENTE">
                     <input type="hidden" id="valorBruto" value="0">
-                    <input type="hidden" id="porcentagemDesconto" value="0">
-                    <input type="hidden" id="motivoDesconto">
+                    <input type="hidden" id="porcentagemDesconto" name="porcentagemDesconto" value="0">
+                    <input type="hidden" id="motivoDesconto" name="motivoDesconto">
+                    <input type="hidden" id="dataVenda" name="dataVenda">
+                    <input type="hidden" id="codigo" name="codigo">
+                    <input type="hidden" id="itensId" name="itensId">
+                    <input type="hidden" id="quantidadeItens" name="quantidadeItens">
 
                     <div class="modal-body">
                         <div class="form-grid">
@@ -249,7 +251,7 @@
 
                             <div class="form-group col-12">
                                 <label>Responsável</label>
-                                <select id="vendaFuncionario" name="funcionario.id" class="form-control" required>
+                                <select id="vendaFuncionario" name="funcionarioId" class="form-control" required>
                                     <option value="">Selecione o Responsável...</option>
                                     <option th:each="func : ${listaFuncionarios}" th:value="${func.id}" th:text="${func.nome}"></option>
                                 </select>
@@ -288,7 +290,7 @@
 
                             <div class="form-group col-12" id="parcelasContainer" style="display: none;">
                                 <label>Número de Parcelas</label>
-                                <select id="parcelas" name="parcelas" class="form-control">
+                                <select id="parcelas" name="numeroParcelas" class="form-control">
                                     <option value="1">1x</option>
                                     <option value="2">2x</option>
                                     <option value="3">3x</option>
@@ -319,13 +321,13 @@
                             <div class="financial-summary col-12">
                                 <div class="fin-item">
                                     <label><span>Valor Bruto (R$)</span></label>
-                                    <input type="number" id="valorBrutoInput" class="form-control" step="0.01" value="0.00" readonly>
+                                    <input type="number" id="valorBrutoInput" name="valorBruto" class="form-control" step="0.01" value="0.00" readonly>
                                 </div>
 
                                 <div class="fin-item total">
                                     <label><span>Valor Total (R$)</span></label>
                                     <div style="display: flex; gap: 8px; align-items: center;">
-                                        <input type="number" id="valorLiquido" class="form-control" step="0.01" readonly>
+                                        <input type="number" id="valorTotal" name="valorTotal" class="form-control" step="0.01" readonly>
                                         <button type="button" class="btn-discount" onclick="abrirModalDesconto()" title="Aplicar Desconto">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <line x1="19" y1="5" x2="5" y2="19"></line>
@@ -357,7 +359,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Porcentagem</label>
-                        <input type="text" id="inputPorcentagem" class="form-control" placeholder="Ex: 10%" required onfocus="removerPorcentagem(this)" onchange="adicionarPorcentagem(this)" maxlength="4">
+                        <input type="text" id="inputPorcentagem" name="porcentagemDesconto" class="form-control" placeholder="Ex: 10%" required onfocus="removerPorcentagem(this)" onchange="adicionarPorcentagem(this)" maxlength="4">
                     </div>
                     <div class="form-group" style="margin-top: 15px;">
                         <label>Motivo do Desconto</label>

@@ -38,9 +38,13 @@ public class VendaController {
     public String abrirVendas(Model model){
         List<Cliente> clientes = clienteService.listarAtivos();
         List<Funcionario> funcionarios = funcionarioService.listarApenasVendedores();
+        List<Venda> vendas = vendaService.listarTodasVendas();
+        List<Venda> vendasPendentes = vendaService.listarVendasPendentes();
 
         model.addAttribute("listaFuncionarios",funcionarios);
         model.addAttribute("listaClietes",clientes);
+        model.addAttribute("listaTodasVendas", vendas);
+        model.addAttribute("listaVendasPendentes", vendasPendentes);
         model.addAttribute("venda", new Venda());
         return "vendas";
     }
@@ -49,15 +53,22 @@ public class VendaController {
     public String salvar(@RequestParam(required = false) Long id,
                          @RequestParam Long clienteId,
                          @RequestParam Long funcionarioId,
+                         @RequestParam BigDecimal valorBruto,
                          @RequestParam BigDecimal valorTotal,
+                         @RequestParam BigDecimal porcentagemDesconto,
                          @RequestParam(required = false) String motivoDesconto,
                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVenda,
+                         @RequestParam String codigo,
+                         @RequestParam StatusVenda status,
+                         @RequestParam(required = false) FormaPagamento formaPagamento,
+                         @RequestParam(required = false) CondicaoPagamento condicaoPagamento,
+                         @RequestParam(required = false) Integer numeroParcelas,
                          @RequestParam List<Long> itensId,
                          @RequestParam List<Integer> quantidadeItens,
                          RedirectAttributes redirectAttributes) {
         try {
-            vendaService.salvarVenda(id, clienteId, funcionarioId, valorTotal,
-                    motivoDesconto, dataVenda, itensId, quantidadeItens);
+            vendaService.salvarVenda(id, clienteId, funcionarioId, valorTotal,valorBruto,porcentagemDesconto,
+                    motivoDesconto, dataVenda, codigo, status, formaPagamento, condicaoPagamento, numeroParcelas, itensId, quantidadeItens);
 
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Venda realizada com sucesso!");
         } catch (Exception e) {
