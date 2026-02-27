@@ -1,9 +1,10 @@
 package Circuit.Circuit.Repository;
 
-import Circuit.Circuit.Model.ItemPedido;
+import Circuit.Circuit.Model.ItemVenda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ItemPedidoRepository extends JpaRepository<ItemPedido,Long> {
+public interface ItemVendaRepository extends JpaRepository<ItemVenda,Long> {
+
 }

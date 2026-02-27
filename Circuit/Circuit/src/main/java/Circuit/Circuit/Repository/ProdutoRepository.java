@@ -16,4 +16,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     long countItensCriticos();
     @Query("SELECT SUM(p.precoVenda) FROM Produto p")
     BigDecimal sumPrecoVenda();
+
+    Produto findByid(Long id);
 }

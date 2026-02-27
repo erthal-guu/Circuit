@@ -2,15 +2,19 @@ package Circuit.Circuit.Model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "vendas")
+@Data
 public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +50,8 @@ public class Venda {
 
     @Column(name = "data_venda")
     private LocalDate dataVenda;
+
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemVenda> itens = new ArrayList<>();
 
 }

@@ -81,7 +81,7 @@ function abrirModalNovaVenda() {
     formVenda.action = "/vendas/cadastrar";
     document.getElementById('vendaId').value = '';
     document.getElementById('valorBruto').value = '0';
-    document.getElementById('porcentagemDesconto').value = '0';
+    document.getElementById('porcentagemDesconto').value = '';
     document.getElementById('motivoDesconto').value = '';
     document.getElementById('listaItensVenda').innerHTML = '';
 
@@ -91,6 +91,11 @@ function abrirModalNovaVenda() {
     document.getElementById('modalTitle').innerText = 'Nova Venda';
     atualizarVisibilidadeItensVenda();
     calcularTotalVenda();
+
+    const condicaoPagamentoContainer = document.getElementById('condicaoPagamentoContainer');
+    const parcelasContainer = document.getElementById('parcelasContainer');
+    if (condicaoPagamentoContainer) condicaoPagamentoContainer.style.display = 'none';
+    if (parcelasContainer) parcelasContainer.style.display = 'none';
 
     document.getElementById('modalNovaVenda').style.display = 'flex';
 }
@@ -130,14 +135,20 @@ function abrirModalEdicao(btn) {
 
 function abrirModalDesconto() {
     document.getElementById('modalDesconto').style.display = 'flex';
-    document.getElementById('inputPorcentagem').value = elPorcentagemHidden.value;
+    const valorPorcentagem = elPorcentagemHidden.value;
+    if (valorPorcentagem && valorPorcentagem !== '0') {
+        document.getElementById('inputPorcentagem').value = valorPorcentagem;
+    } else {
+        document.getElementById('inputPorcentagem').value = '';
+    }
     document.getElementById('inputMotivo').value = elMotivoHidden.value;
 }
 
 function confirmarDesconto() {
     const p = document.getElementById('inputPorcentagem').value;
     const m = document.getElementById('inputMotivo').value;
-    elPorcentagemHidden.value = p || 0;
+    const porcentagemNumerica = p.replace('%', '') || 0;
+    elPorcentagemHidden.value = porcentagemNumerica;
     elMotivoHidden.value = m || '';
     calcularTotalVenda();
     fecharModalDesconto();
@@ -351,4 +362,72 @@ function atualizarItemVenda(id, campo, valor) {
     }
 
     calcularTotalVenda();
+}
+
+function handleFormaPagamentoChange() {
+    const formaPagamento = document.getElementById('formaPagamento');
+    const condicaoPagamentoContainer = document.getElementById('condicaoPagamentoContainer');
+    const parcelasContainer = document.getElementById('parcelasContainer');
+
+    if (!formaPagamento || !condicaoPagamentoContainer || !parcelasContainer) return;
+
+    const selectedValue = formaPagamento.value;
+
+    if (selectedValue === 'CARTAO_CREDITO') {
+        condicaoPagamentoContainer.style.display = 'block';
+        setTimeout(() => {
+            condicaoPagamentoContainer.classList.add('modal-animate-show');
+        }, 10);
+        handleCondicaoPagamentoChange();
+    } else {
+        condicaoPagamentoContainer.classList.remove('modal-animate-show');
+        condicaoPagamentoContainer.classList.add('modal-animate');
+    }
+}
+
+function handleCondicaoPagamentoChange() {
+    const condicaoPagamento = document.querySelector('input[name="condicaoPagamento"]:checked');
+    const parcelasContainer = document.getElementById('parcelasContainer');
+    const labelAVista = document.getElementById('labelCondicaoAVista');
+    const labelParcelado = document.getElementById('labelCondicaoParcelado');
+
+    if (!condicaoPagamento || !parcelasContainer || !labelAVista || !labelParcelado) return;
+
+    if (condicaoPagamento.value === 'PARCELADO') {
+        parcelasContainer.style.display = 'block';
+    } else {
+        parcelasContainer.style.display = 'none';
+    }
+
+    if (condicaoPagamento.value === 'AVISTA') {
+        labelAVista.style.color = '#fff';
+        labelParcelado.style.color = '#64748b';
+    } else if (condicaoPagamento.value === 'PARCELADO') {
+        labelParcelado.style.color = '#fff';
+        labelAVista.style.color = '#64748b';
+    } else {
+        labelAVista.style.color = '#64748b';
+        labelParcelado.style.color = '#64748b';
+    }
+}
+
+function removerPorcentagem(input) {
+    input.value = input.value.replace('%', '');
+}
+
+function adicionarPorcentagem(input) {
+    let valor = input.value.replace(/[^0-9]/g, '');
+    
+    if (valor === '') {
+        input.value = '';
+        return;
+    }
+    
+    if (parseInt(valor) > 100) {
+        valor = '100';
+    }
+    
+    const cursorPos = input.selectionStart;
+    input.value = valor + '%';
+    input.setSelectionRange(cursorPos, cursorPos);
 }
