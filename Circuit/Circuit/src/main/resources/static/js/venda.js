@@ -125,7 +125,7 @@ function abrirModalEdicao(btn) {
     const valorBruto = parseFloat(btn.getAttribute('data-valor-bruto')) || 0;
     const porcentagem = parseFloat(btn.getAttribute('data-porcentagem')) || 0;
     const motivo = btn.getAttribute('data-motivo') || '';
-    const valorTotal = parseFloat(btn.getAttribute('data-valor-liquido')) || 0;
+    const valorTotal = parseFloat(btn.getAttribute('data-valor-bruto')) || 0;
 
     document.getElementById('vendaId').value = id;
     document.getElementById('valorBruto').value = valorBruto.toFixed(2);

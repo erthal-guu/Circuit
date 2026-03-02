@@ -4,14 +4,13 @@ import Circuit.Circuit.Model.*;
 import Circuit.Circuit.Service.ClienteService;
 import Circuit.Circuit.Service.FuncionarioService;
 import Circuit.Circuit.Service.VendaService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,16 +34,19 @@ public class VendaController {
     private VendaService vendaService;
 
     @GetMapping
+    @Transactional
     public String abrirVendas(Model model){
         List<Cliente> clientes = clienteService.listarAtivos();
         List<Funcionario> funcionarios = funcionarioService.listarApenasVendedores();
         List<Venda> vendas = vendaService.listarTodasVendas();
         List<Venda> vendasPendentes = vendaService.listarVendasPendentes();
+        List<Venda> vendasConcluidas = vendaService.listarVendasConcluidas();
 
         model.addAttribute("listaFuncionarios",funcionarios);
-        model.addAttribute("listaClietes",clientes);
+        model.addAttribute("listaClientes",clientes);
         model.addAttribute("listaTodasVendas", vendas);
         model.addAttribute("listaVendasPendentes", vendasPendentes);
+        model.addAttribute("listaVendasConcluidas", vendasConcluidas);
         model.addAttribute("venda", new Venda());
         return "vendas";
     }
