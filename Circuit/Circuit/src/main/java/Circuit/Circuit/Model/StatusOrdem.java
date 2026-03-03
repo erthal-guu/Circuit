@@ -1,6 +1,6 @@
 package Circuit.Circuit.Model;
 
-public enum Status {
+public enum StatusOrdem {
     ABERTA("Aberta"),
     EM_ANALISE("Em análise"),
     AGUARDANDO_APROVACAO("Aguardando aprovação"),
@@ -11,7 +11,7 @@ public enum Status {
 
     private final String description;
 
-    Status(String description) {
+    StatusOrdem(String description) {
         this.description = description;
     }
 

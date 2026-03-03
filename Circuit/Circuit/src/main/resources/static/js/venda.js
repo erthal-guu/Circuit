@@ -35,7 +35,7 @@ function calcularTotalVenda() {
     if (!container) return;
     const itens = container.querySelectorAll('.item-venda-item');
     let valorBruto = 0;
-    
+
     itens.forEach(item => {
         const precoInput = item.querySelector('input[placeholder="Preço (R$)"]');
         const qtdInput = item.querySelector('input[placeholder="Qtd"]');
@@ -117,55 +117,181 @@ function abrirModalNovaVenda() {
     document.getElementById('modalNovaVenda').style.display = 'flex';
 }
 
-function abrirModalEdicao(btn) {
-    formVenda.action = "/vendas/editar";
-    document.getElementById('modalTitle').innerText = 'Editar Venda';
+    async function abrirModalEdicao(btn) {
+        formVenda.action = "/vendas/atualizar";
 
-    const id = btn.getAttribute('data-id');
-    const valorBruto = parseFloat(btn.getAttribute('data-valor-bruto')) || 0;
-    const porcentagem = parseFloat(btn.getAttribute('data-porcentagem')) || 0;
-    const motivo = btn.getAttribute('data-motivo') || '';
-    const valorTotal = parseFloat(btn.getAttribute('data-valor-bruto')) || 0;
+        const id = btn.getAttribute('data-id');
+        const clienteId = btn.getAttribute('data-cliente');
+        const funcionarioId = btn.getAttribute('data-funcionario');
+        const valorBrutoStr = btn.getAttribute('data-valor-bruto') || '0';
+        const valorTotalStr = btn.getAttribute('data-valor-total') || '0';
+        const porcentagemStr = btn.getAttribute('data-porcentagem') || '0';
+        const motivo = btn.getAttribute('data-motivo') || '';
+        const formaPagamento = btn.getAttribute('data-forma-pagamento') || 'AVISTA';
+        const condicaoPagamento = btn.getAttribute('data-condicao-pagamento') || 'AVISTA';
+        const numeroParcelas = parseInt(btn.getAttribute('data-numero-parcelas')) || 1;
+        const status = btn.getAttribute('data-status') || 'PENDENTE';
+        const dataVenda = btn.getAttribute('data-data-venda');
+        const codigo = btn.getAttribute('data-codigo');
+        const valorBruto = parseFloat(valorBrutoStr.replace(',', '.')) || 0;
+        const valorTotal = parseFloat(valorTotalStr.replace(',', '.')) || 0;
+        const porcentagem = parseFloat(porcentagemStr.replace(',', '.')) || 0;
 
-    document.getElementById('vendaId').value = id;
-    document.getElementById('valorBruto').value = valorBruto.toFixed(2);
-    document.getElementById('porcentagemDesconto').value = porcentagem;
-    document.getElementById('motivoDesconto').value = motivo;
+        document.getElementById('vendaId').value = id;
+        document.getElementById('valorBruto').value = valorBruto.toFixed(2);
+        document.getElementById('porcentagemDesconto').value = porcentagem;
+        document.getElementById('motivoDesconto').value = motivo;
+        document.getElementById('vendaCliente').value = clienteId;
+        document.getElementById('vendaFuncionario').value = funcionarioId;
 
-    const statusInput = document.querySelector('input[name="status"]');
-    if (statusInput) statusInput.value = 'PENDENTE';
+        const statusInput = document.querySelector('input[name="status"]');
+        if (statusInput) statusInput.value = status;
 
-    document.getElementById('valorBrutoInput').value = valorBruto.toFixed(2);
-    document.getElementById('valorTotal').value = valorTotal.toFixed(2);
+        document.getElementById('valorBrutoInput').value = valorBruto.toFixed(2);
+        document.getElementById('valorTotal').value = valorTotal.toFixed(2);
 
-    const dataVendaInput = document.getElementById('dataVenda');
-    if (dataVendaInput) {
-        const hoje = new Date();
-        const dataFormatada = hoje.toISOString().split('T')[0];
-        dataVendaInput.value = dataFormatada;
+        const dataVendaInput = document.getElementById('dataVenda');
+        if (dataVendaInput) dataVendaInput.value = dataVenda;
+
+        const codigoInput = document.getElementById('codigo');
+        if (codigoInput) codigoInput.value = codigo;
+
+        const infoDiv = document.getElementById('infoFinanceira');
+        const resumoTxt = document.getElementById('resumoValores');
+        if (infoDiv && resumoTxt) {
+            resumoTxt.innerText = `Valor Total salvo: R$ ${valorTotal.toFixed(2)}`;
+            infoDiv.style.display = 'block';
+        }
+
+        const formaPagamentoSelect = document.getElementById('formaPagamento');
+        if (formaPagamentoSelect) {
+            formaPagamentoSelect.value = formaPagamento;
+            handleFormaPagamentoChange();
+        }
+
+        const condicaoAVistaRadio = document.getElementById('condicaoAVista');
+        const condicaoParceladoRadio = document.getElementById('condicaoParcelado');
+        const parcelasContainer = document.getElementById('parcelasContainer');
+        const condicaoPagamentoContainer = document.getElementById('condicaoPagamentoContainer');
+
+        if (condicaoPagamentoContainer) {
+            condicaoPagamentoContainer.style.display = 'block';
+            condicaoPagamentoContainer.style.opacity = '1';
+            condicaoPagamentoContainer.style.transform = 'translateY(0)';
+        }
+
+        if (condicaoPagamento === 'AVISTA') {
+            if (condicaoAVistaRadio) condicaoAVistaRadio.checked = true;
+            if (condicaoParceladoRadio) condicaoParceladoRadio.checked = false;
+            if (parcelasContainer) parcelasContainer.style.display = 'none';
+        } else {
+            if (condicaoAVistaRadio) condicaoAVistaRadio.checked = false;
+            if (condicaoParceladoRadio) condicaoParceladoRadio.checked = true;
+            if (parcelasContainer) parcelasContainer.style.display = 'block';
+        }
+
+        if (parcelasContainer) {
+            const parcelasSelect = parcelasContainer.querySelector('select[name="numeroParcelas"]');
+            if (parcelasSelect) parcelasSelect.value = numeroParcelas;
+        }
+
+        const listaItens = document.getElementById('listaItensVenda');
+        if (listaItens) listaItens.innerHTML = '';
+
+        await carregarItensVendaExistente(id);
+        calcularTotalVenda();
+        document.getElementById('modalNovaVenda').style.display = 'flex';
     }
-    const codigoInput = document.getElementById('codigo');
-    if (codigoInput) {
-        codigoInput.value = gerarCodigoVenda();
+
+function abrirModalDetalhes(btn) {
+    const id = btn.getAttribute('data-id') || '';
+    const codigo = btn.getAttribute('data-codigo') || '';
+    const cliente = btn.getAttribute('data-cliente') || '';
+    const responsavel = btn.getAttribute('data-responsavel') || '';
+    const data = btn.getAttribute('data-data') || '';
+    const status = btn.getAttribute('data-status') || '';
+    const formaPagamento = btn.getAttribute('data-forma-pagamento') || '';
+    const condicaoPagamento = btn.getAttribute('data-condicao-pagamento') || '';
+    const numeroParcelas = btn.getAttribute('data-numero-parcelas') || '';
+    const valorBruto = btn.getAttribute('data-valor-bruto') || 'R$ 0,00';
+    const desconto = btn.getAttribute('data-desconto') || 'R$ 0,00';
+    const valorTotal = btn.getAttribute('data-valor-total') || 'R$ 0,00';
+
+    const detId = document.getElementById('det-id');
+    if (detId) detId.innerText = id;
+    const detCodigo = document.getElementById('det-codigo-detalhes');
+    if (detCodigo) detCodigo.innerText = codigo;
+    const detCliente = document.getElementById('det-cliente');
+    if (detCliente) detCliente.innerText = cliente;
+    const detResponsavel = document.getElementById('det-responsavel');
+    if (detResponsavel) detResponsavel.innerText = responsavel;
+    const detData = document.getElementById('det-data');
+    if (detData) detData.innerText = data;
+    const detFormaPagamento = document.getElementById('det-forma-pagamento');
+    if (detFormaPagamento) detFormaPagamento.innerText = formaPagamento;
+    const detCondicaoPagamento = document.getElementById('det-condicao-pagamento');
+    if (detCondicaoPagamento) detCondicaoPagamento.innerText = condicaoPagamento;
+    const detNumeroParcelas = document.getElementById('det-numero-parcelas');
+    if (detNumeroParcelas) detNumeroParcelas.innerText = numeroParcelas;
+    const detValorBruto = document.getElementById('det-valor-bruto');
+    if (detValorBruto) detValorBruto.innerText = valorBruto;
+    const detDesconto = document.getElementById('det-desconto');
+    if (detDesconto) detDesconto.innerText = desconto;
+    const detValorTotal = document.getElementById('det-valor-total-venda');
+    if (detValorTotal) detValorTotal.innerText = "$" + valorTotal;
+    detValorTotal.style.color = 'green';
+
+    const badgeDiv = document.getElementById('det-status-badge');
+    if (badgeDiv) {
+        let cl = status === 'PENDENTE' ? 'badge-analysis' :
+               (status === 'CONCLUIDA' ? 'badge-success' :
+               (status === 'CANCELADA' ? 'badge-inactive' : 'badge-inactive'));
+        badgeDiv.innerHTML = `<span class="badge ${cl}">${status}</span>`;
     }
 
-    const infoDiv = document.getElementById('infoFinanceira');
-    const resumoTxt = document.getElementById('resumoValores');
-    if (infoDiv && resumoTxt) {
-        resumoTxt.innerText = `Valor Total salvo: R$ ${valorTotal.toFixed(2)}`;
-        infoDiv.style.display = 'block';
-    }
-    const condicaoAVistaRadio = document.getElementById('condicaoAVista');
-    if (condicaoAVistaRadio) {
-        condicaoAVistaRadio.checked = true;
-    }
+    const tbody = document.getElementById('det-tbody-itens');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center">Processando itens...</td></tr>';
 
-    const listaItens = document.getElementById('listaItensVenda');
-    if (listaItens) listaItens.innerHTML = '';
+    fetch(`/vendas/${id}/itens-json-venda`)
+        .then(res => {
+            if (!res.ok) throw new Error("Erro na API");
+            return res.json();
+        })
+        .then(itens => {
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!Array.isArray(itens) || itens.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum item vinculado.</td></tr>';
+                return;
+            }
+            
+            itens.forEach(item => {
+                const qtd = Number(item.quantidade || 0);
+                const preco = Number(item.precoUnitario || 0);
+                const subtotal = qtd * preco;
 
-    carregarItensVendaExistente(id);
-    calcularTotalVenda();
-    document.getElementById('modalNovaVenda').style.display = 'flex';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-600">${item.nome || '-'}</td>
+                    <td class="text-center">${qtd}</td>
+                    <td>R$ ${preco.toFixed(2)}</td>
+                    <td class="font-600">R$ ${subtotal.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => {
+            console.error('Erro ao buscar itens:', err);
+            if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center">Erro ao carregar itens.</td></tr>';
+        });
+
+    const modal = document.getElementById('modalDetalhesVenda');
+    if (modal) modal.style.display = 'flex';
+}
+
+function fecharModalDetalhesVenda() {
+    const modal = document.getElementById('modalDetalhesVenda');
+    if (modal) modal.style.display = 'none';
 }
 
 function parseItemVendaData(item) {
@@ -185,31 +311,143 @@ function parseItemVendaData(item) {
     return { idItem, nome, qtd, preco };
 }
 
-async function carregarItensVendaExistente(id) {
-    const container = document.getElementById('listaItensVenda');
-    if (!container) return;
-
-    container.innerHTML = '<tr><td colspan="4" class="text-center">Carregando itens...</td></tr>';
-
-    try {
-        const response = await fetch(`/vendas/${id}/itens-json`);
-        if (!response.ok) throw new Error("Erro na API");
-        const itens = await response.json();
-
-        if (container) container.innerHTML = '';
-
-        if (Array.isArray(itens) && itens.length > 0) {
-            itens.forEach(item => {
-                const parsed = parseItemVendaData(item);
-                inserirLinhaTabelaVenda(parsed.idItem, parsed.nome, parsed.qtd, parsed.preco, (parsed.qtd * parsed.preco));
-            });
-        } else {
-            if (container) container.innerHTML = '<tr><td colspan="4" class="text-center">A venda não contém itens registrados.</td></tr>';
+    async function abrirEdicaoVenda(btn) {
+        document.getElementById('main-title').innerText = 'Editar Venda';
+        
+        const btnSalvar = document.getElementById('btn-salvar-global');
+        if (btnSalvar) btnSalvar.innerHTML = btnSalvar.innerHTML.replace('Salvar Venda', 'Atualizar Venda');
+        
+        switchTab('form');
+        
+        const form = document.getElementById('formVenda');
+        if (form) form.action = '/vendas/atualizar';
+        
+        const id = btn.getAttribute('data-id');
+        const clienteId = btn.getAttribute('data-cliente');
+        const funcionarioId = btn.getAttribute('data-funcionario');
+        const codigo = btn.getAttribute('data-codigo');
+        const dataVenda = btn.getAttribute('data-data-venda');
+        const valorBruto = btn.getAttribute('data-valor-bruto');
+        const valorTotal = btn.getAttribute('data-valor-total');
+        const porcentagem = btn.getAttribute('data-porcentagem');
+        const motivo = btn.getAttribute('data-motivo');
+        const formaPagamento = btn.getAttribute('data-forma-pagamento');
+        const condicaoPagamento = btn.getAttribute('data-condicao-pagamento');
+        const numeroParcelas = btn.getAttribute('data-numero-parcelas');
+        const status = btn.getAttribute('data-status');
+        
+        // Preencher campos do formulário
+        const inputId = document.getElementById('vendaId');
+        if (inputId) inputId.value = id;
+        
+        const selectCliente = document.getElementById('clienteId');
+        if (selectCliente) selectCliente.value = clienteId;
+        
+        const selectFuncionario = document.getElementById('funcionarioId');
+        if (selectFuncionario) selectFuncionario.value = funcionarioId;
+        
+        const inputCodigo = document.getElementById('codigo');
+        if (inputCodigo) inputCodigo.value = codigo || '';
+        
+        const inputDataVenda = document.getElementById('dataVenda');
+        if (inputDataVenda) {
+            let rawDate = dataVenda;
+            if (rawDate && rawDate.includes('/')) {
+                const parts = rawDate.split('/');
+                if (parts.length === 3) {
+                    rawDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+            }
+            inputDataVenda.value = rawDate;
         }
-    } catch (err) {
-        if (container) container.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Falha ao carregar itens da venda.</td></tr>';
+        
+        const inputValorBruto = document.getElementById('valorBruto');
+        if (inputValorBruto) inputValorBruto.value = valorBruto || '0';
+        
+        const inputValorTotal = document.getElementById('valorTotal');
+        if (inputValorTotal) inputValorTotal.value = valorTotal || '0';
+        
+        const inputPorcentagem = document.getElementById('porcentagemDesconto');
+        if (inputPorcentagem) inputPorcentagem.value = porcentagem || '0';
+        
+        const inputMotivo = document.getElementById('motivoDesconto');
+        if (inputMotivo) inputMotivo.value = motivo || '';
+        
+        const statusInput = document.querySelector('input[name="status"]');
+        if (statusInput) statusInput.value = status || 'PENDENTE';
+        
+        const selectFormaPagamento = document.getElementById('formaPagamento');
+        if (selectFormaPagamento) selectFormaPagamento.value = formaPagamento || '';
+        
+        const selectCondicaoPagamento = document.getElementById('condicaoPagamento');
+        if (selectCondicaoPagamento) selectCondicaoPagamento.value = condicaoPagamento || '';
+        
+        const inputNumeroParcelas = document.getElementById('numeroParcelas');
+        if (inputNumeroParcelas) inputNumeroParcelas.value = numeroParcelas || '';
+        
+        // Carregar itens
+        const tbody = document.getElementById('listaItensVenda');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center">Carregando itens...</td></tr>';
+        
+        fetch(`/vendas/${id}/itens-json-venda`)
+            .then(res => {
+                if (!res.ok) throw new Error("Erro na API");
+                return res.json();
+            })
+            .then(itens => {
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                if (!Array.isArray(itens) || itens.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum item vinculado.</td></tr>';
+                    return;
+                }
+                itens.forEach(item => {
+                    const qtd = Number(item.quantidade || 0);
+                    const preco = Number(item.precoUnitario || 0);
+                    const subtotal = qtd * preco;
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="font-600">${item.nome || '-'}</td>
+                        <td class="text-center">${qtd}</td>
+                        <td>R$ ${preco.toFixed(2)}</td>
+                        <td class="font-600">R$ ${subtotal.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                calcularTotalVenda();
+            })
+            .catch(err => {
+                console.error('Erro ao buscar itens:', err);
+                if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center">Erro ao carregar itens.</td></tr>';
+            });
     }
-}
+
+    async function carregarItensVendaExistente(id) {
+        const container = document.getElementById('listaItensVenda');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        try {
+            const response = await fetch(`/vendas/${id}/itens-json-venda`);
+            if (!response.ok) throw new Error("Erro na API");
+            const itens = await response.json();
+
+
+            container.innerHTML = '';
+
+            if (Array.isArray(itens) && itens.length > 0) {
+                itens.forEach(item => {
+                    const parsed = parseItemVendaData(item);
+                    inserirLinhaItensVenda(parsed.idItem, parsed.nome, parsed.qtd, parsed.preco, (parsed.qtd * parsed.preco)); // ← função correta
+                });
+            }
+        } catch (err) {
+            container.innerHTML = '';
+        }
+        calcularTotalVenda();
+    }
 
 function inserirLinhaTabelaVenda(id, nome, qtd, preco, total) {
     const container = document.getElementById('listaItensVenda');
@@ -438,12 +676,12 @@ function atualizarCamposItens() {
     const itens = container.querySelectorAll('.item-venda-item');
     const itensIdInput = document.getElementById('itensId');
     const quantidadeItensInput = document.getElementById('quantidadeItens');
-    
+
     if (!itensIdInput || !quantidadeItensInput) return;
-    
+
     const itensId = [];
     const quantidadeItens = [];
-    
+
     itens.forEach(item => {
         const id = item.dataset.id;
         const qtdInput = item.querySelector('input[placeholder="Qtd"]');
@@ -452,7 +690,7 @@ function atualizarCamposItens() {
             quantidadeItens.push(qtdInput.value);
         }
     });
-    
+
     itensIdInput.value = itensId.join(',');
     quantidadeItensInput.value = quantidadeItens.join(',');
 }
@@ -460,7 +698,7 @@ function atualizarCamposItens() {
 function atualizarVisibilidadeItensVenda() {
     const container = document.getElementById('listaItensVenda');
     const itens = container.querySelectorAll('.item-venda-item');
-    
+
     if (itens.length > 0) {
         container.style.display = 'block';
     } else {
@@ -482,7 +720,7 @@ function removerItemVenda(id) {
 function atualizarItemVenda(id, campo, valor) {
     const itemDiv = document.querySelector(`.item-venda-item[data-id="${id}"]`);
     if (!itemDiv) return;
-    
+
     if (campo === 'nome') {
         const inputNome = itemDiv.querySelector('input[placeholder="Nome do Produto"]');
         if (inputNome) inputNome.value = valor;
@@ -544,16 +782,16 @@ function removerPorcentagem(input) {
 
 function adicionarPorcentagem(input) {
     let valor = input.value.replace(/[^0-9]/g, '');
-    
+
     if (valor === '') {
         input.value = '';
         return;
     }
-    
+
     if (parseInt(valor) > 100) {
         valor = '100';
     }
-    
+
     const cursorPos = input.selectionStart;
     input.value = valor + '%';
     input.setSelectionRange(cursorPos, cursorPos);

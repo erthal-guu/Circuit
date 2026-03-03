@@ -83,5 +83,49 @@ public class VendaService {
         venda.setStatus(novoStatus);
         vendaRepository.save(venda);
     }
+
+    @Transactional
+    public void atualizarVenda(Long id, Long clienteId, Long funcionarioId, BigDecimal valorTotal,BigDecimal valorBruto,
+                               BigDecimal porcentagemDesconto,
+                               String motivoDesconto, LocalDate dataVenda, String codigo,
+                               StatusVenda status, FormaPagamento formaPagamento,
+                               CondicaoPagamento condicaoPagamento, Integer numeroParcelas,
+                               List<Long> itensId, List<Integer> quantidadeItens) {
+        Venda venda = vendaRepository.findById(id).orElseThrow();
+
+        if (venda.getStatus() != StatusVenda.PENDENTE) {
+            throw new RuntimeException("Só é possível editar vendas com status PENDENTE");
+        }
+
+        venda.setCodigo(codigo);
+        venda.setStatus(status);
+        venda.setCliente(clienteRepository.findById(clienteId).orElseThrow());
+        venda.setFuncionario(funcionarioRepository.findById(funcionarioId).orElseThrow());
+        venda.setValorTotal(valorTotal);
+        venda.setMotivoDesconto(motivoDesconto);
+        venda.setValorBruto(valorBruto);
+        venda.setPorcentagemDesconto(porcentagemDesconto);
+        venda.setDataVenda(dataVenda);
+        venda.setFormaPagamento(formaPagamento);
+        venda.setCondicaoPagamento(condicaoPagamento);
+        venda.setNumeroParcelas(numeroParcelas);
+
+        venda.getItens().clear();
+        for (int i = 0; i < itensId.size(); i++) {
+            Long produtoId = itensId.get(i);
+            Integer qtd = quantidadeItens.get(i);
+            ItemVenda item = new ItemVenda();
+            Produto produto = produtoRepository.findById(produtoId).orElseThrow();
+
+            item.setProduto(produto);
+            item.setQuantidade(qtd);
+            item.setVenda(venda);
+            estoqueService.retirarEstoqueProd(produtoId, qtd);
+
+            venda.getItens().add(item);
+        }
+
+        vendaRepository.save(venda);
+    }
 }
 

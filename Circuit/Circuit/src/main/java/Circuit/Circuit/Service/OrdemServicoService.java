@@ -1,7 +1,7 @@
 package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.OrdemServico;
-import Circuit.Circuit.Model.Status;
+import Circuit.Circuit.Model.StatusOrdem;
 import Circuit.Circuit.Repository.OrdemServicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,19 +23,19 @@ public class OrdemServicoService {
     }
 
     public List<OrdemServico> ListarOrdensAbertas(){
-        List<Status> statusAtivos = Arrays.asList(
-                Status.ABERTA,
-                Status.EM_ANALISE,
-                Status.AGUARDANDO_APROVACAO,
-                Status.EM_REPARO,
-                Status.AGUARDANDO_PECA
+        List<StatusOrdem> statusAtivos = Arrays.asList(
+                StatusOrdem.ABERTA,
+                StatusOrdem.EM_ANALISE,
+                StatusOrdem.AGUARDANDO_APROVACAO,
+                StatusOrdem.EM_REPARO,
+                StatusOrdem.AGUARDANDO_PECA
         );
         return ordemServicoRepository.findByStatusIn(statusAtivos);
     }
     public List<OrdemServico> ListarOrdensFinalizadas(){
-        List<Status> statusEncerrados= Arrays.asList(
-            Status.FINALIZADA,
-            Status.CANCELADA
+        List<StatusOrdem> statusEncerrados= Arrays.asList(
+            StatusOrdem.FINALIZADA,
+            StatusOrdem.CANCELADA
         );
     return ordemServicoRepository.findByStatusIn(statusEncerrados);
     }
@@ -53,17 +53,17 @@ public class OrdemServicoService {
         ordemBanco.setValorServico(ordemAtualizada.getValorServico());
         ordemBanco.setValorTotal(ordemAtualizada.getValorTotal());
         ordemBanco.setPecasUtilizadas(ordemAtualizada.getPecasUtilizadas());
-        if (ordemAtualizada.getStatus() == Status.FINALIZADA && ordemBanco.getDataSaida() == null) {
+        if (ordemAtualizada.getStatus() == StatusOrdem.FINALIZADA && ordemBanco.getDataSaida() == null) {
             ordemBanco.setDataSaida(LocalDateTime.now());
         }
-        else if (ordemAtualizada.getStatus() != Status.FINALIZADA) {
+        else if (ordemAtualizada.getStatus() != StatusOrdem.FINALIZADA) {
             ordemBanco.setDataSaida(null);
         }
         return ordemServicoRepository.save(ordemBanco);
     }
-    public void atualizarStatus(Long id, Status novoStatus){
+    public void atualizarStatus(Long id, StatusOrdem novoStatus){
         OrdemServico ordemServico = ordemServicoRepository.findById(id).get();
-        if (novoStatus == Status.FINALIZADA) {
+        if (novoStatus == StatusOrdem.FINALIZADA) {
             ordemServico.setDataSaida(LocalDateTime.now());
         } else {
             ordemServico.setDataSaida(null);

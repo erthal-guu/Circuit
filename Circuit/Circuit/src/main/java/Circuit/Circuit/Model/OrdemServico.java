@@ -40,7 +40,7 @@ public class OrdemServico {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.ABERTA;
+    private StatusOrdem status = StatusOrdem.ABERTA;
 
     @Column(name = "senha_dispositivo")
     private String senhaDispositivo;
@@ -85,7 +85,7 @@ public class OrdemServico {
             this.dataEntrada = LocalDateTime.now();
         }
         if (this.status == null) {
-            this.status = Status.ABERTA;
+            this.status = StatusOrdem.ABERTA;
         }
         if (this.valorServico == null) {
             this.valorServico = BigDecimal.ZERO;

@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -74,7 +73,7 @@ public class OrdemServicoController {
         return "redirect:/ordens-servico";
     }
     @PostMapping("/atualizar-status")
-    public String atualizarStatus(@RequestParam Long id, @RequestParam Status status, RedirectAttributes redirectAttributes) {
+    public String atualizarStatus(@RequestParam Long id, @RequestParam StatusOrdem status, RedirectAttributes redirectAttributes) {
         try {
             ordemServicoService.atualizarStatus(id, status);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Status atualizado com sucesso");

@@ -92,7 +92,7 @@ public class VendaController {
         }
         return "redirect:/vendas";
     }
-    @GetMapping("/{id}/itens-json")
+    @GetMapping("/{id}/itens-json-venda")
     @ResponseBody
     public List<Map<String, Object>> buscarItensVenda(@PathVariable Long id) {
         Venda venda = vendaRepository.findById(id).orElseThrow();
@@ -106,6 +106,11 @@ public class VendaController {
             if (item.getProduto() != null) {
                 dto.put("id", item.getProduto().getId());
                 dto.put("nome", item.getProduto().getNome());
+                
+
+                if (item.getPrecoUnitario() == null) {
+                    dto.put("precoUnitario", item.getProduto().getPrecoVenda());
+                }
             } else {
                 dto.put("id", item.getId());
                 dto.put("nome", "Item Desconhecido");
@@ -113,5 +118,34 @@ public class VendaController {
             response.add(dto);
         }
         return response;
+    }
+
+    @PostMapping("/atualizar")
+    @Transactional
+    public String atualizarVenda(@RequestParam Long id,
+                                 @RequestParam Long clienteId,
+                                 @RequestParam Long funcionarioId,
+                                 @RequestParam BigDecimal valorBruto,
+                                 @RequestParam BigDecimal valorTotal,
+                                 @RequestParam BigDecimal porcentagemDesconto,
+                                 @RequestParam(required = false) String motivoDesconto,
+                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVenda,
+                                 @RequestParam String codigo,
+                                 @RequestParam StatusVenda status,
+                                 @RequestParam(required = false) FormaPagamento formaPagamento,
+                                 @RequestParam(required = false) CondicaoPagamento condicaoPagamento,
+                                 @RequestParam(required = false) Integer numeroParcelas,
+                                 @RequestParam List<Long> itensId,
+                                 @RequestParam List<Integer> quantidadeItens,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            vendaService.atualizarVenda(id, clienteId, funcionarioId, valorTotal, valorBruto, porcentagemDesconto,
+                    motivoDesconto, dataVenda, codigo, status, formaPagamento, condicaoPagamento, numeroParcelas, itensId, quantidadeItens);
+
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Venda atualizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao atualizar venda: " + e.getMessage());
+        }
+        return "redirect:/vendas";
     }
 }
