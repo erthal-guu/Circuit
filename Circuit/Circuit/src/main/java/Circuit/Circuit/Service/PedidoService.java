@@ -39,7 +39,8 @@ public class PedidoService {
         List<StatusPedido> statusPedidos = Arrays.asList(
                 StatusPedido.RECEBIDO,
                 StatusPedido.PENDENTE,
-                StatusPedido.CONFIRMADO);
+                StatusPedido.CONFIRMADO,
+                StatusPedido.CANCELADO);
         return pedidoRepository.findByStatusIn(statusPedidos);
     }
 

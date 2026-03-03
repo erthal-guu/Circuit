@@ -77,5 +77,11 @@ public class VendaService {
     public List<Venda>listarVendasConcluidas(){
         return vendaRepository.findByStatus(StatusVenda.CONCLUIDA);
     }
+
+    public void atualizarStatus(Long id,StatusVenda novoStatus){
+        Venda venda = vendaRepository.findById(id).orElseThrow();
+        venda.setStatus(novoStatus);
+        vendaRepository.save(venda);
+    }
 }
 

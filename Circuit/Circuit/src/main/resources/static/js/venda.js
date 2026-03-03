@@ -160,9 +160,83 @@ function abrirModalEdicao(btn) {
         condicaoAVistaRadio.checked = true;
     }
 
-    atualizarVisibilidadeItensVenda();
+    const listaItens = document.getElementById('listaItensVenda');
+    if (listaItens) listaItens.innerHTML = '';
+
+    carregarItensVendaExistente(id);
     calcularTotalVenda();
     document.getElementById('modalNovaVenda').style.display = 'flex';
+}
+
+function parseItemVendaData(item) {
+    const qtd = Number(item.quantidade || item.qtd || item.quantidadeItens || 1);
+    const preco = Number(item.precoUnitario || item.valorUnitario || item.preco || 0);
+
+    let nome = item.descricao || item.nomeItem || item.nome || 'Item Desconhecido';
+    let idItem = item.itemId || item.id || '';
+
+    if (item.produto && item.produto.nome) {
+        nome = item.produto.nome;
+        idItem = item.produto.id;
+    } else {
+        idItem = item.id || '';
+    }
+
+    return { idItem, nome, qtd, preco };
+}
+
+async function carregarItensVendaExistente(id) {
+    const container = document.getElementById('listaItensVenda');
+    if (!container) return;
+
+    container.innerHTML = '<tr><td colspan="4" class="text-center">Carregando itens...</td></tr>';
+
+    try {
+        const response = await fetch(`/vendas/${id}/itens-json`);
+        if (!response.ok) throw new Error("Erro na API");
+        const itens = await response.json();
+
+        if (container) container.innerHTML = '';
+
+        if (Array.isArray(itens) && itens.length > 0) {
+            itens.forEach(item => {
+                const parsed = parseItemVendaData(item);
+                inserirLinhaTabelaVenda(parsed.idItem, parsed.nome, parsed.qtd, parsed.preco, (parsed.qtd * parsed.preco));
+            });
+        } else {
+            if (container) container.innerHTML = '<tr><td colspan="4" class="text-center">A venda não contém itens registrados.</td></tr>';
+        }
+    } catch (err) {
+        if (container) container.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Falha ao carregar itens da venda.</td></tr>';
+    }
+}
+
+function inserirLinhaTabelaVenda(id, nome, qtd, preco, total) {
+    const container = document.getElementById('listaItensVenda');
+    if (!container) return;
+
+    const tr = document.createElement('tr');
+    tr.className = 'item-venda-item';
+    tr.innerHTML = `
+        <td>
+            ${nome}
+            <input type="hidden" name="itensId" value="${id}">
+        </td>
+        <td>
+            <input type="number" name="quantidadeItens" class="form-control" value="${qtd}" min="1" oninput="calcularTotalVenda()">
+        </td>
+        <td>
+            <input type="text" name="precoItens" class="form-control" value="${preco.toFixed(2).replace('.', ',')}" oninput="calcularTotalVenda()">
+        </td>
+        <td class="total-linha">${total.toFixed(2).replace('.', ',')}</td>
+        <td class="text-center">
+            <button type="button" class="btn-icon remove" onclick="this.closest('tr').remove(); calcularTotalVenda();">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+        </td>
+    `;
+    container.appendChild(tr);
+    calcularTotalVenda();
 }
 
 function abrirModalDesconto() {

@@ -3,8 +3,7 @@ package Circuit.Circuit.Model;
 public enum StatusVenda {
     PENDENTE("Pendente"),
     CONCLUIDA("Concluída"),
-    CANCELADA("Cancelada"),
-    EM_PROCESSAMENTO("Em Processamento");
+    CANCELADA("Cancelada");
 
     private final String descricao;
 
