@@ -4,6 +4,7 @@ import Circuit.Circuit.Model.Peca;
 import Circuit.Circuit.Model.Produto;
 import Circuit.Circuit.Repository.PecaRepository;
 import Circuit.Circuit.Repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class EstoqueService {
         produtoRepository.save(produto);
     }
 
+    @Transactional
     public void retirarEstoqueProd(Long id, Integer quantidadeRetirada) {
         Produto produto = produtoRepository.getReferenceById(id);
 

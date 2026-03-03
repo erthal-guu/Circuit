@@ -31,7 +31,6 @@ public class VendaService {
     @Autowired
      private EstoqueService estoqueService;
 
-    @Transactional
     public void salvarVenda(Long id, Long clienteId, Long funcionarioId, BigDecimal valorTotal,BigDecimal valorBruto,
                             BigDecimal porcentagemDesconto,
                             String motivoDesconto, LocalDate dataVenda, String codigo,
@@ -84,7 +83,6 @@ public class VendaService {
         vendaRepository.save(venda);
     }
 
-    @Transactional
     public void atualizarVenda(Long id, Long clienteId, Long funcionarioId, BigDecimal valorTotal,BigDecimal valorBruto,
                                BigDecimal porcentagemDesconto,
                                String motivoDesconto, LocalDate dataVenda, String codigo,

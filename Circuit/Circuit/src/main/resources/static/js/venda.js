@@ -119,7 +119,6 @@ function abrirModalNovaVenda() {
 
     async function abrirModalEdicao(btn) {
         formVenda.action = "/vendas/atualizar";
-
         const id = btn.getAttribute('data-id');
         const clienteId = btn.getAttribute('data-cliente');
         const funcionarioId = btn.getAttribute('data-funcionario');
