@@ -295,6 +295,14 @@
                             </div>
                         </div>
 
+                        <div class="search-box" style="margin-bottom: 15px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchItensParaVincular" placeholder="Buscar itens..." onkeyup="filtrarItensParaVincular()">
+                        </div>
+
                         <div id="listaItensParaVincular" class="checkbox-grid-container" style="max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px;">
                         </div>
 
@@ -304,7 +312,7 @@
                     </div>
 
                     <div class="modal-footer" style="margin-top: 20px;">
-                        <button type="button" class="btn-secondary" onclick="fecharModalVinculo()">Cancelar</button>
+                        <button type="button" class="btn-close" onclick="fecharModalVinculo()">Cancelar</button>
                         <button type="submit" class="btn-submit" id="btnSalvarVinculo" disabled>Salvar Vínculos</button>
                     </div>
                 </form>
@@ -329,6 +337,14 @@
                         <div id="loadingVinculados" style="display: none; font-size: 0.9em; color: #64748b;">
                             Carregando...
                         </div>
+                    </div>
+
+                    <div class="search-box" style="margin-bottom: 15px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="searchItensVinculados" placeholder="Buscar itens vinculados..." onkeyup="filtrarItensVinculados()">
                     </div>
 
                     <div id="listaItensVinculados" style="max-height: 350px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px;">

@@ -18,7 +18,7 @@
             <span class="menu-text">Dashboard</span>
         </a>
 
-        <div class="menu-section"><span class="menu-section-title">OPERACIONAL</span></div>
+        <div class="menu-section"><span class="menu-section-title">OPERAÇÕES</span></div>
 
         <a th:href="@{/ordens-servico}" class="menu-item"
            th:classappend="${activePage == 'ordens-servico'} ? 'active' : ''">
@@ -29,15 +29,6 @@
             </svg>
             <span class="menu-text">Ordens de Serviço</span>
         </a>
-        <a th:href="@{/vendas}" class="menu-item"
-           th:classappend="${activePage == 'vendas'} ? 'active' : ''">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span class="menu-text">Vendas</span>
-        </a>
         <a th:href="@{/pedidos}" class="menu-item"
            th:classappend="${activePage == 'pedidos'} ? 'active' : ''">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -46,6 +37,15 @@
                 <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
             <span class="menu-text">Pedidos</span>
+        </a>
+        <a th:href="@{/vendas}" class="menu-item"
+           th:classappend="${activePage == 'vendas'} ? 'active' : ''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="menu-text">Vendas</span>
         </a>
         <a th:href="@{/estoque}" class="menu-item"
            th:classappend="${activePage == 'estoque' || activePage == 'pecas'} ? 'active' : ''">
@@ -57,38 +57,6 @@
             </svg>
             <span class="menu-text">Estoque</span>
         </a>
-        <div class="menu-section"><span class="menu-section-title">CADASTROS</span></div>
-
-        <a th:href="@{/modelos}" class="menu-item"
-           th:classappend="${activePage == 'modelos'} ? 'active' : ''">
-            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M8 2V22M16 8H2M16 16H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-            </svg>
-            <span class="menu-text">Modelos</span>
-        </a>
-        <a th:href="@{/servicos}" class="menu-item"
-           th:classappend="${activePage == 'servicos'} ? 'active' : ''">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-            </svg>
-            <span class="menu-text">Serviços</span>
-        </a>
-
-        <a th:href="@{/aparelhos}" class="menu-item"
-           th:classappend="${activePage == 'aparelhos'} ? 'active' : ''">
-            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-            </svg>
-            <span class="menu-text">Aparelhos</span>
-        </a>
 
         <div class="menu-section"><span class="menu-section-title">FINANCEIRO</span></div>
 
@@ -98,15 +66,7 @@
                 <path d="M3 3v18h18"/>
                 <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
             </svg>
-            <span class="menu-text">Dashboards Financeiro</span>
-        </a>
-        <a th:href="@{/contas-pagar}" class="menu-item"
-           th:classappend="${activePage == 'contas-pagar'} ? 'active' : ''">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="2" y1="10" x2="22" y2="10"></line>
-            </svg>
-            <span class="menu-text">Contas a Pagar</span>
+            <span class="menu-text">Dashboard Financeiro</span>
         </a>
         <a th:href="@{/contas-receber}" class="menu-item"
            th:classappend="${activePage == 'contas-receber'} ? 'active' : ''">
@@ -116,18 +76,17 @@
             </svg>
             <span class="menu-text">Contas a Receber</span>
         </a>
-
-        <div class="menu-section"><span class="menu-section-title">SISTEMA</span></div>
-
-        <a th:href="@{/funcionarios}" class="menu-item"
-           th:classappend="${activePage == 'funcionarios'} ? 'active' : ''">
-            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M20 8V14M23 11H17M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <a th:href="@{/contas-pagar}" class="menu-item"
+           th:classappend="${activePage == 'contas-pagar'} ? 'active' : ''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
             </svg>
-            <span class="menu-text">Funcionários</span>
+            <span class="menu-text">Contas a Pagar</span>
         </a>
+
+        <div class="menu-section"><span class="menu-section-title">CADASTROS</span></div>
+
         <a th:href="@{/clientes}" class="menu-item"
            th:classappend="${activePage == 'clientes'} ? 'active' : ''">
             <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -150,14 +109,46 @@
             <span class="menu-text">Fornecedores</span>
         </a>
 
-        <a th:href="@{/usuarios}" class="menu-item"
-           th:classappend="${activePage == 'usuarios'} ? 'active' : ''">
+        <a th:href="@{/funcionarios}" class="menu-item"
+           th:classappend="${activePage == 'funcionarios'} ? 'active' : ''">
             <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M12.5 7C12.5 9.20914 10.7091 11 8.5 11C6.29086 11 4.5 9.20914 4.5 7C4.5 4.79086 6.29086 3 8.5 3C10.7091 3 12.5 4.79086 12.5 7Z"
+                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M20 8V14M23 11H17M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span class="menu-text">Usuários</span>
+            <span class="menu-text">Funcionários</span>
+        </a>
+
+        <a th:href="@{/modelos}" class="menu-item"
+           th:classappend="${activePage == 'modelos'} ? 'active' : ''">
+            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 2V22M16 8H2M16 16H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+            <span class="menu-text">Modelos</span>
+        </a>
+
+        <a th:href="@{/servicos}" class="menu-item"
+           th:classappend="${activePage == 'servicos'} ? 'active' : ''">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+            <span class="menu-text">Serviços</span>
+        </a>
+
+        <a th:href="@{/aparelhos}" class="menu-item"
+           th:classappend="${activePage == 'aparelhos'} ? 'active' : ''">
+            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+            <span class="menu-text">Aparelhos</span>
         </a>
 
         <a th:href="@{/relatorios}" class="menu-item"
@@ -167,6 +158,18 @@
                 <path d="M12 20H21V10H12V20ZM12 8H21V4H12V8ZM3 20H11V14H3V20ZM3 12H11V4H3V12Z" fill="currentColor"/>
             </svg>
             <span class="menu-text">Relatórios</span>
+        </a>
+
+        <div class="menu-section"><span class="menu-section-title">SISTEMA</span></div>
+
+        <a th:href="@{/usuarios}" class="menu-item"
+           th:classappend="${activePage == 'usuarios'} ? 'active' : ''">
+            <svg class="menu-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M12.5 7C12.5 9.20914 10.7091 11 8.5 11C6.29086 11 4.5 9.20914 4.5 7C4.5 4.79086 6.29086 3 8.5 3C10.7091 3 12.5 4.79086 12.5 7Z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="menu-text">Usuários</span>
         </a>
     </nav>
 

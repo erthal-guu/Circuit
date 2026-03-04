@@ -118,10 +118,17 @@ function configurarPesquisaLocal(inputId, tableId) {
 }
 
 function switchTab(tabName, event) {
-    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.tab-content').forEach(c => {
+        c.style.display = 'none';
+        c.classList.remove('active');
+    });
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     const id = tabName === 'ativos' ? 'tabAtivos' : 'tabInativos';
-    document.getElementById(id).style.display = 'block';
+    const target = document.getElementById(id);
+    if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+    }
     if (event) event.currentTarget.classList.add('active');
 }
 document.addEventListener("DOMContentLoaded", function() {

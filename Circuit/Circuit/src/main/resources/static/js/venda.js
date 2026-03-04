@@ -543,9 +543,11 @@ function fecharModalStatus() { document.getElementById('modalStatus').style.disp
 
 function abrirModalAdicionarItens() {
     const container = document.getElementById('tbodyModalItensVenda');
+    const searchInput = document.getElementById('searchProdutosVenda');
     container.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando produtos...</div>';
     document.getElementById('countSelecionadosVenda').innerText = '0';
     document.getElementById('subtotalModalVenda').innerText = 'R$ 0,00';
+    if (searchInput) searchInput.value = '';
     document.getElementById('modalAdicionarItensVenda').style.display = 'flex';
     carregarProdutosVenda();
 }
@@ -607,6 +609,26 @@ function toggleCardSelection(checkbox) {
     } else {
         card.classList.remove('selected');
     }
+}
+
+function filtrarProdutosVenda() {
+    const searchInput = document.getElementById('searchProdutosVenda');
+    const container = document.getElementById('tbodyModalItensVenda');
+    if (!searchInput || !container) return;
+
+    const termo = searchInput.value.toLowerCase();
+    const cards = container.querySelectorAll('.checkbox-item-card');
+
+    cards.forEach(card => {
+        const nome = card.querySelector('div[style*="font-weight: 600"]').textContent.toLowerCase();
+        const ref = card.querySelector('div[style*="color: #64748b"]').textContent.toLowerCase();
+        
+        if (nome.includes(termo) || ref.includes(termo)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
 }
 
 function calcularResumoModalVenda() {

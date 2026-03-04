@@ -191,9 +191,12 @@
 
                         <div class="form-group">
                             <label>Responsável</label>
-                            <select class="form-control" name="responsavelId" id="selectResponsavel">
+                            <select class="form-control" name="responsavelId" id="selectResponsavel" required>
                                 <option value="" disabled selected>Selecione...</option>
-                                <option th:each="func : ${listaFuncionarios}" th:value="${func.id}" th:text="${func.nome}"></option>
+                                <option th:each="func : ${listaFuncionarios}"
+                                        th:value="${func.id}"
+                                        th:text="${func.nome}">
+                                </option>
                             </select>
                         </div>
 

@@ -145,6 +145,9 @@
                                 </a>
                             </td>
                         </tr>
+                        <tr th:if="${#lists.isEmpty(listaInativos)}">
+                            <td colspan="6" style="text-align:center; padding: 20px;">Nenhum aparelho inativo.</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

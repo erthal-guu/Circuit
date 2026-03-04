@@ -108,10 +108,17 @@ function configurarPesquisaLocal(inputId, tableId) {
 }
 
 function switchTab(tabName, event) {
-    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.tab-content').forEach(c => {
+        c.style.display = 'none';
+        c.classList.remove('active');
+    });
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     const id = tabName === 'ativos' ? 'tabAtivos' : 'tabInativos';
-    document.getElementById(id).style.display = 'block';
+    const target = document.getElementById(id);
+    if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+    }
     if (event) event.currentTarget.classList.add('active');
 }
 document.addEventListener("DOMContentLoaded", function() {
@@ -131,7 +138,10 @@ function abrirModalVincular() {
     document.getElementById('areaVinculoDinamica').style.display = 'none';
     document.getElementById('btnSalvarVinculo').disabled = true;
     document.getElementById('modalVincularItens').style.display = 'flex';
-
+    const searchInput = document.getElementById('searchItensParaVincular');
+    if (searchInput) searchInput.value = '';
+    const searchInputVinculados = document.getElementById('searchItensVinculados');
+    if (searchInputVinculados) searchInputVinculados.value = '';
 }
 
 function fecharModalVinculo() {
@@ -238,6 +248,11 @@ function switchTabVincular(tabName, event) {
     if (event && event.currentTarget) {
         event.currentTarget.classList.add('active');
     }
+
+    const searchInputVincular = document.getElementById('searchItensParaVincular');
+    const searchInputVinculados = document.getElementById('searchItensVinculados');
+    if (searchInputVincular) searchInputVincular.value = '';
+    if (searchInputVinculados) searchInputVinculados.value = '';
 }
 function carregarItensVinculados(idFornecedor) {
     const area = document.getElementById('areaItensVinculados');
@@ -332,4 +347,40 @@ function desvincularItem(fornId, itemId, tipo, btnElement) {
             btnElement.innerText = 'Desvincular';
             btnElement.disabled = false;
         });
+}
+
+function filtrarItensParaVincular() {
+    const searchInput = document.getElementById('searchItensParaVincular');
+    const container = document.getElementById('listaItensParaVincular');
+    if (!searchInput || !container) return;
+
+    const termo = searchInput.value.toLowerCase();
+    const cards = container.querySelectorAll('.checkbox-item-card');
+
+    cards.forEach(card => {
+        const nome = card.querySelector('span').textContent.toLowerCase();
+        if (nome.includes(termo)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function filtrarItensVinculados() {
+    const searchInput = document.getElementById('searchItensVinculados');
+    const container = document.getElementById('listaItensVinculados');
+    if (!searchInput || !container) return;
+
+    const termo = searchInput.value.toLowerCase();
+    const cards = container.querySelectorAll('.card-vinculado');
+
+    cards.forEach(card => {
+        const nome = card.querySelector('span').textContent.toLowerCase();
+        if (nome.includes(termo)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
 }

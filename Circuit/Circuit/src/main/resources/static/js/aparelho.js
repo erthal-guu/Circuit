@@ -77,15 +77,18 @@ function configurarPesquisa(inputId, tableId) {
         });
     });
 }
-
 function switchTab(tabName, event) {
-    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.tab-content').forEach(c => {
+        c.style.display = 'none';
+        c.classList.remove('active');
+    });
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
     const id = tabName === 'ativos' ? 'tabAtivos' : 'tabInativos';
     const tab = document.getElementById(id);
     if (tab) {
         tab.style.display = 'block';
+        tab.classList.add('active');
     }
     if (event) {
         event.currentTarget.classList.add('active');

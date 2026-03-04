@@ -532,6 +532,13 @@
                     <button type="button" class="close-btn" onclick="fecharModalAdicionarItens()">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <div class="search-box" style="margin-bottom: 15px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="searchProdutosVenda" placeholder="Buscar produtos..." onkeyup="filtrarProdutosVenda()">
+                    </div>
                     <div id="tbodyModalItensVenda" class="checkbox-grid-container" style="max-height: 400px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px;">
                         <div style="text-align: center; padding: 20px;">Carregando produtos...</div>
                     </div>
