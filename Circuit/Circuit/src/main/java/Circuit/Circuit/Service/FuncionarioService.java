@@ -1,6 +1,6 @@
 package Circuit.Circuit.Service;
 
-import Circuit.Circuit.Model.Cargo;
+import Circuit.Circuit.Model.Enum.Cargo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import Circuit.Circuit.Model.Funcionario;

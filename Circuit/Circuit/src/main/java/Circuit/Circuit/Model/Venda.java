@@ -1,9 +1,10 @@
 package Circuit.Circuit.Model;
 
+import Circuit.Circuit.Model.Enum.CondicaoPagamento;
+import Circuit.Circuit.Model.Enum.FormaPagamento;
+import Circuit.Circuit.Model.Enum.StatusVenda;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "vendas")
-@Data
+@Getter
+@Setter
 public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +29,11 @@ public class Venda {
     @Column(name = "status", nullable = false)
     private StatusVenda status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="funcionario_id")
     private Funcionario funcionario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="cliente_id")
     private Cliente cliente;
 
@@ -61,7 +63,7 @@ public class Venda {
     @Column(name = "data_venda")
     private LocalDate dataVenda = LocalDate.now();
 
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ItemVenda> itens = new ArrayList<>();
 
 }

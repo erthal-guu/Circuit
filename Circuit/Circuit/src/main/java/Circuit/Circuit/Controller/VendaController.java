@@ -1,6 +1,9 @@
 package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.Model.*;
+import Circuit.Circuit.Model.Enum.CondicaoPagamento;
+import Circuit.Circuit.Model.Enum.FormaPagamento;
+import Circuit.Circuit.Model.Enum.StatusVenda;
 import Circuit.Circuit.Repository.VendaRepository;
 import Circuit.Circuit.Service.ClienteService;
 import Circuit.Circuit.Service.FuncionarioService;
@@ -37,7 +40,6 @@ public class VendaController {
     private VendaRepository vendaRepository;
 
     @GetMapping
-    @Transactional
     public String abrirVendas(Model model){
         List<Cliente> clientes = clienteService.listarAtivos();
         List<Funcionario> funcionarios = funcionarioService.listarApenasVendedores();
@@ -85,16 +87,16 @@ public class VendaController {
     public String atulizarStatus(@RequestParam Long vendaId,@RequestParam StatusVenda novoStatus,RedirectAttributes ra){
         try{
 
-        vendaService.atualizarStatus(vendaId,novoStatus);
-        ra.addFlashAttribute("mensagemSucesso", "Status da venda atualizado com sucesso!");
-    } catch (Exception e){
+            vendaService.atualizarStatus(vendaId,novoStatus);
+            ra.addFlashAttribute("mensagemSucesso", "Status da venda atualizado com sucesso!");
+        } catch (Exception e){
             ra.addFlashAttribute("mensagemErro", "Erro ao atualizar status: " + e.getMessage());
         }
         return "redirect:/vendas";
     }
     @GetMapping("/{id}/itens-json-venda")
     @ResponseBody
-    public List<Map<String, Object>> buscarItensVenda(@PathVariable Long id) {
+    List<Map<String, Object>> buscarItensVenda(@PathVariable Long id) {
         Venda venda = vendaRepository.findById(id).orElseThrow();
         List<Map<String, Object>> response = new ArrayList<>();
 
@@ -106,7 +108,7 @@ public class VendaController {
             if (item.getProduto() != null) {
                 dto.put("id", item.getProduto().getId());
                 dto.put("nome", item.getProduto().getNome());
-                
+
 
                 if (item.getPrecoUnitario() == null) {
                     dto.put("precoUnitario", item.getProduto().getPrecoVenda());

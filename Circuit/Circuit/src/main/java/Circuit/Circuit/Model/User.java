@@ -1,5 +1,6 @@
 package Circuit.Circuit.Model;
 
+import Circuit.Circuit.Model.Enum.Cargo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

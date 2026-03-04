@@ -23,7 +23,7 @@
                 <div class="page-header">
                     <h1 class="page-title">Contas a Receber</h1>
                 </div>
-
+                
                 <div class="stats-container">
                     <div class="stat-card" style="border-left: 4px solid #059669;">
                         <div class="stat-header">
@@ -85,7 +85,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Cliente</th>
-                                <th>Descrição</th>
+                                <th>Origem</th>
                                 <th>Vencimento</th>
                                 <th>Valor</th>
                                 <th>Status</th>
@@ -96,7 +96,7 @@
                             <tr th:each="conta : ${listaContasReceber}">
                                 <td><strong th:text="'#' + ${conta.id}"></strong></td>
                                 <td th:text="${conta.cliente?.nome}"></td>
-                                <td th:text="${conta.descricao}"></td>
+                                <td th:text="${conta.getOrigem()}"></td>
                                 <td th:text="${#temporals.format(conta.dataVencimento, 'dd/MM/yyyy')}"></td>
                                 <td th:text="'R$ ' + ${#numbers.formatDecimal(conta.valor, 1, 2)}"></td>
                                 <td>
@@ -110,13 +110,19 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn-action btn-edit" type="button" th:data-id="${conta.id}" onclick="editarContaReceber(${conta.id})">
+                                        <button class="btn-action btn-edit" type="button" th:data-id="${conta.id}" onclick="editarContaReceber()">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
                                         </button>
-                                        <button class="btn-action btn-delete" type="button" th:data-id="${conta.id}" onclick="deletarContaReceber(${conta.id})">
+                                        <button class="btn-action btn-success" type="button" th:data-id="${conta.id}" th:data-valor="${conta.valor}" th:data-cliente="${conta.cliente?.nome}" onclick="abrirModalReceber()" title="Receber">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 1v22"></path>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn-action btn-delete" type="button" th:data-id="${conta.id}" onclick="deletarContaReceber()">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <polyline points="3 6 5 6 21 6"></polyline>
                                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -145,7 +151,7 @@
                 <input type="hidden" id="contaReceberId">
                 
                 <div class="form-group">
-                    <label for="cliente">Cliente *</label>
+                    <label for="cliente">Cliente </label>
                     <select id="cliente" name="cliente" required>
                         <option value="">Selecione um cliente</option>
                         <option th:each="cliente : ${listaClientes}" th:value="${cliente.id}" th:text="${cliente.nome}"></option>
@@ -153,23 +159,23 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="descricao">Descrição *</label>
+                    <label for="descricao">Descrição </label>
                     <input type="text" id="descricao" name="descricao" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="valor">Valor *</label>
+                        <label for="valor">Valor </label>
                         <input type="number" id="valor" name="valor" step="0.01" min="0" required>
                     </div>
                     <div class="form-group">
-                        <label for="dataVencimento">Vencimento *</label>
+                        <label for="dataVencimento">Vencimento </label>
                         <input type="date" id="dataVencimento" name="dataVencimento" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="status">Status *</label>
+                    <label for="status">Status </label>
                     <select id="status" name="status" required>
                         <option value="PENDENTE">Pendente</option>
                         <option value="VENCIDO">Vencido</option>
@@ -185,6 +191,59 @@
     </div>
 </div>
 
-<script th:src="@{/static/js/contas_receber.js}"></script>
+<div class="modal" id="modalReceber">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h2>Receber Pagamento</h2>
+            <button class="modal-close" onclick="fecharModalReceber()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="formReceber">
+                <input type="hidden" id="receberId">
+                
+                <div class="form-group">
+                    <label for="receberCliente">Cliente</label>
+                    <input type="text" id="receberCliente" name="cliente" readonly style="background: #f5f5f5;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="receberValor">Valor a Pagar</label>
+                        <input type="number" id="receberValor" name="valor" step="0.01" min="0" readonly style="background: #f5f5f5;">
+                    </div>
+                    <div class="form-group">
+                        <label for="receberValorRecebido">Valor Recebido</label>
+                        <input type="number" id="receberValorRecebido" name="valorRecebido" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="receberDataPagamento">Data Pagamento</label>
+                        <input type="date" id="receberDataPagamento" name="dataPagamento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="receberFormaPagamento">Forma de Pagamento</label>
+                        <select id="receberFormaPagamento" name="formaPagamento" required>
+                            <option value="">Selecione...</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="PIX">PIX</option>
+                            <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+                            <option value="CARTAO_DEBITO">Cartão de Débito</option>
+                            <option value="BOLETO">Boleto</option>
+                            <option value="TRANSFERENCIA">Transferência</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="fecharModalReceber()">Cancelar</button>
+            <button class="btn-primary" onclick="confirmarReceber()">Receber</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/contas_receber.js}"></script>
 </body>
 </html>

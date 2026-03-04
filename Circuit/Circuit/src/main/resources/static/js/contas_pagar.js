@@ -144,6 +144,76 @@ function fecharModalContaPagar() {
     document.getElementById('modalContaPagar').style.display = 'none';
 }
 
+function abrirModalPagar(id, valor, fornecedor) {
+    document.getElementById('pagarId').value = id;
+    document.getElementById('pagarFornecedor').value = fornecedor;
+    document.getElementById('pagarValor').value = valor;
+    document.getElementById('pagarValorPago').value = valor;
+    
+    // Define a data de pagamento como hoje
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('pagarDataPagamento').value = hoje;
+    
+    // Limpa a forma de pagamento
+    document.getElementById('pagarFormaPagamento').value = '';
+    
+    document.getElementById('modalPagar').style.display = 'block';
+}
+
+function fecharModalPagar() {
+    document.getElementById('modalPagar').style.display = 'none';
+    document.getElementById('formPagar').reset();
+}
+
+async function confirmarPagar() {
+    const id = document.getElementById('pagarId').value;
+    const valorPago = document.getElementById('pagarValorPago').value;
+    const dataPagamento = document.getElementById('pagarDataPagamento').value;
+    const formaPagamento = document.getElementById('pagarFormaPagamento').value;
+    
+    // Validação
+    if (!valorPago || valorPago <= 0) {
+        alert('Por favor, informe o valor pago.');
+        return;
+    }
+    
+    if (!dataPagamento) {
+        alert('Por favor, informe a data do pagamento.');
+        return;
+    }
+    
+    if (!formaPagamento) {
+        alert('Por favor, selecione a forma de pagamento.');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/contas-pagar/pagar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                id: id,
+                valorPago: valorPago,
+                dataPagamento: dataPagamento,
+                formaPagamento: formaPagamento
+            })
+        });
+        
+        if (response.ok) {
+            alert('Pagamento realizado com sucesso!');
+            fecharModalPagar();
+            location.reload();
+        } else {
+            alert('Erro ao realizar pagamento. Tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao realizar pagamento. Tente novamente.');
+    }
+}
+
 function formatarData(data) {
     if (!data) return '-';
     return new Date(data).toLocaleDateString('pt-BR');
@@ -179,8 +249,12 @@ function setupSearch(searchInputId, tableId, rowSelector) {
 }
 
 window.onclick = function(event) {
-    const modal = document.getElementById('modalContaPagar');
-    if (event.target == modal) {
+    const modalContaPagar = document.getElementById('modalContaPagar');
+    const modalPagar = document.getElementById('modalPagar');
+    if (event.target == modalContaPagar) {
         fecharModalContaPagar();
+    }
+    if (event.target == modalPagar) {
+        fecharModalPagar();
     }
 }

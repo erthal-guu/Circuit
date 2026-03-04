@@ -1,6 +1,9 @@
 package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.*;
+import Circuit.Circuit.Model.Enum.CondicaoPagamento;
+import Circuit.Circuit.Model.Enum.FormaPagamento;
+import Circuit.Circuit.Model.Enum.StatusVenda;
 import Circuit.Circuit.Repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,11 @@ public class VendaService {
     @Autowired
      private EstoqueService estoqueService;
 
-    public void salvarVenda(Long id, Long clienteId, Long funcionarioId, BigDecimal valorTotal,BigDecimal valorBruto,
+    @Autowired
+    private ContaReceberService contaReceberService;
+
+    @Transactional
+    public void salvarVenda(Long id, Long clienteId, Long funcionarioId, BigDecimal valorTotal, BigDecimal valorBruto,
                             BigDecimal porcentagemDesconto,
                             String motivoDesconto, LocalDate dataVenda, String codigo,
                             StatusVenda status, FormaPagamento formaPagamento,
@@ -66,13 +73,20 @@ public class VendaService {
         }
 
         vendaRepository.save(venda);
+
+        if (venda.getStatus()==StatusVenda.CONCLUIDA){
+            contaReceberService.gerarContaReceberParaVenda(venda);
+        }
     }
+    @Transactional
     public List<Venda> listarTodasVendas(){
         return vendaRepository.findAll();
     }
+    @Transactional
     public List<Venda> listarVendasPendentes(){
         return vendaRepository.findByStatus(StatusVenda.PENDENTE);
     }
+    @Transactional
     public List<Venda>listarVendasConcluidas(){
         return vendaRepository.findByStatus(StatusVenda.CONCLUIDA);
     }
@@ -80,6 +94,9 @@ public class VendaService {
     public void atualizarStatus(Long id,StatusVenda novoStatus){
         Venda venda = vendaRepository.findById(id).orElseThrow();
         venda.setStatus(novoStatus);
+        if (novoStatus == StatusVenda.CONCLUIDA) {
+            contaReceberService.gerarContaReceberParaVenda(venda);
+        }
         vendaRepository.save(venda);
     }
 

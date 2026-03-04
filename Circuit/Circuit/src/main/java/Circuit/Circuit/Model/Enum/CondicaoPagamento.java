@@ -1,4 +1,4 @@
-package Circuit.Circuit.Model;
+package Circuit.Circuit.Model.Enum;
 
 public enum CondicaoPagamento {
     AVISTA,

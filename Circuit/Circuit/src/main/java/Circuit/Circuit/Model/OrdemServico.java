@@ -1,5 +1,6 @@
 package Circuit.Circuit.Model;
 
+import Circuit.Circuit.Model.Enum.StatusOrdem;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,6 +1,7 @@
 package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.Model.*;
+import Circuit.Circuit.Model.Enum.StatusPedido;
 import Circuit.Circuit.Repository.PedidoRepository;
 import Circuit.Circuit.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;

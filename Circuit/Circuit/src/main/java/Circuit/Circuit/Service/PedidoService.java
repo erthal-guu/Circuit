@@ -1,6 +1,7 @@
 package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.*;
+import Circuit.Circuit.Model.Enum.StatusPedido;
 import Circuit.Circuit.Repository.*;
 import Circuit.Circuit.Service.Email.EmailService;
 import jakarta.transaction.Transactional;

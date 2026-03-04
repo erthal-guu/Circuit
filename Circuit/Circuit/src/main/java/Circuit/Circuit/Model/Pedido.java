@@ -1,4 +1,5 @@
 package Circuit.Circuit.Model;
+import Circuit.Circuit.Model.Enum.StatusPedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package Circuit.Circuit.Repository;
 
 import Circuit.Circuit.Model.OrdemServico;
-import Circuit.Circuit.Model.StatusOrdem;
+import Circuit.Circuit.Model.Enum.StatusOrdem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
