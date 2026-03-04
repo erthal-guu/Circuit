@@ -654,7 +654,7 @@ function inserirLinhaItensVenda(id, nome, qtd, preco, total) {
                        style="width: 60px;">
                 <input type="number" placeholder="Preço (R$)" value="${preco}" step="0.01"
                        oninput="atualizarItemVenda(${id}, 'preco', this.value)"
-                       style="width: 100px;">
+                       style="width: 100px;" readonly>
                 <button type="button" class="close-btn" onclick="removerItemVenda(${id})">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>

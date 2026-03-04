@@ -90,6 +90,33 @@
             <span class="menu-text">Aparelhos</span>
         </a>
 
+        <div class="menu-section"><span class="menu-section-title">FINANCEIRO</span></div>
+
+        <a th:href="@{/financeiro}" class="menu-item"
+           th:classappend="${activePage == 'financeiro'} ? 'active' : ''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+            </svg>
+            <span class="menu-text">Dashboards Financeiro</span>
+        </a>
+        <a th:href="@{/contas-pagar}" class="menu-item"
+           th:classappend="${activePage == 'contas-pagar'} ? 'active' : ''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+            <span class="menu-text">Contas a Pagar</span>
+        </a>
+        <a th:href="@{/contas-receber}" class="menu-item"
+           th:classappend="${activePage == 'contas-receber'} ? 'active' : ''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <span class="menu-text">Contas a Receber</span>
+        </a>
+
         <div class="menu-section"><span class="menu-section-title">SISTEMA</span></div>
 
         <a th:href="@{/funcionarios}" class="menu-item"

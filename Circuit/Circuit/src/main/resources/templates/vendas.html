@@ -268,6 +268,7 @@
                                 <th>Status</th>
                                 <th>Data</th>
                                 <th>Valor total</th>
+                                <th>Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -287,6 +288,29 @@
                                 </td>
                                 <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"></td>
                                 <td th:text="'R$ ' + ${#numbers.formatDecimal(venda.valorTotal, 1, 2)}"></td>
+                                <td><button class="btn-action" type="button" title="Detalhes"
+                                            th:data-id="${venda.id}"
+                                            th:data-codigo="${venda.codigo}"
+                                            th:data-cliente="${venda.cliente?.nome}"
+                                            th:data-responsavel="${venda.funcionario?.nome}"
+                                            th:data-data="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}"
+                                            th:data-status="${venda.status}"
+                                            th:data-forma-pagamento="${venda.formaPagamento}"
+                                            th:data-condicao-pagamento="${venda.condicaoPagamento}"
+                                            th:data-numero-parcelas="${venda.numeroParcelas}"
+                                            th:data-valor-bruto="${venda.valorBruto}"
+                                            th:data-desconto="${venda.porcentagemDesconto}"
+                                            th:data-valor-total="${venda.valorTotal}"
+                                            onclick="abrirModalDetalhes(this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                    </svg>
+                                </button></td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(listaVendasConcluidas)}"><td colspan="9" style="text-align: center; padding: 20px;">Nenhuma venda concluída.</td></tr>
                             </tbody>

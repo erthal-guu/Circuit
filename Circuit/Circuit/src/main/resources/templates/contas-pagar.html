@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head.html :: head(titulo = 'Contas a Pagar')}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/menu :: sidebar('contas-pagar')}"></div>
+
+    <main class="main-content">
+        <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
+
+        <div class="content">
+            <div class="content">
+                <div th:if="${mensagemSucesso}" class="auto-close" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                    <span>✅</span>
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div th:if="${mensagemDelete}" class="auto-close" style="background: #FFFFE0; color: goldenrod; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid yellow; display: flex; align-items: center; gap: 10px;">
+                    <span>🗑️</span>
+                    <span th:text="${mensagemDelete}"></span>
+                </div>
+
+                <div class="page-header">
+                    <h1 class="page-title">Contas a Pagar</h1>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-card" style="border-left: 4px solid #e74c3c;">
+                        <div class="stat-header">
+                            <span class="stat-title">Total Pendente</span>
+                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value">
+                            <small style="font-size: 0.5em; vertical-align: middle;">R$</small>
+                            <span th:text="${#numbers.formatDecimal(totalPendente, 1, 2)}">0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card alert" style="border-left: 4px solid #d97706;">
+                        <div class="stat-header">
+                            <span class="stat-title">Total Vencido</span>
+                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" style="color: #d97706;" th:text="${#numbers.formatDecimal(totalVencido, 1, 2)}">
+                            0,00
+                        </div>
+                    </div>
+
+                    <div class="stat-card" style="border-left: 4px solid #059669;">
+                        <div class="stat-header">
+                            <span class="stat-title">Total Pago</span>
+                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value">
+                            <small style="font-size: 0.5em; vertical-align: middle;">R$</small>
+                            <span th:text="${#numbers.formatDecimal(totalPago, 1, 2)}">0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Contas a Pagar</h3>
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchContas" placeholder="Buscar conta...">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabelaContasPagar">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fornecedor</th>
+                                <th>Descrição</th>
+                                <th>Vencimento</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="conta : ${listaContasPagar}">
+                                <td><strong th:text="'#' + ${conta.id}"></strong></td>
+                                <td th:text="${conta.fornecedor?.nome}"></td>
+                                <td th:text="${conta.descricao}"></td>
+                                <td th:text="${#temporals.format(conta.dataVencimento, 'dd/MM/yyyy')}"></td>
+                                <td th:text="'R$ ' + ${#numbers.formatDecimal(conta.valor, 1, 2)}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${
+                                               conta.status.name() == 'PENDENTE' ? 'badge-warning' :
+                                               (conta.status.name() == 'VENCIDO' ? 'badge-danger' :
+                                               (conta.status.name() == 'PAGO' ? 'badge-success' : 'badge-secondary'))
+                                          }"
+                                          th:text="${conta.status}">PENDENTE</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-edit" type="button" th:data-id="${conta.id}" onclick="editarContaPagar(${conta.id})">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn-action btn-delete" type="button" th:data-id="${conta.id}" onclick="deletarContaPagar(${conta.id})">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="modalContaPagar">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 th:text="${contaPagar?.id != null} ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'">Nova Conta a Pagar</h2>
+            <button class="modal-close" onclick="fecharModalContaPagar()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="formContaPagar">
+                <input type="hidden" id="contaPagarId">
+                
+                <div class="form-group">
+                    <label for="fornecedor">Fornecedor *</label>
+                    <select id="fornecedor" name="fornecedor" required>
+                        <option value="">Selecione um fornecedor</option>
+                        <option th:each="fornecedor : ${listaFornecedores}" th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição *</label>
+                    <input type="text" id="descricao" name="descricao" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="valor">Valor *</label>
+                        <input type="number" id="valor" name="valor" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataVencimento">Vencimento *</label>
+                        <input type="date" id="dataVencimento" name="dataVencimento" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" name="status" required>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="VENCIDO">Vencido</option>
+                        <option value="PAGO">Pago</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="fecharModalContaPagar()">Cancelar</button>
+            <button class="btn-primary" onclick="salvarContaPagar()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/static/js/contas_pagar.js}"></script>
+</body>
+</html>
