@@ -31,6 +31,7 @@ public class ContasPagar {
     @Enumerated(EnumType.STRING)
     private StatusFinanceiro status;
 
+    private String descricao;
     private String origem;
     private Long origemId;
 

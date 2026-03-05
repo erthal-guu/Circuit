@@ -75,7 +75,7 @@ public class FornecedorController {
             fornecedorService.excluirFornecedor(id);
             redirectAttributes.addFlashAttribute("mensagemDelete", "Funcionário desativado com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
+                redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
         }
         return "redirect:/fornecedores";
     }

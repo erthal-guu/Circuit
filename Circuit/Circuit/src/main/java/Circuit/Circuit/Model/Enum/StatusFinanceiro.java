@@ -4,6 +4,6 @@ public enum StatusFinanceiro {
     PENDENTE,
     PARCIAL,
     PAGO,
-    VENCIDO,
-    CANCELADO
+    VENCIDA,
+    CANCELADA
 }

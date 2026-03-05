@@ -20,12 +20,12 @@ public class ContaReceberService {
     ContaReceberRepository contaReceberRepository;
 
     public void gerarContaReceberParaVenda(Venda venda ) {
-        boolean VendaJaGerada = contaReceberRepository.existsByOrigemAndOrigemId("VENDA", venda.getId());
+        boolean VendaJaGerada = contaReceberRepository.existsByOrigemAndOrigemId("Venda", venda.getId());
         if (VendaJaGerada){
             return;
         }
         ContasReceber contasReceber = new ContasReceber();
-        contasReceber.setOrigem("VENDA");
+        contasReceber.setOrigem("Venda");
         contasReceber.setOrigemId(venda.getId());
         contasReceber.setValor(venda.getValorTotal());
         contasReceber.setDataVencimento(venda.getDataVenda().plusDays(30));
@@ -35,12 +35,12 @@ public class ContaReceberService {
     }
 
     public void gerarContaReceberParaOS(OrdemServico ordemServico) {
-        boolean OSjaGerada = contaReceberRepository.existsByOrigemAndOrigemId("ORDEM_SERVICO", ordemServico.getId());
+        boolean OSjaGerada = contaReceberRepository.existsByOrigemAndOrigemId("Ordem de serviço", ordemServico.getId());
         if (OSjaGerada) {
             return;
         }
         ContasReceber contasReceber = new ContasReceber();
-        contasReceber.setOrigem("ORDEM_SERVICO");
+        contasReceber.setOrigem("Ordem de serviço");
         contasReceber.setOrigemId(ordemServico.getId());
         contasReceber.setValor(ordemServico.getValorTotal());
         contasReceber.setDataVencimento(ordemServico.getDataEntrada().plusDays(30).toLocalDate());
@@ -55,20 +55,15 @@ public class ContaReceberService {
     public void receberPagamento(Long id, BigDecimal valorRecebido, LocalDate dataPagamento, FormaPagamento formaPagamento, CondicaoPagamento condicaoPagamento, Integer numeroParcelas) {
         ContasReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
-        
-        // Validação: Não é possível pagar uma conta com status PAGO
+
         if (conta.getStatus() == StatusFinanceiro.PAGO) {
             throw new RuntimeException("Não é possível receber pagamento de uma conta com status PAGO");
         }
         
         BigDecimal valorTotal = conta.getValor();
-        
-        // Validação: Valor recebido deve ser maior que zero
         if (valorRecebido.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Valor recebido deve ser maior que zero");
         }
-
-        // Validação: Valor recebido não pode ser maior que o valor total
         if (valorRecebido.compareTo(valorTotal) > 0) {
             throw new RuntimeException("Valor recebido não pode ser maior que o valor total da conta");
         }
@@ -84,8 +79,6 @@ public class ContaReceberService {
         if (numeroParcelas != null) {
             conta.setNumeroParcelas(numeroParcelas);
         }
-
-        // Validação: Define o status com base no valor recebido
         if (valorRecebido.compareTo(valorTotal) < 0) {
             conta.setStatus(StatusFinanceiro.PARCIAL);
         } else if (valorRecebido.compareTo(valorTotal) == 0) {
@@ -101,7 +94,7 @@ public class ContaReceberService {
     }
 
     public BigDecimal calcularTotalVencido() {
-        List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.VENCIDO);
+        List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.VENCIDA);
         return contas.stream().map(ContasReceber::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -113,13 +106,47 @@ public class ContaReceberService {
     public void atualizarStatus(Long id, StatusFinanceiro novoStatus) {
         ContasReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
-        
-        // Validação: Não é possível alterar o status de uma conta PAGO para PENDENTE
         if (conta.getStatus() == StatusFinanceiro.PAGO && novoStatus == StatusFinanceiro.PENDENTE) {
             throw new RuntimeException("Não é possível alterar o status de uma conta PAGO para PENDENTE");
         }
         
         conta.setStatus(novoStatus);
+        contaReceberRepository.save(conta);
+    }
+    public void cancelarConta(Long id){
+        ContasReceber contasReceber = contaReceberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        if (contasReceber.getStatus() == StatusFinanceiro.CANCELADA) {
+            throw new RuntimeException("Não é possível cancelar uma conta já cancelada");
+        }
+
+        contasReceber.setStatus(StatusFinanceiro.CANCELADA);
+        contasReceber.setValorRecebido(BigDecimal.ZERO);
+        contaReceberRepository.save(contasReceber);
+    }
+
+    public void editarConta(Long id, Long clienteId, BigDecimal valor, BigDecimal valorRecebido,
+                          LocalDate dataVencimento, LocalDate dataPagamento, FormaPagamento formaPagamento,
+                          CondicaoPagamento condicaoPagamento, Integer numeroParcelas) {
+        ContasReceber conta = contaReceberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        // Atualiza os campos permitidos
+        conta.setDataVencimento(dataVencimento);
+        if (dataPagamento != null) {
+            conta.setDataPagamento(dataPagamento);
+        }
+        if (formaPagamento != null) {
+            conta.setFormaPagamento(formaPagamento);
+        }
+        if (condicaoPagamento != null) {
+            conta.setCondicaoPagamento(condicaoPagamento);
+        }
+        if (numeroParcelas != null) {
+            conta.setNumeroParcelas(numeroParcelas);
+        }
+
         contaReceberRepository.save(conta);
     }
 
