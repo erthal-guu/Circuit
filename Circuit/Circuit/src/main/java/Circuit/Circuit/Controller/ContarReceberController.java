@@ -1,6 +1,7 @@
 package Circuit.Circuit.Controller;
 
 import Circuit.Circuit.Model.ContasReceber;
+import Circuit.Circuit.Model.Enum.CondicaoPagamento;
 import Circuit.Circuit.Model.Enum.FormaPagamento;
 import Circuit.Circuit.Model.Enum.StatusFinanceiro;
 import Circuit.Circuit.Repository.ContaReceberRepository;
@@ -40,18 +41,30 @@ public class ContarReceberController {
     public String receberPagamento(@RequestParam Long id,
                                     @RequestParam BigDecimal valorRecebido,
                                     @RequestParam LocalDate dataPagamento,
-                                    @RequestParam FormaPagamento formaPagamento,
+
+                                    @RequestParam(required = false) FormaPagamento formaPagamento,
+                                    @RequestParam(required = false) CondicaoPagamento condicaoPagamento,
+                                    @RequestParam(required = false) Integer numeroParcelas,
                                     RedirectAttributes redirectAttributes) {
+ 
         try {
-            ContasReceber conta = contaReceberRepository.findById(id).orElseThrow();
-            conta.setValorRecebido(valorRecebido);
-            conta.setDataPagamento(dataPagamento);
-            conta.setFormaPagamento(formaPagamento);
-            conta.setStatus(StatusFinanceiro.PAGO);
-            contaReceberRepository.save(conta);
+            contaReceberService.receberPagamento(id, valorRecebido, dataPagamento, formaPagamento, condicaoPagamento, numeroParcelas);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Pagamento recebido com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao receber pagamento: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro", e.getMessage());
+        }
+        return "redirect:/contas-receber";
+    }
+
+    @PostMapping("/atualizar-status")
+    public String atualizarStatus(@RequestParam Long id,
+                                   @RequestParam StatusFinanceiro status,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            contaReceberService.atualizarStatus(id, status);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Status atualizado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", e.getMessage());
         }
         return "redirect:/contas-receber";
     }

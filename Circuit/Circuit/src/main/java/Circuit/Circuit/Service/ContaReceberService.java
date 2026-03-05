@@ -1,6 +1,8 @@
 package Circuit.Circuit.Service;
 
 import Circuit.Circuit.Model.ContasReceber;
+import Circuit.Circuit.Model.Enum.CondicaoPagamento;
+import Circuit.Circuit.Model.Enum.FormaPagamento;
 import Circuit.Circuit.Model.Enum.StatusFinanceiro;
 import Circuit.Circuit.Model.OrdemServico;
 import Circuit.Circuit.Model.Venda;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -48,6 +51,49 @@ public class ContaReceberService {
     public List<ContasReceber> listarContasReceber(){
         return contaReceberRepository.findAll();
     }
+    
+    public void receberPagamento(Long id, BigDecimal valorRecebido, LocalDate dataPagamento, FormaPagamento formaPagamento, CondicaoPagamento condicaoPagamento, Integer numeroParcelas) {
+        ContasReceber conta = contaReceberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+        
+        // Validação: Não é possível pagar uma conta com status PAGO
+        if (conta.getStatus() == StatusFinanceiro.PAGO) {
+            throw new RuntimeException("Não é possível receber pagamento de uma conta com status PAGO");
+        }
+        
+        BigDecimal valorTotal = conta.getValor();
+        
+        // Validação: Valor recebido deve ser maior que zero
+        if (valorRecebido.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Valor recebido deve ser maior que zero");
+        }
+
+        // Validação: Valor recebido não pode ser maior que o valor total
+        if (valorRecebido.compareTo(valorTotal) > 0) {
+            throw new RuntimeException("Valor recebido não pode ser maior que o valor total da conta");
+        }
+        
+        conta.setValorRecebido(valorRecebido);
+        conta.setDataPagamento(dataPagamento);
+        if (formaPagamento != null) {
+            conta.setFormaPagamento(formaPagamento);
+        }
+        if (condicaoPagamento != null) {
+            conta.setCondicaoPagamento(condicaoPagamento);
+        }
+        if (numeroParcelas != null) {
+            conta.setNumeroParcelas(numeroParcelas);
+        }
+
+        // Validação: Define o status com base no valor recebido
+        if (valorRecebido.compareTo(valorTotal) < 0) {
+            conta.setStatus(StatusFinanceiro.PARCIAL);
+        } else if (valorRecebido.compareTo(valorTotal) == 0) {
+            conta.setStatus(StatusFinanceiro.PAGO);
+        }
+        
+        contaReceberRepository.save(conta);
+    }
 
     public BigDecimal calcularTotalPendente() {
         List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.PENDENTE);
@@ -62,6 +108,19 @@ public class ContaReceberService {
     public BigDecimal calcularTotalRecebido() {
         List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.PAGO);
         return contas.stream().map(ContasReceber::getValorRecebido).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void atualizarStatus(Long id, StatusFinanceiro novoStatus) {
+        ContasReceber conta = contaReceberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+        
+        // Validação: Não é possível alterar o status de uma conta PAGO para PENDENTE
+        if (conta.getStatus() == StatusFinanceiro.PAGO && novoStatus == StatusFinanceiro.PENDENTE) {
+            throw new RuntimeException("Não é possível alterar o status de uma conta PAGO para PENDENTE");
+        }
+        
+        conta.setStatus(novoStatus);
+        contaReceberRepository.save(conta);
     }
 
 }
