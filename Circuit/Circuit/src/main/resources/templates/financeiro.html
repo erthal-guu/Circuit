@@ -11,7 +11,6 @@
         <header th:replace="~{fragments/header.html :: header}" class="top-bar"></header>
 
         <div class="content">
-            <!-- Header com Título e Filtro -->
             <div class="finance-header">
                 <div>
                     <h1 class="finance-title">Dashboard Financeiro</h1>
@@ -36,8 +35,6 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Cards de Resumo Principal -->
             <div class="summary-cards">
                 <div class="summary-card summary-card-green">
                     <div class="summary-icon">
@@ -47,13 +44,13 @@
                     </div>
                     <div class="summary-content">
                         <p class="summary-label">Receita Total</p>
-                        <h3 class="summary-value">R$ 125.500,00</h3>
+                        <h3 class="summary-value" th:text="${#numbers.formatDecimal(receitaTotal, 1, 2)}"></h3>
                         <div class="summary-trend positive">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
                                 <polyline points="17 6 23 6 23 12"/>
                             </svg>
-                            <span>+12.5% vs mês anterior</span>
+                            <span>Calculado Automaticamente</span>
                         </div>
                     </div>
                 </div>
@@ -66,13 +63,13 @@
                     </div>
                     <div class="summary-content">
                         <p class="summary-label">Despesa Total</p>
-                        <h3 class="summary-value">R$ 78.300,00</h3>
+                        <h3 class="summary-value" th:text="${#numbers.formatDecimal(despesaTotal, 1, 2)}"></h3>
                         <div class="summary-trend negative">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
                                 <polyline points="17 18 23 18 23 12"/>
                             </svg>
-                            <span>+8.3% vs mês anterior</span>
+                            <span>Calculado Automaticamente</span>
                         </div>
                     </div>
                 </div>
@@ -85,13 +82,13 @@
                     </div>
                     <div class="summary-content">
                         <p class="summary-label">Saldo Líquido</p>
-                        <h3 class="summary-value">R$ 47.200,00</h3>
+                        <h3 class="summary-value" th:text="${#numbers.formatDecimal(saldoLiquido, 1, 2)}"></h3>
                         <div class="summary-trend positive">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
                                 <polyline points="17 6 23 6 23 12"/>
                             </svg>
-                            <span>+18.7% vs mês anterior</span>
+                            <span>Calculado Automaticamente</span>
                         </div>
                     </div>
                 </div>
@@ -115,8 +112,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Seção de Gráficos -->
             <div class="charts-section">
                 <div class="chart-card">
                     <div class="chart-header">
@@ -150,8 +145,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Seção de Contas -->
             <div class="accounts-section">
                 <div class="accounts-card">
                     <div class="accounts-header">
