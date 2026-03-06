@@ -35,6 +35,9 @@ public class PedidoService {
     private EmailService emailService;
     @Autowired
     private NotificacaoService notificacaoService;
+    
+    @Autowired
+    private ContasPagarService contasPagarService;
 
     public List<Pedido> listarPedidos() {
         List<StatusPedido> statusPedidos = Arrays.asList(
@@ -118,6 +121,7 @@ public class PedidoService {
 
         if (novoStatus == StatusPedido.RECEBIDO) {
             notificacaoService.criarNotificacaoUnica(pedido);
+            contasPagarService.gerarContaPagarParaPedido(pedido);
         }
 
         if (Boolean.TRUE.equals(deveNotificar)) {

@@ -17,6 +17,31 @@ function abrirModalNovaContaReceber() {
     document.getElementById('modalContaReceber').classList.add('active');
 }
 
+function pesquisarContas() {
+    const termoBusca = document.getElementById('searchContas').value.toLowerCase();
+    const tabela = document.getElementById('tabelaContasReceber');
+    const linhas = tabela.getElementsByTagName('tr');
+    
+    for (let i = 1; i < linhas.length; i++) {
+        const linha = linhas[i];
+        const textoLinha = linha.textContent.toLowerCase();
+        
+        if (termoBusca === '') {
+            linha.style.display = '';
+        } else if (textoLinha.includes(termoBusca)) {
+            linha.style.display = '';
+        } else {
+            linha.style.display = 'none';
+        }
+    }
+}
+
+document.getElementById('searchContas').addEventListener('input', pesquisarContas);
+
+function recarregarPagina() {
+    window.location.reload();
+}
+
 function fecharModalContaReceber() {
     document.getElementById('modalContaReceber').classList.remove('active');
 }
@@ -55,12 +80,10 @@ function salvarContaReceber() {
         numeroParcelas: numeroParcelas || 1
     };
 
-    // Cria um formulário para enviar os dados
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = '/contas-receber/editar';
 
-    // Adiciona os campos ao formulário
     for (const key in dados) {
         if (dados[key] !== null && dados[key] !== '') {
             const input = document.createElement('input');
@@ -98,9 +121,9 @@ function abrirModalReceber(btn) {
     const hoje = new Date().toISOString().split('T')[0];
 
     if (origem === 'Ordem de serviço') {
-        if (receberDataPagamentoRow) receberDataPagamentoRow.value = hoje;
-    } else {
         if (receberDataPagamento) receberDataPagamento.value = hoje;
+    } else {
+        if (receberDataPagamentoRow) receberDataPagamentoRow.value = hoje;
     }
 
     const condicaoAVistaReceber = document.getElementById('condicaoAVistaReceber');
@@ -142,10 +165,16 @@ function abrirModalReceber(btn) {
         }
     } else {
         if (formaPagamentoRow) {
-            formaPagamentoRow.style.display = 'none';
+            formaPagamentoRow.style.display = 'flex';
         }
         if (dataPagamentoRow) {
-            dataPagamentoRow.style.display = 'flex';
+            dataPagamentoRow.style.display = 'none';
+        }
+        if (receberFormaPagamento) {
+            receberFormaPagamento.value = formaPagamento || '';
+            if (formaPagamento) {
+                receberFormaPagamento.dispatchEvent(new Event('change'));
+            }
         }
         if (condicaoPagamentoContainer) {
             condicaoPagamentoContainer.style.display = 'none';
@@ -275,7 +304,6 @@ async function confirmarReceber() {
     const condicaoPagamento = document.querySelector('input[name="condicaoPagamentoReceber"]:checked')?.value;
     const numeroParcelas = document.getElementById('parcelasReceber').value;
 
-    // Determina qual input de data usar
     const dataPagamentoRow = document.getElementById('receberDataPagamentoRow');
     const dataPagamentoInput = dataPagamentoRow && dataPagamentoRow.offsetParent !== null
         ? dataPagamentoRow
@@ -416,7 +444,7 @@ function editarContaReceber(btn) {
     } else {
         if (condicaoAVistaRadio) condicaoAVistaRadio.checked = true;
     }
-    
+
     const numeroParcelasInput = document.getElementById('numeroParcelas');
     if (numeroParcelasInput) {
         numeroParcelasInput.value = numeroParcelas || 1;
@@ -428,4 +456,7 @@ function editarContaReceber(btn) {
     }
     document.getElementById('modalContaReceber').classList.add('active');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+});
 

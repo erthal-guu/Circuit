@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ContaPagarRepository extends JpaRepository<ContasPagar, Long> {
     List<ContasPagar> findByStatus(StatusFinanceiro status);
+    boolean existsByOrigemAndOrigemId(String origem, Long origemId);
 }

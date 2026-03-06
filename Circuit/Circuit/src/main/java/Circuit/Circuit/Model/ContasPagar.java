@@ -1,5 +1,6 @@
 package Circuit.Circuit.Model;
 
+import Circuit.Circuit.Model.Enum.CondicaoPagamento;
 import Circuit.Circuit.Model.Enum.FormaPagamento;
 import Circuit.Circuit.Model.Enum.StatusFinanceiro;
 import jakarta.persistence.*;
@@ -27,6 +28,11 @@ public class ContasPagar {
 
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
+
+    @Enumerated(EnumType.STRING)
+    private CondicaoPagamento condicaoPagamento;
+
+    private Integer numeroParcelas;
 
     @Enumerated(EnumType.STRING)
     private StatusFinanceiro status;

@@ -11,13 +11,20 @@
 
         <div class="content">
             <div class="content">
-                <div th:if="${mensagemSucesso}" class="auto-close" style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
+                <div th:if="${mensagemSucesso}" class="auto-close"
+                     style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;">
                     <span>✅</span>
                     <span th:text="${mensagemSucesso}"></span>
                 </div>
-                <div th:if="${mensagemDelete}" class="auto-close" style="background: #FFFFE0; color: goldenrod; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid yellow; display: flex; align-items: center; gap: 10px;">
+                <div th:if="${mensagemDelete}" class="auto-close"
+                     style="background: #FFFFE0; color: goldenrod; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid yellow; display: flex; align-items: center; gap: 10px;">
                     <span>🗑️</span>
                     <span th:text="${mensagemDelete}"></span>
+                </div>
+                <div th:if="${mensagemErro}" class="auto-close"
+                     style="background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fecaca; display: flex; align-items: center; gap: 10px;">
+                    <span>❌</span>
+                    <span th:text="${mensagemErro}"></span>
                 </div>
 
                 <div class="page-header">
@@ -28,7 +35,8 @@
                     <div class="stat-card" style="border-left: 4px solid #e74c3c;">
                         <div class="stat-header">
                             <span class="stat-title">Total Pendente</span>
-                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2">
+                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#e74c3c"
+                                 stroke-width="2">
                                 <line x1="12" y1="1" x2="12" y2="23"></line>
                                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                             </svg>
@@ -39,15 +47,17 @@
                         </div>
                     </div>
 
-                    <div class="stat-card alert" style="border-left: 4px solid #d97706;">
+                    <div class="stat-card alert" style="border-left: 4px solid red;">
                         <div class="stat-header">
-                            <span class="stat-title">Total Vencido</span>
-                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2">
+                            <span class="stat-title">Total Cancelado</span>
+                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="red"
+                                 stroke-width="2">
                                 <line x1="12" y1="1" x2="12" y2="23"></line>
                                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                             </svg>
                         </div>
-                        <div class="stat-value" style="color: #d97706;" th:text="${#numbers.formatDecimal(totalVencido, 1, 2)}">
+                        <div class="stat-value" style="color: #d97706;"
+                             th:text="${#numbers.formatDecimal(totalCancelado, 1, 2)}">
                             0,00
                         </div>
                     </div>
@@ -55,7 +65,8 @@
                     <div class="stat-card" style="border-left: 4px solid #059669;">
                         <div class="stat-header">
                             <span class="stat-title">Total Pago</span>
-                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <svg class="stat-icon icon-price" viewBox="0 0 24 24" fill="none" stroke="#059669"
+                                 stroke-width="2">
                                 <line x1="12" y1="1" x2="12" y2="23"></line>
                                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                             </svg>
@@ -71,7 +82,8 @@
                     <div class="table-header">
                         <h3>Contas a Pagar</h3>
                         <div class="search-box">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
@@ -85,7 +97,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Fornecedor</th>
-                                <th>Descrição</th>
+                                <th>Origem</th>
                                 <th>Vencimento</th>
                                 <th>Valor</th>
                                 <th>Status</th>
@@ -95,39 +107,68 @@
                             <tbody>
                             <tr th:each="conta : ${listaContasPagar}">
                                 <td><strong th:text="'#' + ${conta.id}"></strong></td>
-                                <td th:text="${conta.fornecedor?.nome}"></td>
-                                <td th:text="${conta.descricao}"></td>
+                                <td th:text="${conta.fornecedor?.nomeFantasia}"></td>
+                                <td th:text="${conta.origem}"></td>
                                 <td th:text="${#temporals.format(conta.dataVencimento, 'dd/MM/yyyy')}"></td>
                                 <td th:text="'R$ ' + ${#numbers.formatDecimal(conta.valor, 1, 2)}"></td>
                                 <td>
                                     <span class="badge"
                                           th:classappend="${
-                                               conta.status.name() == 'PENDENTE' ? 'badge-warning' :
-                                               (conta.status.name() == 'VENCIDO' ? 'badge-danger' :
-                                               (conta.status.name() == 'PAGO' ? 'badge-success' : 'badge-secondary'))
-                                          }"
+                                                conta.status.name() == 'PENDENTE' ? 'badge-warning' :
+                                                (conta.status.name() == 'PARCIAL' ? 'badge-analysis' :
+                                                (conta.status.name() == 'PAGO' ? 'badge-success' :
+                                                (conta.status.name() == 'VENCIDA' ? 'badge-warning' :
+                                                (conta.status.name() == 'CANCELADA' ? 'badge-danger' : 'badge-secondary'))))
+                                           }"
                                           th:text="${conta.status}">PENDENTE</span>
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn-action btn-edit" type="button" th:data-id="${conta.id}" onclick="editarContaPagar()">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <button class="btn-action btn-edit" type="button"
+                                                th:data-id="${conta.id}"
+                                                th:data-fornecedorId="${conta.fornecedor?.id}"
+                                                th:data-fornecedor="${conta.fornecedor?.nomeFantasia}"
+                                                th:data-valor="${conta.valor}"
+                                                th:data-valorPago="${conta.valorPago}"
+                                                th:data-vencimento="${conta.dataVencimento}"
+                                                th:data-pagamento="${conta.dataPagamento}"
+                                                th:data-status="${conta.status}"
+                                                th:data-formaPagamento="${conta.formaPagamento}"
+                                                th:data-origem="${conta.origem}"
+                                                th:data-origemId="${conta.origemId}"
+                                                th:data-condicaoPagamento="${conta.condicaoPagamento}"
+                                                th:data-numeroParcelas="${conta.numeroParcelas}"
+                                                onclick="editarContaPagar(this)">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
                                         </button>
-                                        <button class="btn-action btn-success" type="button" th:data-id="${conta.id}" th:data-valor="${conta.valor}" th:data-fornecedor="${conta.fornecedor?.nome}" onclick="abrirModalPagar(${conta.id}, ${conta.valor}, '${conta.fornecedor?.nome}')" title="Pagar">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <button class="btn-action btn-success" type="button"
+                                                onclick="abrirModalPagar(this)" title="Pagar"
+                                                th:data-id="${conta.id}"
+                                                th:data-fornecedor="${conta.fornecedor.nomeFantasia}"
+                                                th:data-fornecedorId="${conta.fornecedor.id}"
+                                                th:data-valorPagar="${conta.valor}"
+                                                th:data-valorPago="${conta.valorPago}"
+                                                th:data-formaPagamento="${conta.formaPagamento}"
+                                                th:data-origem="${conta.origem}">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2">
                                                 <path d="M12 1v22"></path>
                                                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                             </svg>
                                         </button>
-                                        <button class="btn-action btn-delete" type="button" th:data-id="${conta.id}" onclick="deletarContaPagar()">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                                        <a class="btn-action btn-delete" type="button" th:href="@{/contas-pagar/excluir/{id}(id=${conta.id})}"
+                                           onclick="return confirm('Cancelar essa conta ?')">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2">
                                                 <polyline points="3 6 5 6 21 6"></polyline>
                                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                             </svg>
-                                        </button>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -143,86 +184,50 @@
 <div class="modal" id="modalContaPagar">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 th:text="${contaPagar?.id != null} ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'">Nova Conta a Pagar</h2>
-            <button class="modal-close" onclick="fecharModalContaPagar()">&times;</button>
+            <h2 id="modalContaPagarTitle">Editar Conta a Pagar</h2>
+            <button class="close-btn" onclick="fecharModalContaPagar()">&times;</button>
         </div>
         <div class="modal-body">
             <form id="formContaPagar">
                 <input type="hidden" id="contaPagarId">
-                
-                <div class="form-group">
-                    <label for="fornecedor">Fornecedor *</label>
-                    <select id="fornecedor" name="fornecedor" required>
-                        <option value="">Selecione um fornecedor</option>
-                        <option th:each="fornecedor : ${listaFornecedores}" th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
-                    </select>
-                </div>
 
                 <div class="form-group">
-                    <label for="descricao">Descrição *</label>
-                    <input type="text" id="descricao" name="descricao" required>
+                    <label for="fornecedor">Fornecedor </label>
+                    <select id="fornecedor" name="fornecedor" required>
+                        <option value="">Selecione um fornecedor</option>
+                        <option th:each="fornecedor : ${listaFornecedores}" th:value="${fornecedor.id}"
+                                th:text="${fornecedor.nomeFantasia}"></option>
+                    </select>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="valor">Valor *</label>
-                        <input type="number" id="valor" name="valor" step="0.01" min="0" required>
+                        <label for="valor">Valor Total </label>
+                        <input type="number" id="valor" name="valor" step="0.01" min="0" required readonly
+                               style="background: #f5f5f5;">
                     </div>
                     <div class="form-group">
-                        <label for="dataVencimento">Vencimento *</label>
+                        <label for="valorPago">Valor Pago </label>
+                        <input type="number" id="valorPago" name="valorPago" step="0.01" min="0" readonly
+                               style="background: #f5f5f5;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataVencimento">Vencimento </label>
                         <input type="date" id="dataVencimento" name="dataVencimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataPagamento">Data Pagamento </label>
+                        <input type="date" id="dataPagamento" name="dataPagamento" readonly
+                               style="background: #f5f5f5;">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="status">Status *</label>
-                    <select id="status" name="status" required>
-                        <option value="PENDENTE">Pendente</option>
-                        <option value="VENCIDO">Vencido</option>
-                        <option value="PAGO">Pago</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-secondary" onclick="fecharModalContaPagar()">Cancelar</button>
-            <button class="btn-primary" onclick="salvarContaPagar()">Salvar</button>
-        </div>
-    </div>
-</div>
-
-<form th:action="@{/contas-pagar/pagar}" method="POST">
-<div class="modal" id="modalPagar">
-    <div class="modal-content" style="max-width: 500px;">
-        <div class="modal-header">
-            <h2>Pagar Conta</h2>
-            <button class="modal-close" onclick="fecharModalPagar()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="pagarFornecedor">Fornecedor</label>
-                <input type="text" id="pagarFornecedor" name="fornecedor" readonly style="background: #f5f5f5;">
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="pagarValor">Valor a Pagar</label>
-                    <input type="number" id="pagarValor" name="valor" step="0.01" min="0" readonly style="background: #f5f5f5;">
-                </div>
-                <div class="form-group">
-                    <label for="pagarValorPago">Valor Pago</label>
-                    <input type="number" id="pagarValorPago" name="valorPago" step="0.01" min="0" required>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="pagarDataPagamento">Data Pagamento</label>
-                    <input type="date" id="pagarDataPagamento" name="dataPagamento" required>
-                </div>
-                <div class="form-group">
-                    <label for="pagarFormaPagamento">Forma de Pagamento</label>
-                    <select id="pagarFormaPagamento" name="formaPagamento" required>
+                    <label for="formaPagamento">Forma de Pagamento </label>
+                    <select id="formaPagamento" name="formaPagamento" onchange="handleFormaPagamentoChangeEditar()" required>
                         <option value="">Selecione...</option>
                         <option value="DINHEIRO">Dinheiro</option>
                         <option value="PIX">PIX</option>
@@ -232,17 +237,183 @@
                         <option value="TRANSFERENCIA">Transferência</option>
                     </select>
                 </div>
-            </div>
-            <input type="hidden" id="pagarId" name="id">
+
+                <div class="form-group" id="condicaoPagamentoContainerEditar"
+                     style="display: none; opacity: 0; transform: translateY(-20px); transition: all 0.3s ease;">
+                    <label>Condição de Pagamento</label>
+                    <div class="tab-pill-container"
+                         style="background: rgba(0, 0, 0, 0.05); padding: 2px; border-radius: 50px; display: inline-flex;">
+                        <input type="radio" id="condicaoAVistaEditar" name="condicaoPagamentoEditar" value="AVISTA"
+                               checked onchange="handleCondicaoPagamentoChangeEditar()">
+                        <label for="condicaoAVistaEditar" id="labelCondicaoAVistaEditar" style="color: #64748b;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                            <span>A Vista</span>
+                        </label>
+                        <input type="radio" id="condicaoParceladoEditar" name="condicaoPagamentoEditar"
+                               value="PARCELADO" onchange="handleCondicaoPagamentoChangeEditar()">
+                        <label for="condicaoParceladoEditar" id="labelCondicaoParceladoEditar" style="color: #64748b;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                            <span>Parcelado</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="parcelasContainerEditar" style="display: none;">
+                    <label>Número de Parcelas</label>
+                    <select id="numeroParcelas" name="numeroParcelas" class="form-control">
+                        <option value="1">1x</option>
+                        <option value="2">2x</option>
+                        <option value="3">3x</option>
+                        <option value="4">4x</option>
+                        <option value="5">5x</option>
+                        <option value="6">6x</option>
+                        <option value="7">7x</option>
+                        <option value="8">8x</option>
+                        <option value="9">9x</option>
+                        <option value="10">10x</option>
+                        <option value="11">11x</option>
+                        <option value="12">12x</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="origem">Origem </label>
+                    <input type="text" id="origem" name="origem" readonly style="background: #f5f5f5;">
+                    <input type="hidden" id="origemId" name="origemId">
+                </div>
+
+            </form>
         </div>
         <div class="modal-footer">
-            <button class="btn-secondary" type="button" onclick="fecharModalPagar()">Cancelar</button>
-            <button class="btn-primary" type="submit">Pagar</button>
+            <button class="btn-secondary" onclick="fecharModalContaPagar()">Cancelar</button>
+            <button class="btn-primary" onclick="salvarContaPagar()">Salvar</button>
         </div>
     </div>
 </div>
-</form>
+<div class="modal" id="modalPagar">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h2>Pagar Conta</h2>
+            <button class="close-btn" onclick="fecharModalPagar()">&times;</button>
+        </div>
+        <form id="formPagar" th:action="@{/contas-pagar/pagar}" method="POST">
+            <div class="modal-body">
+                <input type="hidden" id="pagarId" name="id">
 
+                <div class="form-group">
+                    <label for="pagarFornecedor">Fornecedor</label>
+                    <input type="text" id="pagarFornecedor" name="fornecedor" readonly style="background: #f5f5f5;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pagarValor">Valor a Pagar</label>
+                        <input type="number" id="pagarValor" name="valor" step="0.01" min="0" readonly
+                               style="background: #f5f5f5;">
+                    </div>
+                    <div class="form-group">
+                        <label for="pagarValorPago">Valor Pago</label>
+                        <input type="number" id="pagarValorPago" name="valorPago" step="0.01" min="0" required
+                               placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-row" id="formaPagamentoRow" style="display: none;">
+                    <div class="form-group">
+                        <label for="pagarDataPagamento">Data Pagamento</label>
+                        <input type="date" id="pagarDataPagamento" name="dataPagamento">
+                    </div>
+                    <div class="form-group">
+                        <label for="pagarFormaPagamento">Forma de Pagamento</label>
+                        <select id="pagarFormaPagamento" name="formaPagamento"
+                                onchange="handleFormaPagamentoChangePagar()">
+                            <option value="">Selecione...</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="PIX">PIX</option>
+                            <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+                            <option value="CARTAO_DEBITO">Cartão de Débito</option>
+                            <option value="BOLETO">Boleto</option>
+                            <option value="TRANSFERENCIA">Transferência</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row" id="dataPagamentoRow" style="display: none;">
+                    <div class="form-group">
+                        <label for="pagarDataPagamentoRow">Data Pagamento</label>
+                        <input type="date" id="pagarDataPagamentoRow" name="dataPagamento">
+                    </div>
+                </div>
+
+                <div class="form-group" id="condicaoPagamentoContainerPagar"
+                     style="display: none; opacity: 0; transform: translateY(-20px); transition: all 0.3s ease;">
+                    <label>Condição de Pagamento</label>
+                    <div class="tab-pill-container"
+                         style="background: rgba(0, 0, 0, 0.05); padding: 2px; border-radius: 50px; display: inline-flex;">
+                        <input type="radio" id="condicaoAVistaPagar" name="condicaoPagamentoPagar" value="AVISTA"
+                               checked onchange="handleCondicaoPagamentoChangePagar()">
+                        <label for="condicaoAVistaPagar" id="labelCondicaoAVistaPagar" style="color: #64748b;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                            <span>A Vista</span>
+                        </label>
+                        <input type="radio" id="condicaoParceladoPagar" name="condicaoPagamentoPagar"
+                               value="PARCELADO" onchange="handleCondicaoPagamentoChangePagar()">
+                        <label for="condicaoParceladoPagar" id="labelCondicaoParceladoPagar"
+                               style="color: #64748b;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                            <span>Parcelado</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="parcelasContainerPagar" style="display: none;">
+                    <label>Número de Parcelas</label>
+                    <select id="parcelasPagar" name="numeroParcelas" class="form-control"
+                            onchange="calcularValorParcela()">
+                        <option value="1">1x</option>
+                        <option value="2">2x</option>
+                        <option value="3">3x</option>
+                        <option value="4">4x</option>
+                        <option value="5">5x</option>
+                        <option value="6">6x</option>
+                        <option value="7">7x</option>
+                        <option value="8">8x</option>
+                        <option value="9">9x</option>
+                        <option value="10">10x</option>
+                        <option value="11">11x</option>
+                        <option value="12">12x</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="valorParcelaContainer" style="display: none;">
+                    <label>Valor da Parcela</label>
+                    <input type="number" id="valorParcela" name="valorParcela" step="0.01" min="0" readonly
+                           style="background: #f5f5f5;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" type="button" onclick="fecharModalPagar()">Cancelar</button>
+                <button class="btn-primary" type="submit">Pagar</button>
+            </div>
+        </form>
+    </div>
+</div>
 <script th:src="@{/js/contas_pagar.js}"></script>
 </body>
 </html>

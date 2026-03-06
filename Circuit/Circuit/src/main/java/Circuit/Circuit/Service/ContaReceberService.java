@@ -1,11 +1,13 @@
 package Circuit.Circuit.Service;
 
+import Circuit.Circuit.Model.Cliente;
 import Circuit.Circuit.Model.ContasReceber;
 import Circuit.Circuit.Model.Enum.CondicaoPagamento;
 import Circuit.Circuit.Model.Enum.FormaPagamento;
 import Circuit.Circuit.Model.Enum.StatusFinanceiro;
 import Circuit.Circuit.Model.OrdemServico;
 import Circuit.Circuit.Model.Venda;
+import Circuit.Circuit.Repository.ClienteRepository;
 import Circuit.Circuit.Repository.ContaReceberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ import java.util.List;
 public class ContaReceberService {
     @Autowired
     ContaReceberRepository contaReceberRepository;
+    
+    @Autowired
+    ClienteRepository clienteRepository;
 
     public void gerarContaReceberParaVenda(Venda venda ) {
         boolean VendaJaGerada = contaReceberRepository.existsByOrigemAndOrigemId("Venda", venda.getId());
@@ -60,6 +65,10 @@ public class ContaReceberService {
             throw new RuntimeException("Não é possível receber pagamento de uma conta com status PAGO");
         }
         
+        if (conta.getStatus() == StatusFinanceiro.CANCELADA) {
+            throw new RuntimeException("Não é possível receber pagamento de uma conta cancelada");
+        }
+        
         BigDecimal valorTotal = conta.getValor();
         if (valorRecebido.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Valor recebido deve ser maior que zero");
@@ -93,14 +102,14 @@ public class ContaReceberService {
         return contas.stream().map(ContasReceber::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal calcularTotalVencido() {
-        List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.VENCIDA);
-        return contas.stream().map(ContasReceber::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     public BigDecimal calcularTotalRecebido() {
         List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.PAGO);
         return contas.stream().map(ContasReceber::getValorRecebido).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal calcularTotalCancelado() {
+        List<ContasReceber> contas = contaReceberRepository.findByStatus(StatusFinanceiro.CANCELADA);
+        return contas.stream().map(ContasReceber::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void atualizarStatus(Long id, StatusFinanceiro novoStatus) {
@@ -121,6 +130,10 @@ public class ContaReceberService {
             throw new RuntimeException("Não é possível cancelar uma conta já cancelada");
         }
 
+        if (contasReceber.getStatus() == StatusFinanceiro.PAGO) {
+            throw new RuntimeException("Não é possível cancelar uma conta já paga");
+        }
+
         contasReceber.setStatus(StatusFinanceiro.CANCELADA);
         contasReceber.setValorRecebido(BigDecimal.ZERO);
         contaReceberRepository.save(contasReceber);
@@ -132,7 +145,6 @@ public class ContaReceberService {
         ContasReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-        // Atualiza os campos permitidos
         conta.setDataVencimento(dataVencimento);
         if (dataPagamento != null) {
             conta.setDataPagamento(dataPagamento);
@@ -145,6 +157,13 @@ public class ContaReceberService {
         }
         if (numeroParcelas != null) {
             conta.setNumeroParcelas(numeroParcelas);
+        }
+        
+        if (clienteId != null) {
+            Cliente cliente = clienteRepository.findById(clienteId).orElse(null);
+            if (cliente != null) {
+                conta.setCliente(cliente);
+            }
         }
 
         contaReceberRepository.save(conta);

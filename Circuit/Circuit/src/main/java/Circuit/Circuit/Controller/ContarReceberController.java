@@ -16,7 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/contas-receber")
@@ -33,12 +35,20 @@ public class ContarReceberController {
     public String abrirContasReceber(Model model){
        List<ContasReceber> contasReceber = contaReceberService.listarContasReceber();
        List<Cliente> clientes  = clienteService.listarAtivos();
+        
+       BigDecimal totalPendente = contaReceberService.calcularTotalPendente();
+       BigDecimal totalRecebido = contaReceberService.calcularTotalRecebido();
+       BigDecimal totalCancelado = contaReceberService.calcularTotalCancelado();
+        
        model.addAttribute("listaContasReceber",contasReceber);
        model.addAttribute("listaClientes",clientes);
        model.addAttribute("contas-receber", new ContasReceber());
+       model.addAttribute("totalPendente", totalPendente);
+       model.addAttribute("totalRecebido", totalRecebido);
+       model.addAttribute("totalCancelado", totalCancelado);
 
          return "contas-receber";
-     }
+      }
 
     @PostMapping("/receber")
     public String receberPagamento(@RequestParam Long id,
