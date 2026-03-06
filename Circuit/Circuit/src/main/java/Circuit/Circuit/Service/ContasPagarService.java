@@ -63,6 +63,9 @@ public class ContasPagarService {
         if (conta.getStatus() == StatusFinanceiro.PAGO) {
             throw new RuntimeException("Não é possível pagar uma conta com status PAGO");
         }
+        if (conta.getStatus() == StatusFinanceiro.CANCELADA) {
+            throw new RuntimeException("Não é possível pagar uma conta cancelada");
+        }
 
         BigDecimal valorTotal = conta.getValor();
         if (valorPago.compareTo(BigDecimal.ZERO) <= 0) {

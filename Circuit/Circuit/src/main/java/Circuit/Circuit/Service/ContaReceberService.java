@@ -145,6 +145,16 @@ public class ContaReceberService {
         ContasReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
+        if (conta.getStatus() == StatusFinanceiro.PAGO) {
+            throw new RuntimeException("Não é possível editar uma conta com status PAGO");
+        }
+        if (conta.getStatus() == StatusFinanceiro.PARCIAL) {
+            throw new RuntimeException("Não é possível editar uma conta com status PARCIAL");
+        }
+        if (conta.getStatus() == StatusFinanceiro.CANCELADA) {
+            throw new RuntimeException("Não é possível editar uma conta cancelada");
+        }
+
         conta.setDataVencimento(dataVencimento);
         if (dataPagamento != null) {
             conta.setDataPagamento(dataPagamento);

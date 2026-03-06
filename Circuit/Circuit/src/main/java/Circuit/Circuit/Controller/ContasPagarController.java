@@ -59,19 +59,6 @@ public class ContasPagarController {
         return "redirect:/contas-pagar";
     }
 
-    @PostMapping("/atualizar-status")
-    public String atualizarStatus(@RequestParam Long id,
-                                   @RequestParam StatusFinanceiro status,
-                                   RedirectAttributes redirectAttributes) {
-        try {
-            contasPagarService.atualizarStatus(id, status);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Status atualizado com sucesso!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemErro", e.getMessage());
-        }
-        return "redirect:/contas-pagar";
-    }
-
     @GetMapping("/excluir/{id}")
     public String cancelarConta(@PathVariable Long id, RedirectAttributes redirectAttributes){
         try {
