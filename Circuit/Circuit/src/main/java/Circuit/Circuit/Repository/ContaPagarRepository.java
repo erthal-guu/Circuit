@@ -28,15 +28,10 @@ public interface ContaPagarRepository extends JpaRepository<ContasPagar, Long> {
     @Query("SELECT SUM(c.valor) FROM ContasPagar c WHERE c.status = 'PAGO' AND FUNCTION('MONTH', c.dataPagamento) = :mes")
     BigDecimal buscarTotalDespesasPorMes(Integer mes);
 
-    @Query("SELECT c FROM ContasPagar c WHERE c.dataVencimento BETWEEN :dataInicio AND :dataFim AND c.status != 'PAGO' ORDER BY c.dataVencimento ASC")
+    @Query("SELECT c FROM ContasPagar c WHERE c.dataVencimento BETWEEN :dataInicio AND :dataFim AND c.status = 'PENDENTE' ORDER BY c.dataVencimento ASC")
     List<ContasPagar> buscarContasPagarProximos30Dias(LocalDate dataInicio, LocalDate dataFim);
 
-    @Query("SELECT COUNT(c) FROM ContasPagar c WHERE c.dataVencimento BETWEEN :dataInicio AND :dataFim AND c.status = 'PENDENTE'")
-    Long contarContasPendentesProximos30Dias(LocalDate dataInicio, LocalDate dataFim);
 
-    @Query("SELECT COUNT(c) FROM ContasPagar c WHERE c.dataVencimento < :dataAtual AND c.status != 'PAGO'")
-    Long contarContasVencidas(LocalDate dataAtual);
-
-    @Query("SELECT SUM(c.valor) FROM ContasPagar c WHERE c.dataVencimento BETWEEN :dataInicio AND :dataFim AND c.status != 'PAGO'")
+    @Query("SELECT SUM(c.valor) FROM ContasPagar c WHERE c.dataVencimento BETWEEN :dataInicio AND :dataFim AND c.status = 'PENDENTE'")
     BigDecimal buscarTotalContasPagarProximos30Dias(LocalDate dataInicio, LocalDate dataFim);
 }

@@ -16,14 +16,6 @@
                     <h1 class="finance-title">Dashboard Financeiro</h1>
                     <p class="finance-subtitle">Visão geral das finanças do negócio</p>
                 </div>
-                    <button class="btn-export">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="7 10 12 15 17 10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
-                        </svg>
-                        Exportar
-                    </button>
                 </div>
             </div>
             <div class="summary-cards">
@@ -103,7 +95,7 @@
                     </div>
                 </div>
             </div>
-            <div class="charts-section" style="width: 100%; flex-wrap: wrap">
+            <div class="charts-section">
                 <div class="chart-card" >
                     <div class="chart-header">
                         <h3>Fluxo de Caixa Mensal</h3>
@@ -145,57 +137,36 @@
                         </div>
                         <div class="accounts-summary">
                             <div class="account-stat">
-                                <span class="account-stat-label">Pendentes</span>
-                                <span class="account-stat-value account-stat-green" id="contas-receber-pendentes">0</span>
-                            </div>
-                            <div class="account-stat">
-                                <span class="account-stat-label">Vencidas</span>
-                                <span class="account-stat-value account-stat-red" id="contas-receber-vencidas">0</span>
-                            </div>
-                            <div class="account-stat">
                                 <span class="account-stat-label">Total</span>
-                                <span class="account-stat-value" id="contas-receber-total">R$ 0,00</span>
+                                <span class="account-stat-value" th:text="${#numbers.formatCurrency(contasReceberTotal)}">R$ 0,00</span>
                             </div>
                         </div>
                     </div>
-                    <div class="accounts-list" id="contas-receber-list">
-                        <div class="account-item">
+                    <div class="accounts-list">
+                        <div class="account-item" th:each="conta : ${contasReceberList}">
                             <div class="account-info">
-                                <div class="account-avatar">JS</div>
+                                <div class="account-avatar" th:text="${conta.cliente != null ? conta.cliente.nome.substring(0, 2).toUpperCase() : '??'}">JS</div>
                                 <div>
-                                    <p class="account-name"> </p>
-                                    <p class="account-desc"> </p>
+                                    <p class="account-name" th:text="${conta.cliente != null ? conta.cliente.nome : 'Cliente não informado'}">João Silva</p>
+                                    <p class="account-desc" th:text="${conta.origem + ' #' + (conta.origemId != null ? conta.origemId : 'N/A')}">Venda #123</p>
                                 </div>
                             </div>
                             <div class="account-amount account-amount-positive">
-                                <p class="amount-value"></p>
-                                <p class="amount-date"></p>
+                                <p class="amount-value" th:text="${#numbers.formatCurrency(conta.valor)}" style="color: #ea580c">R$ 1.500,00</p>
+                                <p class="amount-date" th:text="${#temporals.format(conta.dataVencimento, 'dd/MM/yyyy')}">10/03/2024</p>
                             </div>
                         </div>
-                        <div class="account-item">
+                        <div class="account-item" th:if="${#lists.isEmpty(contasReceberList)}">
                             <div class="account-info">
-                                <div class="account-avatar"></div>
+                                <div class="account-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg></div>
                                 <div>
-                                    <p class="account-name"></p>
-                                    <p class="account-desc"></p>
+                                    <p class="account-name">Nenhuma conta a receber</p>
+                                    <p class="account-desc">Próximos 30 dias</p>
                                 </div>
-                            </div>
-                            <div class="account-amount account-amount-positive">
-                                <p class="amount-value"></p>
-                                <p class="amount-date"></p>
-                            </div>
-                        </div>
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="account-avatar"></div>
-                                <div>
-                                    <p class="account-name"></p>
-                                    <p class="account-desc"></p>
-                                </div>
-                            </div>
-                            <div class="account-amount account-amount-positive">
-                                <p class="amount-value"></p>
-                                <p class="amount-date"></p>
                             </div>
                         </div>
                     </div>
@@ -209,57 +180,37 @@
                         </div>
                         <div class="accounts-summary">
                             <div class="account-stat">
-                                <span class="account-stat-label">Pendentes</span>
-                                <span class="account-stat-value account-stat-yellow" id="contas-pagar-pendentes">0</span>
-                            </div>
-                            <div class="account-stat">
-                                <span class="account-stat-label">Vencidas</span>
-                                <span class="account-stat-value account-stat-red" id="contas-pagar-vencidas">0</span>
-                            </div>
-                            <div class="account-stat">
                                 <span class="account-stat-label">Total</span>
-                                <span class="account-stat-value" id="contas-pagar-total">R$ 0,00</span>
+                                <span class="account-stat-value" th:text="${#numbers.formatCurrency(contasPagarTotal)}">R$ 0,00</span>
                             </div>
                         </div>
                     </div>
-                    <div class="accounts-list" id="contas-pagar-list">
-                        <div class="account-item">
+                    <div class="accounts-list">
+                        <div class="account-item" th:each="conta : ${contasPagarList}">
                             <div class="account-info">
-                                <div class="account-avatar account-avatar-company">TP</div>
+                                <div class="account-avatar account-avatar-company" 
+                                     th:text="${conta.fornecedor != null ? conta.fornecedor.nomeFantasia.substring(0, 2).toUpperCase() : '??'}">TP</div>
                                 <div>
-                                    <p class="account-name">TechPeças Ltda</p>
-                                    <p class="account-desc">Compra de peças</p>
+                                    <p class="account-name" th:text="${conta.fornecedor != null ? conta.fornecedor.nomeFantasia : 'Fornecedor não informado'}">TechPeças Ltda</p>
+                                    <p class="account-desc" th:text="${conta.descricao != null ? conta.descricao : 'Sem descrição'}">Compra de peças</p>
                                 </div>
                             </div>
                             <div class="account-amount account-amount-negative">
-                                <p class="amount-value">R$ 5.000,00</p>
-                                <p class="amount-date">10/03/2024</p>
+                                <p class="amount-value" th:text="${#numbers.formatCurrency(conta.valor)}">R$ 5.000,00</p>
+                                <p class="amount-date" th:text="${#temporals.format(conta.dataVencimento, 'dd/MM/yyyy')}">10/03/2024</p>
                             </div>
                         </div>
-                        <div class="account-item">
+                        <div class="account-item" th:if="${#lists.isEmpty(contasPagarList)}">
                             <div class="account-info">
-                                <div class="account-avatar account-avatar-company">ES</div>
+                                <div class="account-avatar account-avatar-company"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg></div>
                                 <div>
-                                    <p class="account-name">Eletrônica Sul</p>
-                                    <p class="account-desc">Componentes</p>
+                                    <p class="account-name">Nenhuma conta a pagar</p>
+                                    <p class="account-desc">Próximos 30 dias</p>
                                 </div>
-                            </div>
-                            <div class="account-amount account-amount-negative">
-                                <p class="amount-value">R$ 3.500,00</p>
-                                <p class="amount-date">18/03/2024</p>
-                            </div>
-                        </div>
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="account-avatar account-avatar-company">FP</div>
-                                <div>
-                                    <p class="account-name">Ferramentas Pro</p>
-                                    <p class="account-desc">Equipamentos</p>
-                                </div>
-                            </div>
-                            <div class="account-amount account-amount-negative">
-                                <p class="amount-value">R$ 2.200,00</p>
-                                <p class="amount-date">22/03/2024</p>
                             </div>
                         </div>
                     </div>
@@ -268,6 +219,126 @@
     </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script th:src="@{/js/financeiro.js}"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctxFluxoCaixa = document.getElementById('fluxoCaixaChart');
+        if (ctxFluxoCaixa) {
+            const fluxoCaixaData = /*[[${fluxoCaixaData}]]*/ [];
+            const meses = fluxoCaixaData.map(item => item[0]);
+            const receitas = fluxoCaixaData.map(item => item[1] != null ? item[1] : 0);
+            const despesas = fluxoCaixaData.map(item => item[2] != null ? item[2] : 0);
+
+            new Chart(ctxFluxoCaixa, {
+                type: 'bar',
+                data: {
+                    labels: meses,
+                    datasets: [
+                        {
+                            label: 'Receitas',
+                            data: receitas,
+                            backgroundColor: '#C2FADC',
+                            borderColor: '#008B66',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Despesas',
+                            data: despesas,
+                            backgroundColor: '#FFDCE2',
+                            borderColor: '#D82C2C',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += 'R$ ' + context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        const ctxDistribuicao = document.getElementById('distribuicaoChart');
+        if (ctxDistribuicao) {
+            const distribuicaoData = /*[[${distribuicaoDespesasData}]]*/ [];
+            const categorias = distribuicaoData.map(item => item[0]);
+            const valores = distribuicaoData.map(item => item[1] != null ? item[1] : 0);
+
+            const cores = [
+                '#2C6AD8', '#4A6FA5', '#7BA3C9', '#A8D0E6', '#D4E5F7',
+                '#1E3A5F', '#2D5A87', '#3C7AB5', '#5B9AE3', '#7AB9F1'
+            ];
+
+            new Chart(ctxDistribuicao, {
+                type: 'doughnut',
+                data: {
+                    labels: categorias,
+                    datasets: [{
+                        data: valores,
+                        backgroundColor: cores.slice(0, categorias.length),
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    const value = context.parsed;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    label += 'R$ ' + value.toFixed(2) + ' (' + percentage + '%)';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+    /*]]>*/
+</script>
 </body>
 </html>
