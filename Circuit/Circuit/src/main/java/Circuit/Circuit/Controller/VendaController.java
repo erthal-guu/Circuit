@@ -62,7 +62,7 @@ public class VendaController {
                          @RequestParam Long funcionarioId,
                          @RequestParam BigDecimal valorBruto,
                          @RequestParam BigDecimal valorTotal,
-                         @RequestParam BigDecimal porcentagemDesconto,
+                         @RequestParam (required = false )BigDecimal porcentagemDesconto,
                          @RequestParam(required = false) String motivoDesconto,
                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVenda,
                          @RequestParam String codigo,

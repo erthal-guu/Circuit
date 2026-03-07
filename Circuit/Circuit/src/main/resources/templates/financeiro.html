@@ -16,15 +16,6 @@
                     <h1 class="finance-title">Dashboard Financeiro</h1>
                     <p class="finance-subtitle">Visão geral das finanças do negócio</p>
                 </div>
-                <div class="finance-filter">
-                    <div class="filter-group">
-                        <label>Período</label>
-                        <select class="filter-select">
-                            <option>Este Mês</option>
-                            <option selected>Este Ano</option>
-                            <option>Últimos 12 Meses</option>
-                        </select>
-                    </div>
                     <button class="btn-export">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -101,22 +92,22 @@
                     </div>
                     <div class="summary-content">
                         <p class="summary-label">Lucro Líquido</p>
-                        <h3 class="summary-value">R$ 35.800,00</h3>
+                        <h3 class="summary-value" th:text="${#numbers.formatDecimal(lucroliquido, 1, 2)}"></h3>
                         <div class="summary-trend positive">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
                                 <polyline points="17 6 23 6 23 12"/>
                             </svg>
-                            <span>+22.4% vs mês anterior</span>
+                            <span>Calculado Automaticamente</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="charts-section">
-                <div class="chart-card">
+            <div class="charts-section" style="width: 100%; flex-wrap: wrap">
+                <div class="chart-card" >
                     <div class="chart-header">
                         <h3>Fluxo de Caixa Mensal</h3>
-                        <div class="chart-legend">
+                        <div class="chart-legend" >
                             <span class="legend-item">
                                 <span class="legend-dot legend-green"></span>
                                 Receitas
@@ -155,56 +146,56 @@
                         <div class="accounts-summary">
                             <div class="account-stat">
                                 <span class="account-stat-label">Pendentes</span>
-                                <span class="account-stat-value account-stat-green">12</span>
+                                <span class="account-stat-value account-stat-green" id="contas-receber-pendentes">0</span>
                             </div>
                             <div class="account-stat">
                                 <span class="account-stat-label">Vencidas</span>
-                                <span class="account-stat-value account-stat-red">3</span>
+                                <span class="account-stat-value account-stat-red" id="contas-receber-vencidas">0</span>
                             </div>
                             <div class="account-stat">
                                 <span class="account-stat-label">Total</span>
-                                <span class="account-stat-value">R$ 9.000,00</span>
+                                <span class="account-stat-value" id="contas-receber-total">R$ 0,00</span>
                             </div>
                         </div>
                     </div>
-                    <div class="accounts-list">
+                    <div class="accounts-list" id="contas-receber-list">
                         <div class="account-item">
                             <div class="account-info">
                                 <div class="account-avatar">JS</div>
                                 <div>
-                                    <p class="account-name">João Silva</p>
-                                    <p class="account-desc">Serviço #2401</p>
+                                    <p class="account-name"> </p>
+                                    <p class="account-desc"> </p>
                                 </div>
                             </div>
                             <div class="account-amount account-amount-positive">
-                                <p class="amount-value">R$ 2.500,00</p>
-                                <p class="amount-date">15/03/2024</p>
+                                <p class="amount-value"></p>
+                                <p class="amount-date"></p>
                             </div>
                         </div>
                         <div class="account-item">
                             <div class="account-info">
-                                <div class="account-avatar">MS</div>
+                                <div class="account-avatar"></div>
                                 <div>
-                                    <p class="account-name">Maria Santos</p>
-                                    <p class="account-desc">Serviço #2402</p>
+                                    <p class="account-name"></p>
+                                    <p class="account-desc"></p>
                                 </div>
                             </div>
                             <div class="account-amount account-amount-positive">
-                                <p class="amount-value">R$ 1.800,00</p>
-                                <p class="amount-date">20/03/2024</p>
+                                <p class="amount-value"></p>
+                                <p class="amount-date"></p>
                             </div>
                         </div>
                         <div class="account-item">
                             <div class="account-info">
-                                <div class="account-avatar">PO</div>
+                                <div class="account-avatar"></div>
                                 <div>
-                                    <p class="account-name">Pedro Oliveira</p>
-                                    <p class="account-desc">Venda #1045</p>
+                                    <p class="account-name"></p>
+                                    <p class="account-desc"></p>
                                 </div>
                             </div>
                             <div class="account-amount account-amount-positive">
-                                <p class="amount-value">R$ 3.200,00</p>
-                                <p class="amount-date">25/03/2024</p>
+                                <p class="amount-value"></p>
+                                <p class="amount-date"></p>
                             </div>
                         </div>
                     </div>
@@ -219,19 +210,19 @@
                         <div class="accounts-summary">
                             <div class="account-stat">
                                 <span class="account-stat-label">Pendentes</span>
-                                <span class="account-stat-value account-stat-yellow">8</span>
+                                <span class="account-stat-value account-stat-yellow" id="contas-pagar-pendentes">0</span>
                             </div>
                             <div class="account-stat">
                                 <span class="account-stat-label">Vencidas</span>
-                                <span class="account-stat-value account-stat-red">2</span>
+                                <span class="account-stat-value account-stat-red" id="contas-pagar-vencidas">0</span>
                             </div>
                             <div class="account-stat">
                                 <span class="account-stat-label">Total</span>
-                                <span class="account-stat-value">R$ 14.800,00</span>
+                                <span class="account-stat-value" id="contas-pagar-total">R$ 0,00</span>
                             </div>
                         </div>
                     </div>
-                    <div class="accounts-list">
+                    <div class="accounts-list" id="contas-pagar-list">
                         <div class="account-item">
                             <div class="account-info">
                                 <div class="account-avatar account-avatar-company">TP</div>
@@ -274,10 +265,9 @@
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 </div>
-
-<script th:src="@{/static/js/main.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script th:src="@{/js/financeiro.js}"></script>
 </body>
 </html>
