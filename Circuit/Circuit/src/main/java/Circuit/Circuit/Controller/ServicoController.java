@@ -33,8 +33,8 @@ public class ServicoController {
 
     @GetMapping
     public String ListarServicos(Model model){
-        List<Servico> ativos = servicoService.ListarAtivos();
-        List<Servico> inativos = servicoService.ListarInativos();
+        List<Servico> ativos = servicoService.listarAtivos();
+        List<Servico> inativos = servicoService.listarInativos();
         List<Peca> pecas = pecaService.listarPecasAtivas();
 
         model.addAttribute("listaAtivos", ativos);

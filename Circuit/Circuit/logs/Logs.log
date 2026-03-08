@@ -1,0 +1,19 @@
+2026-03-08 15:13:18.002 [http-nio-8080-exec-6] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 138.471.969-89
+2026-03-08 15:13:18.104 [http-nio-8080-exec-6] WARN  C.Circuit.Service.LoginService - Tentativa de login falhou: CPF não encontrado - 138.471.969-89
+2026-03-08 15:13:25.344 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 139.471.969-89
+2026-03-08 15:13:25.354 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 139.471.969-89, Nome: Gustavo Erthal, Cargo: ADMIN
+2026-03-08 15:13:40.856 [http-nio-8080-exec-5] INFO  C.Circuit.Service.FornecedorService - Tentativa de edição de fornecedor - ID: 1, Razão Social atual: GugsDisplays Ltda, Razão Social nova: GugsDisplays Ltda
+2026-03-08 15:13:40.886 [http-nio-8080-exec-5] INFO  C.Circuit.Service.FornecedorService - Fornecedor editado com sucesso - ID: 1, Razão Social: GugsDisplays Ltda, CNPJ: 12.345.678/0001-90
+2026-03-08 15:35:52.056 [http-nio-8080-exec-2] INFO  C.Circuit.Service.PedidoService - Tentativa de cadastro de novo pedido - Código: PO-ECB5, Valor: 245.00, Fornecedor: BustaDisplays, Tipo: PECA
+2026-03-08 15:35:52.098 [http-nio-8080-exec-2] INFO  C.Circuit.Service.PedidoService - Enviando email de notificação para fornecedor - Pedido: PO-ECB5
+2026-03-08 15:35:52.099 [http-nio-8080-exec-2] INFO  C.Circuit.Service.PedidoService - Pedido cadastrado com sucesso - ID: 8, Código: PO-ECB5, Valor: 245.00
+2026-03-08 15:38:42.801 [http-nio-8080-exec-7] INFO  C.Circuit.Service.VendaService - Tentativa de salvar venda - Código: VD-381F, Valor Total: 144.90, Status: PENDENTE, Cliente ID: 6, Funcionário ID: 4
+2026-03-08 15:38:42.804 [http-nio-8080-exec-7] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 1, Nome: Carregador Turbo 20W Tipo-C, Quantidade atual: 16, Quantidade a retirar: 1
+2026-03-08 15:38:42.806 [http-nio-8080-exec-7] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 1, Nome: Carregador Turbo 20W Tipo-C, Nova quantidade: 15
+2026-03-08 15:38:42.807 [http-nio-8080-exec-7] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 3, Nome: Película de Vidro 3D iPhone 11, Quantidade atual: 14, Quantidade a retirar: 1
+2026-03-08 15:38:42.807 [http-nio-8080-exec-7] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 3, Nome: Película de Vidro 3D iPhone 11, Nova quantidade: 13
+2026-03-08 15:38:42.807 [http-nio-8080-exec-7] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 4, Nome: Película de Vidro 3D Galaxy S23, Quantidade atual: 5, Quantidade a retirar: 1
+2026-03-08 15:38:42.808 [http-nio-8080-exec-7] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 4, Nome: Película de Vidro 3D Galaxy S23, Nova quantidade: 4
+2026-03-08 15:38:42.814 [http-nio-8080-exec-7] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 6, Código: VD-381F, Valor Total: 144.90
+2026-03-08 15:38:58.815 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Tentativa de recebimento de pagamento - ID: 8, Valor recebido: 600, Data: 2026-03-08, Forma: null, Condição: null, Parcelas: 1
+2026-03-08 15:38:58.818 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Pagamento recebido com sucesso - ID: 8, Valor recebido: 600, Status: PAGO

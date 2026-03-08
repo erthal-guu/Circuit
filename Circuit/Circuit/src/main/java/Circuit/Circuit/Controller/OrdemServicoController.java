@@ -36,11 +36,11 @@ public class OrdemServicoController {
     public String abrirOrdem(Model model) {
         List<Funcionario> tecnicos = funcionarioService.listarApenasTecnicos();
         List<Cliente> clientes = clienteService.listarAtivos();
-        List<Servico> servicos = servicoService.ListarAtivos();
+        List<Servico> servicos = servicoService.listarAtivos();
         List<Peca> pecas = pecaService.listarPecasAtivas();
-        List<OrdemServico> ordens = ordemServicoService.ListarOrdens();
-        List<OrdemServico> ordensAbertas = ordemServicoService.ListarOrdensAbertas();
-        List<OrdemServico> ordensFinalizadas = ordemServicoService.ListarOrdensFinalizadas();
+        List<OrdemServico> ordens = ordemServicoService.listarOrdens();
+        List<OrdemServico> ordensAbertas = ordemServicoService.listarOrdensAbertas();
+        List<OrdemServico> ordensFinalizadas = ordemServicoService.listarOrdensFinalizadas();
         model.addAttribute("listaTecnicos",tecnicos);
         model.addAttribute("listaClientes",clientes);
         model.addAttribute("listaServicos",servicos);

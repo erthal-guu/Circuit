@@ -24,8 +24,8 @@ public class ModeloController {
 
     @GetMapping
     public String abrirModelos(Model model){
-        List<Modelo> ativos = modeloService.ListarModelosAtivos();
-        List<Modelo> inativos = modeloService.ListarModelosInativos();
+        List<Modelo> ativos = modeloService.listarModelosAtivos();
+        List<Modelo> inativos = modeloService.listarModelosInativos();
         List<Marca>  marcas = marcaRepository.findAllByOrderByNomeAsc();
         model.addAttribute("listaAtivos", ativos);
         model.addAttribute("listaInativos", inativos);

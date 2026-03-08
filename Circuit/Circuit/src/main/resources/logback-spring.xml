@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOGS" value="./logs"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="SystemLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOGS}/application.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+    </appender>
+    <appender name="UserLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOGS}/Logs.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/Logs-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+    </appender>
+    <logger name="Circuit.Circuit.Service" level="INFO" additivity="false">
+        <appender-ref ref="UserLogFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
+
+    <logger name="Circuit.Circuit.Controller" level="INFO" additivity="false">
+        <appender-ref ref="UserLogFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
+
+    <logger name="Circuit.Circuit.Security" level="INFO" additivity="false">
+        <appender-ref ref="UserLogFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="SystemLogFile"/>
+        <appender-ref ref="Console"/>
+    </root>
+
+</configuration>

@@ -30,7 +30,7 @@ public class AparelhoController {
     public String abrirAparelhos(Model model){
         List<Aparelho> ativos = aparelhoService.listarAparelhosAtivos();
         List<Aparelho> inativos = aparelhoService.listarAparelhosInativos();
-        List<Modelo> modelos = modeloService.ListarModelosAtivos();
+        List<Modelo> modelos = modeloService.listarModelosAtivos();
         List<Cliente> clientes = clienteService.listarAtivos();
 
         model.addAttribute("listaAtivos", ativos);

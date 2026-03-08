@@ -213,7 +213,7 @@ function inserirLinhaTabelaPrincipal(id, nome, qtd, preco, total) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
         <td>${nome} <input type="hidden" name="itensId" value="${id}"></td>
-        <td><input type="number" name="quantidadeItens" class="form-control" value="${qtd}" oninput="recalcularTotalPedido()"></td>
+        <td><input type="number" name="quantidadeItens" class="form-control" value="${qtd}" oninput="recalcularTotalPedido()" readonly></td>
         <td><input type="text" name="precoItens" class="form-control" value="${preco.toFixed(2)}" oninput="recalcularTotalPedido()"></td>
         <td class="total-linha">${total.toFixed(2)}</td>
         <td class="text-center">
