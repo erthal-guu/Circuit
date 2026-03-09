@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/notificacoes")
-public class NotificacaoController {
+public class  NotificacaoController {
 
     @Autowired
     private NotificacaoService notificacaoService;

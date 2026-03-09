@@ -168,7 +168,7 @@ function carregarItensDoFornecedor(idFornecedor) {
                         <div class="font-600">${parsed.nome}</div>
                         <div class="small-text text-muted">REF: ${parsed.idItem}</div>
                     </td>
-                    <td><input type="text" class="input-modal-erp preco-modal" value="${parsed.preco.toFixed(2)}" oninput="calcularResumoModal()"></td>
+                    <td><input type="text" class="input-modal-erp preco-modal" value="${parsed.preco.toFixed(2)}" oninput="calcularResumoModal()" readonly></td>
                     <td><input type="number" class="input-modal-erp qtd-modal" value="1" min="1" oninput="calcularResumoModal()"></td>
                 `;
                 container.appendChild(tr);

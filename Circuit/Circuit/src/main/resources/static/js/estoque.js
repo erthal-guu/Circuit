@@ -310,14 +310,6 @@ document.addEventListener("DOMContentLoaded", function () {
     configurarPesquisaLocal('searchInputAtivos', 'estoqueTable');
     configurarPesquisaLocal('searchInputInativos', 'estoqueTableInativos');
 
-    // Auto-close nos alertas
-    document.querySelectorAll('.auto-close').forEach(alerta => {
-        setTimeout(() => {
-            alerta.style.opacity = '0';
-            setTimeout(() => alerta.remove(), 500);
-        }, 3000);
-    });
-
     const camposPreco = [document.getElementById('prodPrecoCompra'), document.getElementById('prodPrecoVenda')];
     camposPreco.forEach(campo => {
         if (campo) campo.addEventListener('input', mascaraMoeda);

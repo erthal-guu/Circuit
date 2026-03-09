@@ -17,3 +17,239 @@
 2026-03-08 15:38:42.814 [http-nio-8080-exec-7] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 6, Código: VD-381F, Valor Total: 144.90
 2026-03-08 15:38:58.815 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Tentativa de recebimento de pagamento - ID: 8, Valor recebido: 600, Data: 2026-03-08, Forma: null, Condição: null, Parcelas: 1
 2026-03-08 15:38:58.818 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Pagamento recebido com sucesso - ID: 8, Valor recebido: 600, Status: PAGO
+2026-03-09 03:48:53.697 [http-nio-8080-exec-6] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 139.471.969-89
+2026-03-09 03:48:53.791 [http-nio-8080-exec-6] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 139.471.969-89, Nome: Gustavo Erthal, Cargo: ADMIN
+2026-03-09 03:53:11.283 [http-nio-8080-exec-9] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 111.111.111-11
+2026-03-09 03:53:11.320 [http-nio-8080-exec-9] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 111.111.111-11, Nome: Admin, Cargo: ADMIN
+2026-03-09 03:58:17.383 [http-nio-8080-exec-5] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Técnico, CPF: 222.222.222-22, Cargo: TECNICO
+2026-03-09 03:58:17.491 [http-nio-8080-exec-5] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 3, Nome: Técnico, CPF: 222.222.222-22, Cargo: TECNICO
+2026-03-09 03:58:36.621 [http-nio-8080-exec-1] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Vendedor, CPF: 333.333.333-33, Cargo: VENDEDOR
+2026-03-09 03:58:36.697 [http-nio-8080-exec-1] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 4, Nome: Vendedor, CPF: 333.333.333-33, Cargo: VENDEDOR
+2026-03-09 03:58:57.927 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Gerente, CPF: 444.444.444-44, Cargo: GERENTE
+2026-03-09 03:58:58.002 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 5, Nome: Gerente, CPF: 444.444.444-44, Cargo: GERENTE
+2026-03-09 04:01:12.209 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 111.111.111-11
+2026-03-09 04:01:12.210 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 111.111.111-11, Nome: Administrador, Cargo: ADMIN
+2026-03-09 04:01:36.895 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Técnico, CPF: 222.222.222-22, Cargo: TECNICO
+2026-03-09 04:01:36.971 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 2, Nome: Técnico, CPF: 222.222.222-22, Cargo: TECNICO
+2026-03-09 04:01:54.954 [http-nio-8080-exec-1] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Vendedor, CPF: 333.333.333-33, Cargo: VENDEDOR
+2026-03-09 04:01:55.032 [http-nio-8080-exec-1] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 3, Nome: Vendedor, CPF: 333.333.333-33, Cargo: VENDEDOR
+2026-03-09 04:02:19.762 [http-nio-8080-exec-7] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Gerente, CPF: 444.444.444-44, Cargo: GERENTE
+2026-03-09 04:02:19.840 [http-nio-8080-exec-7] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 4, Nome: Gerente, CPF: 444.444.444-44, Cargo: GERENTE
+2026-03-09 04:02:43.802 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Auxiliar, CPF: 555.555.555-55, Cargo: AUXILIAR
+2026-03-09 04:02:43.878 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 5, Nome: Auxiliar, CPF: 555.555.555-55, Cargo: AUXILIAR
+2026-03-09 04:03:14.421 [http-nio-8080-exec-6] INFO  C.Circuit.Service.UsuarioService - Tentativa de cadastro de novo usuário - Nome: Recepcionista, CPF: 666.666.666-66, Cargo: RECEPCIONISTA
+2026-03-09 04:03:14.498 [http-nio-8080-exec-6] INFO  C.Circuit.Service.UsuarioService - Usuário cadastrado com sucesso - ID: 6, Nome: Recepcionista, CPF: 666.666.666-66, Cargo: RECEPCIONISTA
+2026-03-09 04:03:45.082 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Tentativa de exclusão de usuário - ID: 6, Nome: Recepcionista, CPF: 666.666.666-66
+2026-03-09 04:03:45.092 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Usuário desativado com sucesso - ID: 6, Nome: Recepcionista, CPF: 666.666.666-66
+2026-03-09 04:03:53.259 [http-nio-8080-exec-6] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 666.666.666-66
+2026-03-09 04:03:53.260 [http-nio-8080-exec-6] WARN  C.Circuit.Service.LoginService - Tentativa de login falhou: Usuário inativo - CPF: 666.666.666-66, Nome: Recepcionista
+2026-03-09 04:04:00.338 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 666.666.666-66
+2026-03-09 04:04:00.339 [http-nio-8080-exec-1] WARN  C.Circuit.Service.LoginService - Tentativa de login falhou: Usuário inativo - CPF: 666.666.666-66, Nome: Recepcionista
+2026-03-09 04:04:06.560 [http-nio-8080-exec-6] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 555.555.555-55
+2026-03-09 04:04:06.560 [http-nio-8080-exec-6] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 555.555.555-55, Nome: Auxiliar, Cargo: AUXILIAR
+2026-03-09 04:04:10.448 [http-nio-8080-exec-2] INFO  C.Circuit.Security.LogoutHandler - Logout realizado - CPF: 555.555.555-55, Nome: Auxiliar
+2026-03-09 04:04:10.448 [http-nio-8080-exec-2] INFO  C.Circuit.Service.LoginService - Logout realizado - CPF: 555.555.555-55, Nome: Auxiliar
+2026-03-09 04:04:26.758 [http-nio-8080-exec-3] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 111.111.111-11
+2026-03-09 04:04:26.759 [http-nio-8080-exec-3] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 111.111.111-11, Nome: Administrador, Cargo: ADMIN
+2026-03-09 04:04:31.127 [http-nio-8080-exec-9] INFO  C.Circuit.Service.UsuarioService - Tentativa de restauração de usuário - ID: 6, Nome: Recepcionista, CPF: 666.666.666-66
+2026-03-09 04:04:31.130 [http-nio-8080-exec-9] INFO  C.Circuit.Service.UsuarioService - Usuário restaurado com sucesso - ID: 6, Nome: Recepcionista, CPF: 666.666.666-66
+2026-03-09 04:06:04.305 [http-nio-8080-exec-9] INFO  C.Circuit.Service.UsuarioService - Tentativa de exclusão de usuário - ID: 1, Nome: Administrador, CPF: 111.111.111-11
+2026-03-09 04:06:04.307 [http-nio-8080-exec-9] INFO  C.Circuit.Service.UsuarioService - Usuário desativado com sucesso - ID: 1, Nome: Administrador, CPF: 111.111.111-11
+2026-03-09 04:06:16.704 [http-nio-8080-exec-5] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 111.111.111-11
+2026-03-09 04:06:16.705 [http-nio-8080-exec-5] WARN  C.Circuit.Service.LoginService - Tentativa de login falhou: Usuário inativo - CPF: 111.111.111-11, Nome: Administrador
+2026-03-09 04:06:22.755 [http-nio-8080-exec-3] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 222.222.222-22
+2026-03-09 04:06:22.756 [http-nio-8080-exec-3] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 222.222.222-22, Nome: Técnico, Cargo: TECNICO
+2026-03-09 04:06:25.969 [http-nio-8080-exec-10] INFO  C.Circuit.Security.LogoutHandler - Logout realizado - CPF: 222.222.222-22, Nome: Técnico
+2026-03-09 04:06:25.969 [http-nio-8080-exec-10] INFO  C.Circuit.Service.LoginService - Logout realizado - CPF: 222.222.222-22, Nome: Técnico
+2026-03-09 04:06:39.080 [http-nio-8080-exec-8] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 333.333.333-33
+2026-03-09 04:06:39.081 [http-nio-8080-exec-8] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 333.333.333-33, Nome: Vendedor, Cargo: VENDEDOR
+2026-03-09 04:06:48.604 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 444.444.444-44
+2026-03-09 04:06:48.605 [http-nio-8080-exec-1] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 444.444.444-44, Nome: Gerente, Cargo: GERENTE
+2026-03-09 04:06:52.876 [http-nio-8080-exec-3] INFO  C.Circuit.Service.UsuarioService - Tentativa de restauração de usuário - ID: 1, Nome: Administrador, CPF: 111.111.111-11
+2026-03-09 04:06:52.878 [http-nio-8080-exec-3] INFO  C.Circuit.Service.UsuarioService - Usuário restaurado com sucesso - ID: 1, Nome: Administrador, CPF: 111.111.111-11
+2026-03-09 04:06:59.615 [http-nio-8080-exec-4] INFO  C.Circuit.Service.UsuarioService - Tentativa de edição de usuário - ID: 1, Nome atual: Administrador, Nome novo: Administrador top, Cargo novo: ADMIN
+2026-03-09 04:06:59.617 [http-nio-8080-exec-4] INFO  C.Circuit.Service.UsuarioService - Usuário editado com sucesso - ID: 1, Nome: Administrador top, CPF: 111.111.111-11, Cargo: ADMIN, Senha alterada: false
+2026-03-09 04:07:06.019 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Tentativa de edição de usuário - ID: 1, Nome atual: Administrador top, Nome novo: Administrador, Cargo novo: ADMIN
+2026-03-09 04:07:06.021 [http-nio-8080-exec-8] INFO  C.Circuit.Service.UsuarioService - Usuário editado com sucesso - ID: 1, Nome: Administrador, CPF: 111.111.111-11, Cargo: ADMIN, Senha alterada: false
+2026-03-09 04:11:51.989 [http-nio-8080-exec-7] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=1, nome=null, ativo=true, marca=null), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:11:55.258 [http-nio-8080-exec-5] INFO  C.Circuit.Service.AparelhoService - Tentativa de exclusão de aparelho - ID: 11, Modelo: Modelo(id=1, nome=iPhone 15 Pro, ativo=true, marca=Marca(id=1, nome=Apple)), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=Ana Silva, cpf=111.111.111-11, email=ana.silva@email.com, telefone=(41) 99999-1111, cep=80010-000, logradouro=Rua XV de Novembro, numero=100, bairro=Centro, cidade=Curitiba, estado=PR, ativo=true)
+2026-03-09 04:11:55.259 [http-nio-8080-exec-5] INFO  C.Circuit.Service.AparelhoService - Aparelho desativado com sucesso - ID: 11, Modelo: Modelo(id=1, nome=iPhone 15 Pro, ativo=true, marca=Marca(id=1, nome=Apple)), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=Ana Silva, cpf=111.111.111-11, email=ana.silva@email.com, telefone=(41) 99999-1111, cep=80010-000, logradouro=Rua XV de Novembro, numero=100, bairro=Centro, cidade=Curitiba, estado=PR, ativo=true)
+2026-03-09 04:11:59.981 [http-nio-8080-exec-6] INFO  C.Circuit.Service.AparelhoService - Tentativa de restauração de aparelho - ID: 11, Modelo: Modelo(id=1, nome=iPhone 15 Pro, ativo=true, marca=Marca(id=1, nome=Apple)), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=Ana Silva, cpf=111.111.111-11, email=ana.silva@email.com, telefone=(41) 99999-1111, cep=80010-000, logradouro=Rua XV de Novembro, numero=100, bairro=Centro, cidade=Curitiba, estado=PR, ativo=true)
+2026-03-09 04:11:59.983 [http-nio-8080-exec-6] INFO  C.Circuit.Service.AparelhoService - Aparelho restaurado com sucesso - ID: 11, Modelo: Modelo(id=1, nome=iPhone 15 Pro, ativo=true, marca=Marca(id=1, nome=Apple)), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=Ana Silva, cpf=111.111.111-11, email=ana.silva@email.com, telefone=(41) 99999-1111, cep=80010-000, logradouro=Rua XV de Novembro, numero=100, bairro=Centro, cidade=Curitiba, estado=PR, ativo=true)
+2026-03-09 04:12:04.002 [http-nio-8080-exec-6] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=1, nome=null, ativo=true, marca=null), Número de Série: SN1111111111112, Cliente: Cliente(id=7, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:12:07.008 [http-nio-8080-exec-6] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=1, nome=null, ativo=true, marca=null), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:12:39.853 [http-nio-8080-exec-6] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=2, nome=null, ativo=true, marca=null), Número de Série: SN2222222222222, Cliente: Cliente(id=8, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:12:47.157 [http-nio-8080-exec-6] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=1, nome=null, ativo=true, marca=null), Número de Série: SN1111111111111, Cliente: Cliente(id=7, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:13:10.722 [http-nio-8080-exec-2] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=3, nome=null, ativo=true, marca=null), Número de Série: SN3333333333333, Cliente: Cliente(id=9, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:13:45.756 [http-nio-8080-exec-4] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=4, nome=null, ativo=true, marca=null), Número de Série: SN4444444444444, Cliente: Cliente(id=9, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:13:49.006 [http-nio-8080-exec-4] INFO  C.Circuit.Service.AparelhoService - Tentativa de cadastro de novo aparelho - Modelo: Modelo(id=3, nome=null, ativo=true, marca=null), Número de Série: SN3333333333333, Cliente: Cliente(id=9, nome=null, cpf=null, email=null, telefone=null, cep=null, logradouro=null, numero=null, bairro=null, cidade=null, estado=null, ativo=true)
+2026-03-09 04:26:32.776 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca de câmera iPhone 11, Valor Base: 200, Peças: 1 peças
+2026-03-09 04:26:32.788 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 1, Nome: Troca de câmera iPhone 11, Valor Base: 200
+2026-03-09 04:26:39.676 [http-nio-8080-exec-2] INFO  C.Circuit.Service.ServicoService - Tentativa de edição de serviço - ID: 1, Nome atual: Troca de câmera iPhone 11, Nome novo: Troca de câmera iPhone 11, Valor novo: 200.00
+2026-03-09 04:26:39.680 [http-nio-8080-exec-2] INFO  C.Circuit.Service.ServicoService - Serviço editado com sucesso - ID: 1, Nome: Troca de câmera iPhone 11, Valor Base: 200.00
+2026-03-09 04:26:42.927 [http-nio-8080-exec-3] INFO  C.Circuit.Service.ServicoService - Tentativa de restauração de serviço - ID: 1, Nome: Troca de câmera iPhone 11, Valor Base: 200.00
+2026-03-09 04:26:42.929 [http-nio-8080-exec-3] INFO  C.Circuit.Service.ServicoService - Serviço restaurado com sucesso - ID: 1, Nome: Troca de câmera iPhone 11
+2026-03-09 04:26:45.270 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ServicoService - Tentativa de exclusão de serviço - ID: 1, Nome: Troca de câmera iPhone 11, Valor Base: 200.00
+2026-03-09 04:26:45.272 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ServicoService - Serviço desativado com sucesso - ID: 1, Nome: Troca de câmera iPhone 11
+2026-03-09 04:26:48.014 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ServicoService - Tentativa de restauração de serviço - ID: 1, Nome: Troca de câmera iPhone 11, Valor Base: 200.00
+2026-03-09 04:26:48.016 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ServicoService - Serviço restaurado com sucesso - ID: 1, Nome: Troca de câmera iPhone 11
+2026-03-09 04:27:18.995 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca do Flex Poco X3 Pro, Valor Base: 100, Peças: 1 peças
+2026-03-09 04:27:18.998 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 2, Nome: Troca do Flex Poco X3 Pro, Valor Base: 100
+2026-03-09 04:27:49.963 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca do display S21 Plus, Valor Base: 300, Peças: 1 peças
+2026-03-09 04:27:49.967 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 3, Nome: Troca do display S21 Plus, Valor Base: 300
+2026-03-09 04:28:50.174 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Tentativa de edição de modelo - ID: 4, Nome atual: Galaxy A54, Nome novo: Galaxy S21 Plus, Marca: Samsung
+2026-03-09 04:28:50.176 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Modelo editado com sucesso - ID: 4, Nome: Galaxy S21 Plus, Marca: null
+2026-03-09 04:29:57.741 [http-nio-8080-exec-10] INFO  C.C.Service.OrdemServicoService - Tentativa de cadastro de ordem de serviço - Cliente: null, Aparelho: null, Status: ABERTA
+2026-03-09 04:29:57.750 [http-nio-8080-exec-10] INFO  C.C.Service.OrdemServicoService - Ordem de serviço cadastrada com sucesso - ID: 1, Cliente: null, Status: ABERTA
+2026-03-09 10:55:45.653 [http-nio-8080-exec-7] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 111.111.111-11
+2026-03-09 10:55:45.771 [http-nio-8080-exec-7] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 111.111.111-11, Nome: Administrador, Cargo: ADMIN
+2026-03-09 10:56:17.957 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca da bateria do A32, Valor Base: 50, Peças: 1 peças
+2026-03-09 10:56:18.002 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 4, Nome: Troca da bateria do A32, Valor Base: 50
+2026-03-09 10:57:22.755 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca do botão Home do IPhone 8 Plus, Valor Base: 100, Peças: 1 peças
+2026-03-09 10:57:22.762 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 5, Nome: Troca do botão Home do IPhone 8 Plus, Valor Base: 100
+2026-03-09 11:00:35.115 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca do vidro Traseiro do iPhone 15, Valor Base: 100, Peças: 1 peças
+2026-03-09 11:00:35.122 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 6, Nome: Troca do vidro Traseiro do iPhone 15, Valor Base: 100
+2026-03-09 11:01:36.521 [http-nio-8080-exec-8] INFO  C.C.Service.OrdemServicoService - Tentativa de cadastro de ordem de serviço - Cliente: null, Aparelho: null, Status: ABERTA
+2026-03-09 11:01:36.531 [http-nio-8080-exec-8] INFO  C.C.Service.OrdemServicoService - Ordem de serviço cadastrada com sucesso - ID: 2, Cliente: null, Status: ABERTA
+2026-03-09 11:02:09.567 [http-nio-8080-exec-1] INFO  C.Circuit.Service.VendaService - Tentativa de salvar venda - Código: VD-B16D, Valor Total: 242.91, Status: PENDENTE, Cliente ID: 7, Funcionário ID: 10
+2026-03-09 11:02:09.571 [http-nio-8080-exec-1] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 1, Nome: Carregador Turbo 20W USB-C, Quantidade atual: 50, Quantidade a retirar: 1
+2026-03-09 11:02:09.571 [http-nio-8080-exec-1] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 1, Nome: Carregador Turbo 20W USB-C, Nova quantidade: 49
+2026-03-09 11:02:09.572 [http-nio-8080-exec-1] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Quantidade atual: 100, Quantidade a retirar: 4
+2026-03-09 11:02:09.572 [http-nio-8080-exec-1] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Nova quantidade: 96
+2026-03-09 11:02:09.586 [http-nio-8080-exec-1] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 1, Código: VD-B16D, Valor Total: 242.91
+2026-03-09 11:02:46.672 [http-nio-8080-exec-6] INFO  C.Circuit.Service.VendaService - Tentativa de salvar venda - Código: VD-672B, Valor Total: 561.15, Status: PENDENTE, Cliente ID: 14, Funcionário ID: 6
+2026-03-09 11:02:46.674 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 1, Nome: Carregador Turbo 20W USB-C, Quantidade atual: 49, Quantidade a retirar: 1
+2026-03-09 11:02:46.674 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 1, Nome: Carregador Turbo 20W USB-C, Nova quantidade: 48
+2026-03-09 11:02:46.675 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Quantidade atual: 96, Quantidade a retirar: 1
+2026-03-09 11:02:46.675 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Nova quantidade: 95
+2026-03-09 11:02:46.676 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 3, Nome: Capa Silicone iPhone 15 Pro - Preta, Quantidade atual: 30, Quantidade a retirar: 1
+2026-03-09 11:02:46.676 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 3, Nome: Capa Silicone iPhone 15 Pro - Preta, Nova quantidade: 29
+2026-03-09 11:02:46.677 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 4, Nome: Película Vidro 3D Galaxy S24, Quantidade atual: 200, Quantidade a retirar: 1
+2026-03-09 11:02:46.677 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 4, Nome: Película Vidro 3D Galaxy S24, Nova quantidade: 199
+2026-03-09 11:02:46.679 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 5, Nome: Fone de Ouvido Bluetooth TWS v5.3, Quantidade atual: 25, Quantidade a retirar: 1
+2026-03-09 11:02:46.679 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 5, Nome: Fone de Ouvido Bluetooth TWS v5.3, Nova quantidade: 24
+2026-03-09 11:02:46.680 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 6, Nome: Suporte Veicular Magnético, Quantidade atual: 40, Quantidade a retirar: 1
+2026-03-09 11:02:46.680 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 6, Nome: Suporte Veicular Magnético, Nova quantidade: 39
+2026-03-09 11:02:46.680 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 7, Nome: Carregador Portátil 10.000mAh, Quantidade atual: 20, Quantidade a retirar: 1
+2026-03-09 11:02:46.681 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 7, Nome: Carregador Portátil 10.000mAh, Nova quantidade: 19
+2026-03-09 11:02:46.681 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 8, Nome: Adaptador Jack 3.5mm para USB-C, Quantidade atual: 60, Quantidade a retirar: 1
+2026-03-09 11:02:46.681 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 8, Nome: Adaptador Jack 3.5mm para USB-C, Nova quantidade: 59
+2026-03-09 11:02:46.682 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 9, Nome: Capa Anti-Impacto Transparente G54, Quantidade atual: 45, Quantidade a retirar: 1
+2026-03-09 11:02:46.682 [http-nio-8080-exec-6] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 9, Nome: Capa Anti-Impacto Transparente G54, Nova quantidade: 44
+2026-03-09 11:02:46.688 [http-nio-8080-exec-6] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 2, Código: VD-672B, Valor Total: 561.15
+2026-03-09 11:03:33.610 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Tentativa de salvar venda - Código: VD-2225, Valor Total: 405.00, Status: PENDENTE, Cliente ID: 15, Funcionário ID: 6
+2026-03-09 11:03:33.615 [http-nio-8080-exec-10] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 9, Nome: Capa Anti-Impacto Transparente G54, Quantidade atual: 44, Quantidade a retirar: 4
+2026-03-09 11:03:33.616 [http-nio-8080-exec-10] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 9, Nome: Capa Anti-Impacto Transparente G54, Nova quantidade: 40
+2026-03-09 11:03:33.617 [http-nio-8080-exec-10] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 10, Nome: Película de Câmera iPhone 13, Quantidade atual: 80, Quantidade a retirar: 10
+2026-03-09 11:03:33.617 [http-nio-8080-exec-10] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 10, Nome: Película de Câmera iPhone 13, Nova quantidade: 70
+2026-03-09 11:03:33.619 [http-nio-8080-exec-10] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 11, Nome: Cartão de Memória MicroSD 64GB, Quantidade atual: 35, Quantidade a retirar: 1
+2026-03-09 11:03:33.620 [http-nio-8080-exec-10] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 11, Nome: Cartão de Memória MicroSD 64GB, Nova quantidade: 34
+2026-03-09 11:03:33.622 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 3, Código: VD-2225, Valor Total: 405.00
+2026-03-09 11:03:46.810 [http-nio-8080-exec-9] INFO  C.Circuit.Service.VendaService - Tentativa de salvar venda - Código: VD-8179, Valor Total: 84.90, Status: PENDENTE, Cliente ID: 12, Funcionário ID: 10
+2026-03-09 11:03:46.812 [http-nio-8080-exec-9] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Quantidade atual: 95, Quantidade a retirar: 1
+2026-03-09 11:03:46.812 [http-nio-8080-exec-9] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Nova quantidade: 94
+2026-03-09 11:03:46.814 [http-nio-8080-exec-9] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 3, Nome: Capa Silicone iPhone 15 Pro - Preta, Quantidade atual: 29, Quantidade a retirar: 1
+2026-03-09 11:03:46.814 [http-nio-8080-exec-9] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 3, Nome: Capa Silicone iPhone 15 Pro - Preta, Nova quantidade: 28
+2026-03-09 11:03:46.816 [http-nio-8080-exec-9] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 4, Código: VD-8179, Valor Total: 84.90
+2026-03-09 11:04:38.106 [http-nio-8080-exec-3] INFO  C.Circuit.Service.VendaService - Tentativa de salvar venda - Código: VD-4EB2, Valor Total: 800.10, Status: PENDENTE, Cliente ID: 8, Funcionário ID: 10
+2026-03-09 11:04:38.108 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Quantidade atual: 94, Quantidade a retirar: 5
+2026-03-09 11:04:38.108 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Nova quantidade: 89
+2026-03-09 11:04:38.108 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 3, Nome: Capa Silicone iPhone 15 Pro - Preta, Quantidade atual: 28, Quantidade a retirar: 10
+2026-03-09 11:04:38.109 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 3, Nome: Capa Silicone iPhone 15 Pro - Preta, Nova quantidade: 18
+2026-03-09 11:04:38.109 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 10, Nome: Película de Câmera iPhone 13, Quantidade atual: 70, Quantidade a retirar: 3
+2026-03-09 11:04:38.109 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 10, Nome: Película de Câmera iPhone 13, Nova quantidade: 67
+2026-03-09 11:04:38.110 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 11, Nome: Cartão de Memória MicroSD 64GB, Quantidade atual: 34, Quantidade a retirar: 1
+2026-03-09 11:04:38.110 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 11, Nome: Cartão de Memória MicroSD 64GB, Nova quantidade: 33
+2026-03-09 11:04:38.111 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 15, Nome: Fone Intra-auricular com Fio P2, Quantidade atual: 70, Quantidade a retirar: 4
+2026-03-09 11:04:38.111 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 15, Nome: Fone Intra-auricular com Fio P2, Nova quantidade: 66
+2026-03-09 11:04:38.117 [http-nio-8080-exec-3] INFO  C.Circuit.Service.VendaService - Venda salva com sucesso - ID: 5, Código: VD-4EB2, Valor Total: 800.10
+2026-03-09 11:05:01.676 [http-nio-8080-exec-8] INFO  C.Circuit.Service.FornecedorService - Vinculando itens ao fornecedor - Fornecedor ID: 1, Tipo: PECA, Quantidade de itens: 5
+2026-03-09 11:05:01.687 [http-nio-8080-exec-8] INFO  C.Circuit.Service.FornecedorService - Peças vinculadas ao fornecedor - Fornecedor: 1, Quantidade: 5
+2026-03-09 11:06:25.874 [http-nio-8080-exec-10] INFO  C.Circuit.Service.FornecedorService - Vinculando itens ao fornecedor - Fornecedor ID: 2, Tipo: PRODUTO, Quantidade de itens: 5
+2026-03-09 11:06:25.880 [http-nio-8080-exec-10] INFO  C.Circuit.Service.FornecedorService - Produtos vinculados ao fornecedor - Fornecedor: 2, Quantidade: 5
+2026-03-09 11:06:41.261 [http-nio-8080-exec-6] INFO  C.Circuit.Service.FornecedorService - Vinculando itens ao fornecedor - Fornecedor ID: 3, Tipo: PECA, Quantidade de itens: 5
+2026-03-09 11:06:41.266 [http-nio-8080-exec-6] INFO  C.Circuit.Service.FornecedorService - Peças vinculadas ao fornecedor - Fornecedor: 3, Quantidade: 5
+2026-03-09 11:06:51.457 [http-nio-8080-exec-6] INFO  C.Circuit.Service.FornecedorService - Vinculando itens ao fornecedor - Fornecedor ID: 4, Tipo: PRODUTO, Quantidade de itens: 5
+2026-03-09 11:06:51.462 [http-nio-8080-exec-6] INFO  C.Circuit.Service.FornecedorService - Produtos vinculados ao fornecedor - Fornecedor: 4, Quantidade: 5
+2026-03-09 11:06:57.596 [http-nio-8080-exec-2] INFO  C.Circuit.Service.FornecedorService - Vinculando itens ao fornecedor - Fornecedor ID: 7, Tipo: PECA, Quantidade de itens: 6
+2026-03-09 11:06:57.601 [http-nio-8080-exec-2] INFO  C.Circuit.Service.FornecedorService - Peças vinculadas ao fornecedor - Fornecedor: 7, Quantidade: 6
+2026-03-09 11:07:03.786 [http-nio-8080-exec-2] INFO  C.Circuit.Service.FornecedorService - Vinculando itens ao fornecedor - Fornecedor ID: 6, Tipo: PRODUTO, Quantidade de itens: 5
+2026-03-09 11:07:03.790 [http-nio-8080-exec-2] INFO  C.Circuit.Service.FornecedorService - Produtos vinculados ao fornecedor - Fornecedor: 6, Quantidade: 5
+2026-03-09 11:07:42.365 [http-nio-8080-exec-10] INFO  C.Circuit.Service.FornecedorService - Tentativa de cadastro de novo fornecedor - Razão Social: BustaTech Ltda, CNPJ: 16.772.189/5718-90, Tipo: PRODUTO
+2026-03-09 11:07:42.380 [http-nio-8080-exec-10] INFO  C.Circuit.Service.FornecedorService - Fornecedor cadastrado com sucesso - ID: 11, Razão Social: BustaTech Ltda, CNPJ: 16.772.189/5718-90
+2026-03-09 11:08:43.962 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ClienteService - Tentativa de cadastro de novo cliente - Nome: Gustavo Erthal Leão de Siqueira, CPF: 139.471.969-89, Email: vplgugs@gmail.com
+2026-03-09 11:08:43.975 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ClienteService - Cliente cadastrado com sucesso - ID: 17, Nome: Gustavo Erthal Leão de Siqueira, CPF: 139.471.969-89
+2026-03-09 11:09:13.946 [http-nio-8080-exec-9] INFO  C.Circuit.Service.FuncionarioService - Tentativa de exclusão de funcionário - ID: 7, Nome: Julia Costa, CPF: 404.404.404-44, Cargo: GERENTE
+2026-03-09 11:09:13.950 [http-nio-8080-exec-9] INFO  C.Circuit.Service.FuncionarioService - Funcionário desativado com sucesso - ID: 7, Nome: Julia Costa, CPF: 404.404.404-44, Cargo: GERENTE
+2026-03-09 11:09:16.839 [http-nio-8080-exec-9] INFO  C.Circuit.Service.FuncionarioService - Tentativa de exclusão de funcionário - ID: 9, Nome: Lucas Oliveira, CPF: 606.606.606-66, Cargo: RECEPCIONISTA
+2026-03-09 11:09:16.841 [http-nio-8080-exec-9] INFO  C.Circuit.Service.FuncionarioService - Funcionário desativado com sucesso - ID: 9, Nome: Lucas Oliveira, CPF: 606.606.606-66, Cargo: RECEPCIONISTA
+2026-03-09 11:09:20.063 [http-nio-8080-exec-7] INFO  C.Circuit.Service.FornecedorService - Tentativa de exclusão de fornecedor - ID: 5, Razão Social: Componentes do Sul Ltda, CNPJ: 55.555.555/0001-55
+2026-03-09 11:09:20.064 [http-nio-8080-exec-7] INFO  C.Circuit.Service.FornecedorService - Fornecedor desativado com sucesso - ID: 5, Razão Social: Componentes do Sul Ltda, CNPJ: 55.555.555/0001-55
+2026-03-09 11:09:21.395 [http-nio-8080-exec-7] INFO  C.Circuit.Service.FornecedorService - Tentativa de exclusão de fornecedor - ID: 2, Razão Social: Tech Produto Importação S.A., CNPJ: 22.222.222/0001-22
+2026-03-09 11:09:21.397 [http-nio-8080-exec-7] INFO  C.Circuit.Service.FornecedorService - Fornecedor desativado com sucesso - ID: 2, Razão Social: Tech Produto Importação S.A., CNPJ: 22.222.222/0001-22
+2026-03-09 11:09:22.871 [http-nio-8080-exec-7] INFO  C.Circuit.Service.FornecedorService - Tentativa de exclusão de fornecedor - ID: 1, Razão Social: Peça Sul Distribuidora Ltda, CNPJ: 11.111.111/0001-11
+2026-03-09 11:09:22.873 [http-nio-8080-exec-7] INFO  C.Circuit.Service.FornecedorService - Fornecedor desativado com sucesso - ID: 1, Razão Social: Peça Sul Distribuidora Ltda, CNPJ: 11.111.111/0001-11
+2026-03-09 11:09:28.791 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Tentativa de exclusão de modelo - ID: 6, Nome: Moto G84, Marca: Motorola
+2026-03-09 11:09:28.793 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Modelo desativado com sucesso - ID: 6, Nome: Moto G84, Marca: Motorola
+2026-03-09 11:09:30.805 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Tentativa de exclusão de modelo - ID: 8, Nome: Xiaomi 14, Marca: Xiaomi
+2026-03-09 11:09:30.806 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Modelo desativado com sucesso - ID: 8, Nome: Xiaomi 14, Marca: Xiaomi
+2026-03-09 11:09:33.115 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Tentativa de exclusão de modelo - ID: 10, Nome: ROG Phone 8, Marca: Asus
+2026-03-09 11:09:33.116 [http-nio-8080-exec-6] INFO  C.Circuit.Service.ModeloService - Modelo desativado com sucesso - ID: 10, Nome: ROG Phone 8, Marca: Asus
+2026-03-09 11:09:39.172 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ClienteService - Tentativa de exclusão de cliente - ID: 17, Nome: Gustavo Erthal Leão de Siqueira, CPF: 139.471.969-89
+2026-03-09 11:09:39.173 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ClienteService - Cliente desativado com sucesso - ID: 17, Nome: Gustavo Erthal Leão de Siqueira, CPF: 139.471.969-89
+2026-03-09 11:09:41.058 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ClienteService - Tentativa de exclusão de cliente - ID: 13, Nome: Giselle Souza, CPF: 777.777.777-77
+2026-03-09 11:09:41.060 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ClienteService - Cliente desativado com sucesso - ID: 13, Nome: Giselle Souza, CPF: 777.777.777-77
+2026-03-09 11:09:43.045 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ClienteService - Tentativa de exclusão de cliente - ID: 11, Nome: Elena Martins, CPF: 555.555.555-55
+2026-03-09 11:09:43.046 [http-nio-8080-exec-5] INFO  C.Circuit.Service.ClienteService - Cliente desativado com sucesso - ID: 11, Nome: Elena Martins, CPF: 555.555.555-55
+2026-03-09 11:11:13.521 [http-nio-8080-exec-4] INFO  C.Circuit.Service.PedidoService - Tentativa de cadastro de novo pedido - Código: PO-1DAF, Valor: 194.00, Fornecedor: Rio Peças, Tipo: PECA
+2026-03-09 11:11:13.535 [http-nio-8080-exec-4] INFO  C.Circuit.Service.PedidoService - Pedido cadastrado com sucesso - ID: 1, Código: PO-1DAF, Valor: 194.00
+2026-03-09 11:12:16.300 [http-nio-8080-exec-3] INFO  C.Circuit.Service.PedidoService - Tentativa de cadastro de novo pedido - Código: PO-FE25, Valor: 228.00, Fornecedor: DF Produtos, Tipo: PRODUTO
+2026-03-09 11:12:16.309 [http-nio-8080-exec-3] INFO  C.Circuit.Service.PedidoService - Pedido cadastrado com sucesso - ID: 2, Código: PO-FE25, Valor: 228.00
+2026-03-09 11:13:01.535 [http-nio-8080-exec-4] INFO  C.C.Service.OrdemServicoService - Tentativa de atualizar status de ordem de serviço - ID: 1, Status atual: ABERTA, Novo status: AGUARDANDO_APROVACAO
+2026-03-09 11:13:01.539 [http-nio-8080-exec-4] INFO  C.C.Service.OrdemServicoService - Status de ordem de serviço atualizado com sucesso - ID: 1, Novo status: AGUARDANDO_APROVACAO
+2026-03-09 11:13:03.877 [http-nio-8080-exec-4] INFO  C.C.Service.OrdemServicoService - Tentativa de atualizar status de ordem de serviço - ID: 2, Status atual: ABERTA, Novo status: FINALIZADA
+2026-03-09 11:13:03.881 [http-nio-8080-exec-4] INFO  C.C.Service.ContaReceberService - Gerando conta a receber para OS #2 - Valor: 260.00, Cliente: Ana Silva
+2026-03-09 11:13:03.885 [http-nio-8080-exec-4] INFO  C.C.Service.ContaReceberService - Conta a receber gerada com sucesso - ID: 1, Valor: 260.00, Vencimento: 2026-04-08
+2026-03-09 11:13:03.886 [http-nio-8080-exec-4] INFO  C.C.Service.OrdemServicoService - Status de ordem de serviço atualizado com sucesso - ID: 2, Novo status: FINALIZADA
+2026-03-09 11:13:07.994 [http-nio-8080-exec-1] INFO  C.C.Service.OrdemServicoService - Tentativa de atualizar status de ordem de serviço - ID: 2, Status atual: FINALIZADA, Novo status: FINALIZADA
+2026-03-09 11:13:07.997 [http-nio-8080-exec-1] INFO  C.C.Service.OrdemServicoService - Status de ordem de serviço atualizado com sucesso - ID: 2, Novo status: FINALIZADA
+2026-03-09 11:13:14.122 [http-nio-8080-exec-9] INFO  C.Circuit.Service.PedidoService - Tentativa de atualizar status de pedido - ID: 1, Código: PO-1DAF, Status atual: PENDENTE, Novo status: RECEBIDO
+2026-03-09 11:13:14.123 [http-nio-8080-exec-9] INFO  C.Circuit.Service.PedidoService - Pedido recebido, criando notificação e conta a pagar - ID: 1
+2026-03-09 11:13:14.133 [http-nio-8080-exec-9] INFO  C.Circuit.Service.ContasPagarService - Gerando conta a pagar para pedido #PO-1DAF - Valor: 194.00, Fornecedor: Rio Peças
+2026-03-09 11:13:14.137 [http-nio-8080-exec-9] INFO  C.Circuit.Service.ContasPagarService - Conta a pagar gerada com sucesso - ID: 1, Valor: 194.00, Vencimento: 2026-04-08
+2026-03-09 11:13:14.137 [http-nio-8080-exec-9] INFO  C.Circuit.Service.PedidoService - Status de pedido atualizado com sucesso - ID: 1, Novo status: RECEBIDO
+2026-03-09 11:13:16.428 [http-nio-8080-exec-9] INFO  C.Circuit.Service.PedidoService - Tentativa de atualizar status de pedido - ID: 2, Código: PO-FE25, Status atual: PENDENTE, Novo status: PENDENTE
+2026-03-09 11:13:16.428 [http-nio-8080-exec-9] INFO  C.Circuit.Service.PedidoService - Status de pedido atualizado com sucesso - ID: 2, Novo status: PENDENTE
+2026-03-09 11:13:28.672 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Tentativa de atualizar status de venda - ID: 3, Status atual: PENDENTE, Novo status: CONCLUIDA
+2026-03-09 11:13:28.672 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Gerando conta a receber para venda #3 - Valor: 405.00, Cliente: Irene Mendes
+2026-03-09 11:13:28.676 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Conta a receber gerada com sucesso - ID: 2, Valor: 405.00, Vencimento: 2026-04-08
+2026-03-09 11:13:28.677 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Status de venda atualizado com sucesso - ID: 3, Novo status: CONCLUIDA
+2026-03-09 11:13:30.456 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Tentativa de atualizar status de venda - ID: 4, Status atual: PENDENTE, Novo status: CONCLUIDA
+2026-03-09 11:13:30.456 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Gerando conta a receber para venda #4 - Valor: 84.90, Cliente: Fabio Lima
+2026-03-09 11:13:30.459 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Conta a receber gerada com sucesso - ID: 3, Valor: 84.90, Vencimento: 2026-04-08
+2026-03-09 11:13:30.459 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Status de venda atualizado com sucesso - ID: 4, Novo status: CONCLUIDA
+2026-03-09 11:13:32.479 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Tentativa de atualizar status de venda - ID: 2, Status atual: PENDENTE, Novo status: CONCLUIDA
+2026-03-09 11:13:32.479 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Gerando conta a receber para venda #2 - Valor: 561.15, Cliente: Hugo Ferreira
+2026-03-09 11:13:32.482 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Conta a receber gerada com sucesso - ID: 4, Valor: 561.15, Vencimento: 2026-04-08
+2026-03-09 11:13:32.482 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Status de venda atualizado com sucesso - ID: 2, Novo status: CONCLUIDA
+2026-03-09 11:13:36.029 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Tentativa de atualizar status de venda - ID: 5, Status atual: PENDENTE, Novo status: CANCELADA
+2026-03-09 11:13:36.030 [http-nio-8080-exec-10] INFO  C.Circuit.Service.VendaService - Status de venda atualizado com sucesso - ID: 5, Novo status: CANCELADA
+2026-03-09 11:13:56.817 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Tentativa de recebimento de pagamento - ID: 2, Valor recebido: 405.00, Data: 2026-03-09, Forma: CARTAO_CREDITO, Condição: null, Parcelas: 3
+2026-03-09 11:13:56.819 [http-nio-8080-exec-10] INFO  C.C.Service.ContaReceberService - Pagamento recebido com sucesso - ID: 2, Valor recebido: 405.00, Status: PAGO
+2026-03-09 11:14:01.930 [http-nio-8080-exec-5] INFO  C.C.Service.ContaReceberService - Tentativa de cancelamento de conta - ID: 3, Valor: 84.90, Cliente: Fabio Lima
+2026-03-09 11:14:01.931 [http-nio-8080-exec-5] INFO  C.C.Service.ContaReceberService - Conta cancelada com sucesso - ID: 3
+2026-03-09 11:14:14.012 [http-nio-8080-exec-3] INFO  C.Circuit.Service.ContasPagarService - Tentativa de pagamento de conta - ID: 1, Valor pago: 194.00, Data: 2026-03-09, Forma: CARTAO_CREDITO
+2026-03-09 11:14:14.014 [http-nio-8080-exec-3] INFO  C.Circuit.Service.ContasPagarService - Conta paga com sucesso - ID: 1, Valor pago: 194.00, Status: PAGO
+2026-03-09 11:15:15.865 [http-nio-8080-exec-10] INFO  C.Circuit.Service.PedidoService - Tentativa de cadastro de novo pedido - Código: PO-65CB, Valor: 444.00, Fornecedor: Recife Peças, Tipo: PECA
+2026-03-09 11:15:15.877 [http-nio-8080-exec-10] INFO  C.Circuit.Service.PedidoService - Pedido cadastrado com sucesso - ID: 3, Código: PO-65CB, Valor: 444.00
+2026-03-09 11:15:18.313 [http-nio-8080-exec-8] INFO  C.Circuit.Service.PedidoService - Tentativa de atualizar status de pedido - ID: 3, Código: PO-65CB, Status atual: PENDENTE, Novo status: CONFIRMADO
+2026-03-09 11:15:18.316 [http-nio-8080-exec-8] INFO  C.Circuit.Service.PedidoService - Status de pedido atualizado com sucesso - ID: 3, Novo status: CONFIRMADO
+2026-03-09 11:15:26.906 [http-nio-8080-exec-7] INFO  C.Circuit.Service.PedidoService - Tentativa de atualizar status de pedido - ID: 3, Código: PO-65CB, Status atual: CONFIRMADO, Novo status: RECEBIDO
+2026-03-09 11:15:26.907 [http-nio-8080-exec-7] INFO  C.Circuit.Service.PedidoService - Pedido recebido, criando notificação e conta a pagar - ID: 3
+2026-03-09 11:15:26.910 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ContasPagarService - Gerando conta a pagar para pedido #PO-65CB - Valor: 444.00, Fornecedor: Recife Peças
+2026-03-09 11:15:26.912 [http-nio-8080-exec-7] INFO  C.Circuit.Service.ContasPagarService - Conta a pagar gerada com sucesso - ID: 2, Valor: 444.00, Vencimento: 2026-04-08
+2026-03-09 11:15:26.912 [http-nio-8080-exec-7] INFO  C.Circuit.Service.PedidoService - Status de pedido atualizado com sucesso - ID: 3, Novo status: RECEBIDO
+2026-03-09 11:15:39.380 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ContasPagarService - Tentativa de pagamento de conta - ID: 2, Valor pago: 444, Data: 2026-03-09, Forma: PIX
+2026-03-09 11:15:39.383 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ContasPagarService - Conta paga com sucesso - ID: 2, Valor pago: 444, Status: PAGO
+2026-03-09 11:17:27.851 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Tentativa de recebimento de pagamento - ID: 4, Valor recebido: 561.15, Data: 2026-03-09, Forma: DINHEIRO, Condição: null, Parcelas: 1
+2026-03-09 11:17:27.855 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Pagamento recebido com sucesso - ID: 4, Valor recebido: 561.15, Status: PAGO
