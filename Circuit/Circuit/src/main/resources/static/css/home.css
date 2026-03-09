@@ -443,7 +443,6 @@ body {
   background: #e2e8f0;
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
@@ -565,3 +564,40 @@ body {
             font-size: 14px;
             font-weight: 500;
         }
+.hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  border-radius: 1.5rem;
+  margin-top: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.home-logo {
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 2.5rem;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  color: #1e293b;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.user-highlight {
+  color: #2563eb;
+}
+
+.welcome-subtitle {
+  color: #64748b;
+  font-size: 1.1rem;
+  max-width: 600px;
+}

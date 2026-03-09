@@ -10,4 +10,9 @@ public class ViewController {
     public String home() {
         return "home";
     }
+
+    @GetMapping("/relatorios")
+    public String relatorios(){
+        return "relatorios";
+    }
 }
