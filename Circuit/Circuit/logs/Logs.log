@@ -253,3 +253,32 @@
 2026-03-09 11:15:39.383 [http-nio-8080-exec-8] INFO  C.Circuit.Service.ContasPagarService - Conta paga com sucesso - ID: 2, Valor pago: 444, Status: PAGO
 2026-03-09 11:17:27.851 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Tentativa de recebimento de pagamento - ID: 4, Valor recebido: 561.15, Data: 2026-03-09, Forma: DINHEIRO, Condição: null, Parcelas: 1
 2026-03-09 11:17:27.855 [http-nio-8080-exec-7] INFO  C.C.Service.ContaReceberService - Pagamento recebido com sucesso - ID: 4, Valor recebido: 561.15, Status: PAGO
+2026-03-09 11:37:49.241 [http-nio-8080-exec-1] INFO  C.Circuit.Service.ServicoService - Tentativa de cadastro de novo serviço - Nome: Troca do conector FPC do iPhone 13, Valor Base: 100, Peças: 1 peças
+2026-03-09 11:37:49.245 [http-nio-8080-exec-1] INFO  C.Circuit.Service.ServicoService - Serviço cadastrado com sucesso - ID: 7, Nome: Troca do conector FPC do iPhone 13, Valor Base: 100
+2026-03-09 11:38:31.271 [http-nio-8080-exec-6] INFO  C.C.Service.OrdemServicoService - Tentativa de cadastro de ordem de serviço - Cliente: null, Aparelho: null, Status: ABERTA
+2026-03-09 11:38:31.286 [http-nio-8080-exec-6] INFO  C.C.Service.OrdemServicoService - Ordem de serviço cadastrada com sucesso - ID: 3, Cliente: null, Status: ABERTA
+2026-03-09 11:38:37.813 [http-nio-8080-exec-8] INFO  C.C.Service.OrdemServicoService - Tentativa de atualizar status de ordem de serviço - ID: 1, Status atual: AGUARDANDO_APROVACAO, Novo status: FINALIZADA
+2026-03-09 11:38:37.817 [http-nio-8080-exec-8] INFO  C.C.Service.ContaReceberService - Gerando conta a receber para OS #1 - Valor: 952.00, Cliente: Diego Costa
+2026-03-09 11:38:37.821 [http-nio-8080-exec-8] INFO  C.C.Service.ContaReceberService - Conta a receber gerada com sucesso - ID: 5, Valor: 952.00, Vencimento: 2026-04-08
+2026-03-09 11:38:37.823 [http-nio-8080-exec-8] INFO  C.C.Service.OrdemServicoService - Status de ordem de serviço atualizado com sucesso - ID: 1, Novo status: FINALIZADA
+2026-03-09 11:38:41.092 [http-nio-8080-exec-6] INFO  C.C.Service.OrdemServicoService - Tentativa de atualizar status de ordem de serviço - ID: 3, Status atual: ABERTA, Novo status: FINALIZADA
+2026-03-09 11:38:41.092 [http-nio-8080-exec-6] INFO  C.C.Service.ContaReceberService - Gerando conta a receber para OS #3 - Valor: 155.00, Cliente: Carla Oliveira
+2026-03-09 11:38:41.095 [http-nio-8080-exec-6] INFO  C.C.Service.ContaReceberService - Conta a receber gerada com sucesso - ID: 6, Valor: 155.00, Vencimento: 2026-04-08
+2026-03-09 11:38:41.096 [http-nio-8080-exec-6] INFO  C.C.Service.OrdemServicoService - Status de ordem de serviço atualizado com sucesso - ID: 3, Novo status: FINALIZADA
+2026-03-09 11:38:51.459 [http-nio-8080-exec-8] INFO  C.C.Service.ContaReceberService - Tentativa de recebimento de pagamento - ID: 5, Valor recebido: 952.00, Data: 2026-03-09, Forma: CARTAO_CREDITO, Condição: null, Parcelas: 1
+2026-03-09 11:38:51.461 [http-nio-8080-exec-8] INFO  C.C.Service.ContaReceberService - Pagamento recebido com sucesso - ID: 5, Valor recebido: 952.00, Status: PAGO
+2026-03-09 11:39:39.147 [http-nio-8080-exec-4] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 4, Nome: Película Vidro 3D Galaxy S24, Quantidade atual: 199, Quantidade a retirar: 170
+2026-03-09 11:39:39.147 [http-nio-8080-exec-4] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 4, Nome: Película Vidro 3D Galaxy S24, Nova quantidade: 29
+2026-03-09 11:39:47.411 [http-nio-8080-exec-2] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Quantidade atual: 89, Quantidade a retirar: 70
+2026-03-09 11:39:47.411 [http-nio-8080-exec-2] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 2, Nome: Cabo Lightning 1.2m Reforçado, Nova quantidade: 19
+2026-03-09 11:39:53.650 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 1, Nome: Carregador Turbo 20W USB-C, Quantidade atual: 48, Quantidade a retirar: 28
+2026-03-09 11:39:53.650 [http-nio-8080-exec-3] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 1, Nome: Carregador Turbo 20W USB-C, Nova quantidade: 20
+2026-03-09 11:40:02.868 [http-nio-8080-exec-8] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 8, Nome: Adaptador Jack 3.5mm para USB-C, Quantidade atual: 59, Quantidade a retirar: 30
+2026-03-09 11:40:02.869 [http-nio-8080-exec-8] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 8, Nome: Adaptador Jack 3.5mm para USB-C, Nova quantidade: 29
+2026-03-09 11:40:02.871 [http-nio-8080-exec-8] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 9, Nome: Capa Anti-Impacto Transparente G54, Quantidade atual: 40, Quantidade a retirar: 30
+2026-03-09 11:40:02.871 [http-nio-8080-exec-8] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 9, Nome: Capa Anti-Impacto Transparente G54, Nova quantidade: 10
+2026-03-09 11:40:02.874 [http-nio-8080-exec-8] INFO  C.Circuit.Service.EstoqueService - Tentativa de retirar estoque de produto - ID: 10, Nome: Película de Câmera iPhone 13, Quantidade atual: 67, Quantidade a retirar: 30
+2026-03-09 11:40:02.874 [http-nio-8080-exec-8] INFO  C.Circuit.Service.EstoqueService - Estoque de produto retirado com sucesso - ID: 10, Nome: Película de Câmera iPhone 13, Nova quantidade: 37
+2026-03-09 11:49:45.420 [http-nio-8080-exec-4] WARN  C.Circuit.Service.ContasPagarService - Tentativa de cancelar conta já paga - ID: 2
+2026-03-09 11:52:19.721 [http-nio-8080-exec-2] INFO  C.Circuit.Service.LoginService - Tentativa de login para CPF: 111.111.111-11
+2026-03-09 11:52:19.749 [http-nio-8080-exec-2] INFO  C.Circuit.Service.LoginService - Login realizado com sucesso - CPF: 111.111.111-11, Nome: Administrador, Cargo: ADMIN
