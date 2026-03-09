@@ -324,12 +324,7 @@ O sistema utiliza **Spring Security** para controle de acesso:
 - **Password hashing** com BCrypt
 - **CSRF Protection** ativado
 - **Logout handler** personalizado
-
-### Papéis (Roles)
-
-- `ADMIN` - Acesso total ao sistema
-- `GERENTE` - Acesso limitado a gerenciamento
-- `FUNCIONARIO` - Acesso básico às operações
+- 
 
 ## 📊 Modelos de Dados Principais
 
@@ -354,9 +349,6 @@ O sistema utiliza **Spring Security** para controle de acesso:
 ### ContasReceber
 - ID, cliente, valor, data vencimento, status, forma pagamento
 
-## 📝 Licença
-
-Este projeto é proprietário da Circuit.
 
 ## 👥 Desenvolvedor
 
